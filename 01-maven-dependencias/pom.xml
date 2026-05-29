@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.cursosdedesarrollo</groupId>
+        <artifactId>ejemplo-servlets-jsp-2026</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>01-maven-dependencias</artifactId>
+    <packaging>jar</packaging>
+
+    <name>01 - Maven: Dependencias y Scopes</name>
+
+    <dependencies>
+
+        <!-- SCOPE COMPILE (por defecto) ─────────────────────────────────────
+             Disponible en compilación, tests y empaquetado.
+             Se incluye en el classpath del JAR final. -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.20.0</version>
+        </dependency>
+
+        <!-- SCOPE COMPILE: API de logging.
+             El código se compila contra esta interfaz, pero la implementación
+             real la aporta logback-classic en runtime (ver abajo). -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+
+        <!-- SCOPE RUNTIME ───────────────────────────────────────────────────
+             Maven lo necesita para ejecutar, pero NO para compilar.
+             No aparece en el classpath de compilación; sí en el JAR/WAR final.
+             Patrón típico: programar contra una API (slf4j-api) e inyectar
+             la implementación concreta (logback) en runtime. -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.11</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- SCOPE TEST ──────────────────────────────────────────────────────
+             Solo disponible al compilar y ejecutar tests.
+             No se incluye en el JAR final. -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- SCOPE PROVIDED (ejemplo comentado) ──────────────────────────────
+             Maven compila con ella, pero NO la empaqueta.
+             El contenedor de despliegue (Tomcat, WebLogic) ya la provee.
+             Ejemplo real: javax.servlet-api en módulos WAR.
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        -->
+
+        <!-- EXCLUSIÓN DE TRANSITIVAS (ejemplo comentado) ────────────────────
+             Cuando dos dependencias arrastran versiones incompatibles de una
+             misma librería transitiva, se excluye la no deseada:
+        <dependency>
+            <groupId>some.library</groupId>
+            <artifactId>some-artifact</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        -->
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.cursosdedesarrollo.App</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.cursosdedesarrollo</groupId>
+        <artifactId>ejemplo-servlets-jsp-2026</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>02-maven-jar</artifactId>
+    <packaging>jar</packaging>
+
+    <name>02 - Maven: Generación de JARs</name>
+
+    <dependencies>
+
+        <!-- scope compile (por defecto): disponible en compilación, tests y en el JAR final -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.20.0</version>
+        </dependency>
+
+        <!-- Ejemplo de exclusión de transitivas: commons-collections viene como dependencia
+             transitiva de algunas librerías. Si causase conflicto de versiones con otra
+             dependencia del proyecto, se excluiría así: -->
+        <!--
+        <dependency>
+            <groupId>some.library</groupId>
+            <artifactId>some-artifact</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-collections</groupId>
+                    <artifactId>commons-collections</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        -->
+
+        <!-- scope test: solo compila y ejecuta en la fase test, no se incluye en el JAR -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- scope provided (ejemplo): Maven lo usa para compilar pero NO lo empaqueta;
+             el contenedor (Tomcat, WebLogic) ya lo proporciona en runtime.
+             Ejemplo real en módulos web: javax.servlet-api -->
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- JAR ejecutable: añade Main-Class al MANIFEST.MF para poder lanzarlo
+                 con: java -jar target/01-maven-1.0-SNAPSHOT.jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.cursosdedesarrollo.App</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.cursosdedesarrollo.App</mainClass>
+                </configuration>
+            </plugin>
+            <!-- Fat-JAR (uber-jar): empaqueta el proyecto Y todas sus dependencias en un
+                 único JAR autoejectable. Ejecutar con: java -jar target/01-maven-1.0-SNAPSHOT-jar-with-dependencies.jar
+                 Contrasta con el JAR estándar de arriba, que necesita las dependencias en el classpath. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.cursosdedesarrollo.App</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Genera 01-maven-1.0-SNAPSHOT-sources.jar junto al JAR principal.
+                 Estándar para bibliotecas: permite a los consumidores navegar el código fuente. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
