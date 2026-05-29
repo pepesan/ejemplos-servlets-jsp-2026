@@ -5,7 +5,9 @@ public class App {
     public static void main(String[] args) {
         ConfiguracionApp config = new ConfiguracionApp();
 
-        String sep = "─".repeat(50);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 50; i++) sb.append("─");
+        String sep = sb.toString();
         System.out.println(sep);
         System.out.println("  Demo Maven Profiles");
         System.out.println(sep);

@@ -1,0 +1,33 @@
+package com.cursosdedesarrollo;
+
+import java.io.PrintWriter;
+
+/** Utilidades de presentación compartidas por los servlets de este módulo. */
+class Html {
+
+    static void cabecera(PrintWriter out, String titulo) {
+        out.println("<!DOCTYPE html><html lang='es'><head><meta charset='UTF-8'>");
+        out.println("<title>" + esc(titulo) + "</title>");
+        out.println("<style>");
+        out.println("body{font-family:monospace;max-width:860px;margin:2em auto;background:#1e1e2e;color:#cdd6f4}");
+        out.println("h1{color:#89b4fa}h2{color:#cba6f7;margin-top:1.4em}");
+        out.println("p,li{line-height:1.6;color:#a6adc8}.sub{color:#a6adc8;font-size:.9em;margin-top:-.5em}");
+        out.println(".hint{color:#a6adc8;font-size:.85em;font-style:italic}");
+        out.println("a{color:#89dceb}");
+        out.println("table{border-collapse:collapse;width:100%;margin:.6em 0}");
+        out.println("td,th{border:1px solid #45475a;padding:.4em .8em;text-align:left;vertical-align:top}");
+        out.println("th{background:#313244;color:#cba6f7;white-space:nowrap}");
+        out.println("pre{background:#181825;border-left:3px solid #89b4fa;padding:.8em 1em;");
+        out.println("    overflow-x:auto;border-radius:4px;font-size:.85em;line-height:1.5}");
+        out.println("</style></head><body>");
+    }
+
+    static void pie(PrintWriter out) {
+        out.println("</body></html>");
+    }
+
+    static String esc(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
+    }
+}

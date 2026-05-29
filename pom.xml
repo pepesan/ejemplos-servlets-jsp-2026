@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cursosdedesarrollo</groupId>
-    <artifactId>ejemplo-servlets-jsp-2026</artifactId>
+    <artifactId>ejemplos-servlets-jsp-2026</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -21,6 +21,8 @@
         <!-- Servlets -->
         <module>10-servlet-xml</module>
         <module>11-servlet-anotaciones</module>
+        <module>12-servlet-lifecycle</module>
+        <module>13-servlet-request-response</module>
         <!-- JSP -->
         <module>20-jsp-jstl</module>
         <!-- MVC -->
@@ -34,9 +36,27 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.release>8</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <!-- JDK 21+ avisa de que Java 8 como target esta deprecado.
+                             -Xlint:-options suprime ese aviso del compilador. -->
+                        <compilerArgs>
+                            <arg>-Xlint:-options</arg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>

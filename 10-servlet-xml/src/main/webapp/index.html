@@ -2,12 +2,84 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>10 - Servlet configurado por web.xml</title>
+    <title>10 — Servlet configurado por web.xml</title>
+    <style>
+        body { font-family: monospace; max-width: 720px; margin: 2em auto;
+               background: #1e1e2e; color: #cdd6f4; }
+        h1   { color: #89b4fa; }
+        h2   { color: #cba6f7; margin-top: 1.6em; }
+        p    { line-height: 1.6; color: #a6adc8; }
+        a    { color: #89dceb; }
+        .card { background: #313244; border-radius: 6px;
+                padding: 1em 1.4em; margin: 1em 0; }
+        .card h3 { margin: 0 0 .4em 0; color: #a6e3a1; font-size: 1em; }
+        .card .url { font-size: 1.1em; margin: .4em 0; }
+        .card .desc { color: #a6adc8; font-size: .9em; margin: 0; }
+        pre  { background: #181825; border-left: 3px solid #89b4fa;
+               padding: .8em 1em; overflow-x: auto; border-radius: 4px;
+               font-size: .85em; line-height: 1.5; }
+        .badge { display: inline-block; padding: .15em .5em; border-radius: 3px;
+                 font-size: .8em; font-weight: bold; background: #89b4fa; color: #1e1e2e; }
+        .vs    { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin: 1em 0; }
+        .vs .col { background: #313244; padding: .8em 1em; border-radius: 4px; }
+        .vs .col h4 { margin: 0 0 .4em 0; color: #cba6f7; font-size: .9em; }
+        .vs .col ul { margin: 0; padding-left: 1.2em; color: #a6adc8; font-size: .85em; }
+    </style>
 </head>
 <body>
-    <h1>10 - Servlet configurado por web.xml</h1>
-    <ul>
-        <li><a href="hola-xml">GET /hola-xml</a></li>
-    </ul>
+
+<h1>10 — Servlet configurado por web.xml</h1>
+<p>
+    Primer contacto con la tecnología Servlet: configuración clásica mediante el descriptor
+    de despliegue <code>WEB-INF/web.xml</code>, sin ninguna anotación Java.
+    Este era el único mecanismo disponible hasta <strong>Servlet 2.5 (Java EE 5)</strong>.
+</p>
+
+<h2>Servlet disponible</h2>
+
+<div class="card">
+    <h3>HolaMundoXmlServlet</h3>
+    <div class="url"><a href="hola-xml">GET /hola-xml</a></div>
+    <p class="desc">Responde con texto plano. Mapeo declarado íntegramente en web.xml.</p>
+</div>
+
+<h2>¿Cómo funciona el mapeo en web.xml?</h2>
+<p>
+    El fichero <code>WEB-INF/web.xml</code> asocia una clase Java con una URL
+    en dos pasos: primero se declara el servlet (nombre + clase), luego se mapea
+    ese nombre a un patrón de URL.
+</p>
+<pre>&lt;servlet&gt;
+    &lt;servlet-name&gt;holaMundoXml&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;com.cursosdedesarrollo.HolaMundoXmlServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;holaMundoXml&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/hola-xml&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+
+<h2>web.xml vs @WebServlet</h2>
+<div class="vs">
+    <div class="col">
+        <h4>web.xml <span class="badge">Servlet ≤ 2.5</span></h4>
+        <ul>
+            <li>Configuración centralizada</li>
+            <li>Funciona en cualquier versión</li>
+            <li>Necesario para override de anotaciones</li>
+            <li>Más verboso</li>
+        </ul>
+    </div>
+    <div class="col">
+        <h4>@WebServlet <span class="badge">Servlet 3.0+</span></h4>
+        <ul>
+            <li>Configuración junto al código</li>
+            <li>Menos ficheros</li>
+            <li>Requiere Tomcat 7+ / Java EE 6+</li>
+            <li>Ver módulo <a href="http://localhost:8011">11-servlet-anotaciones</a></li>
+        </ul>
+    </div>
+</div>
+
 </body>
 </html>

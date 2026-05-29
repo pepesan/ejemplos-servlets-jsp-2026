@@ -8,7 +8,7 @@ Demuestra los tres tipos de JAR que Maven puede generar y cuándo usar cada uno:
 
 | Mínimo | Recomendado | Compilación destino |
 |--------|-------------|---------------------|
-| Java 8 | **Java 11 Temurin** | Java 8 (`source/target = 8` en el POM raíz) |
+| Java 8 | **Java 11 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
 `commons-lang3 3.20` es compatible con Java 8, 11 y 17. El fat-JAR generado también requiere JDK ≥ 8 para ejecutarse.
 

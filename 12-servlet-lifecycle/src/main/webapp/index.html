@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>12 — Ciclo de vida del Servlet</title>
+    <style>
+        body { font-family: monospace; max-width: 720px; margin: 2em auto;
+               background: #1e1e2e; color: #cdd6f4; }
+        h1   { color: #89b4fa; }
+        h2   { color: #cba6f7; margin-top: 1.6em; }
+        p    { line-height: 1.6; color: #a6adc8; }
+        a    { color: #89dceb; }
+        .card { background: #313244; border-radius: 6px;
+                padding: 1em 1.4em; margin: 1em 0; }
+        .card h3 { margin: 0 0 .3em 0; color: #a6e3a1; font-size: 1em; }
+        .card .url { font-size: 1.05em; margin: .3em 0; }
+        .card .url + .url { margin-top: .1em; }
+        .card .desc { color: #a6adc8; font-size: .9em; margin: .5em 0 0 0; }
+        pre  { background: #181825; border-left: 3px solid #89b4fa;
+               padding: .8em 1em; overflow-x: auto; border-radius: 4px;
+               font-size: .85em; line-height: 1.5; }
+        .badge-once  { display: inline-block; padding: .15em .5em; border-radius: 3px;
+                       font-size: .78em; font-weight: bold;
+                       background: #f38ba8; color: #1e1e2e; }
+        .badge-every { display: inline-block; padding: .15em .5em; border-radius: 3px;
+                       font-size: .78em; font-weight: bold;
+                       background: #a6e3a1; color: #1e1e2e; }
+        .diagram { background: #181825; padding: 1em 1.4em; border-radius: 4px;
+                   margin: 1em 0; font-size: .85em; line-height: 1.8; }
+        table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+        td, th { border: 1px solid #45475a; padding: .5em 1em; text-align: left; }
+        th { background: #313244; color: #cba6f7; }
+    </style>
+</head>
+<body>
+
+<h1>12 — Ciclo de vida del Servlet</h1>
+<p>
+    El contenedor (Tomcat) gestiona el ciclo de vida completo de cada servlet:
+    crea la instancia, la inicializa, la usa para atender peticiones y la destruye.
+    El programador solo implementa los tres métodos del ciclo de vida.
+</p>
+
+<h2>Diagrama del ciclo de vida</h2>
+<div class="diagram">
+    Arranque del servidor<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;│<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+    ┌─────────────┐<br>
+    │&nbsp;&nbsp;&nbsp;init()&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;← <span class="badge-once">UNA VEZ</span> &nbsp;Lee init-params, abre conexiones<br>
+    └──────┬──────┘<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+    ┌─────────────┐<br>
+    │&nbsp;service()&nbsp;&nbsp;│&nbsp;&nbsp;← <span class="badge-every">CADA PETICIÓN</span> &nbsp;Puede haber hilos concurrentes<br>
+    │&nbsp;doGet/Post │<br>
+    └──────┬──────┘<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br>
+    ┌─────────────┐<br>
+    │&nbsp;destroy()&nbsp;&nbsp;│&nbsp;&nbsp;← <span class="badge-once">UNA VEZ</span> &nbsp;Libera recursos al parar el servidor<br>
+    └─────────────┘
+</div>
+
+<h2>Servlets de este módulo</h2>
+
+<div class="card">
+    <h3>CicloVidaServlet — ciclo de vida completo</h3>
+    <div class="url"><a href="ciclo-vida">GET /ciclo-vida</a></div>
+    <p class="desc">
+        Sobreescribe <code>init()</code>, <code>service()</code> y <code>destroy()</code>.
+        Muestra en tiempo real cuándo se ejecutó <code>init()</code>, cuántas peticiones
+        se han atendido (contador compartido con <code>AtomicInteger</code>) y los
+        <code>init-param</code> leídos del <code>web.xml</code>.
+        Recarga la página varias veces para ver el contador subir;
+        para el servidor para ver <code>destroy()</code> en la consola.
+    </p>
+</div>
+
+<div class="card">
+    <h3>FormularioServlet — doGet + doPost</h3>
+    <div class="url"><a href="formulario">GET /formulario</a> — muestra el formulario</div>
+    <div class="url"><code>POST /formulario</code> — procesa los datos (enviar desde el formulario)</div>
+    <p class="desc">
+        Un mismo servlet atiende dos métodos HTTP:
+        <code>doGet()</code> sirve el formulario HTML;
+        <code>doPost()</code> lee los parámetros del cuerpo de la petición, valida y
+        devuelve un resumen. Aplica el patrón <strong>PRG</strong>
+        (Post-Redirect-Get) para evitar el reenvío al recargar con F5.
+        También demuestra el escape de HTML para prevenir XSS.
+    </p>
+</div>
+
+<h2>Conceptos clave</h2>
+<table>
+    <tr><th>Concepto</th><th>Dónde verlo</th></tr>
+    <tr>
+        <td><code>init(ServletConfig)</code> — <span class="badge-once">una vez</span></td>
+        <td>Consola de Tomcat al arrancar + página <a href="ciclo-vida">/ciclo-vida</a></td>
+    </tr>
+    <tr>
+        <td><code>service()</code> → <code>doGet()</code> / <code>doPost()</code> — <span class="badge-every">cada petición</span></td>
+        <td>Contador en <a href="ciclo-vida">/ciclo-vida</a>, formulario en <a href="formulario">/formulario</a></td>
+    </tr>
+    <tr>
+        <td><code>destroy()</code> — <span class="badge-once">una vez</span></td>
+        <td>Consola de Tomcat al parar el servidor (<code>Ctrl+C</code>)</td>
+    </tr>
+    <tr>
+        <td><code>load-on-startup</code></td>
+        <td><code>web.xml</code> de este módulo: <code>CicloVidaServlet</code> carga al arrancar</td>
+    </tr>
+    <tr>
+        <td><code>init-param</code></td>
+        <td>Parámetros <em>autor</em> y <em>version</em> visibles en <a href="ciclo-vida">/ciclo-vida</a></td>
+    </tr>
+    <tr>
+        <td>Patrón PRG</td>
+        <td>Enviar el formulario vacío → redirección 302 a <code>/formulario?error=vacio</code></td>
+    </tr>
+    <tr>
+        <td>Escape XSS</td>
+        <td>Escribe <code>&lt;script&gt;</code> en el nombre del formulario → se muestra como texto</td>
+    </tr>
+</table>
+
+</body>
+</html>

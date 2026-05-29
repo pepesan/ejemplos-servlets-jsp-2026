@@ -8,7 +8,7 @@ Módulo web (WAR) que demuestra la arquitectura de Struts 1.x: flujo de peticion
 
 | Mínimo | Recomendado | Compilación destino |
 |--------|-------------|---------------------|
-| **Java 8** | **Java 8 Temurin** | Java 8 (`source/target = 8` en el POM raíz) |
+| **Java 8** | **Java 8 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
 > **Java 8 es obligatorio.** Struts 1.3.x usa reflexión y acceso a campos privados de formas que el sistema de módulos de Java 9+ (`--illegal-access`) bloquea o elimina. Con Java 11+ el servidor arranca pero pueden producirse errores en tiempo de ejecución al procesar formularios.
 

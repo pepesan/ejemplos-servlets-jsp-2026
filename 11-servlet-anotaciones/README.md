@@ -8,7 +8,7 @@ Servlet mapeado con `@WebServlet`, sin ninguna entrada en `web.xml`. Forma está
 
 | Mínimo | Recomendado | Compilación destino |
 |--------|-------------|---------------------|
-| Java 8 | **Java 11 Temurin** | Java 8 (`source/target = 8` en el POM raíz) |
+| Java 8 | **Java 11 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
 > Para configurar el JDK en IntelliJ IDEA ver [00-maven/README.md](../00-maven/README.md#configurar-en-intellij-idea).
 

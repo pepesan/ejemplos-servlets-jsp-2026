@@ -8,7 +8,7 @@ Módulo web (WAR) que integra Struts 1.x como capa web y Hibernate 3.x como capa
 
 | Mínimo | Recomendado | Compilación destino |
 |--------|-------------|---------------------|
-| **Java 8** | **Java 8 Temurin** | Java 8 (`source/target = 8` en el POM raíz) |
+| **Java 8** | **Java 8 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
 > **Java 8 es obligatorio.** Este módulo combina Struts 1.3.x y Hibernate 3.6.x, ambos incompatibles con el sistema de módulos de Java 9+. Struts usa reflexión sobre campos privados; Hibernate usa cglib/javassist para proxies de entidades. Con Java 11+ ambas capas pueden fallar en tiempo de ejecución.
 

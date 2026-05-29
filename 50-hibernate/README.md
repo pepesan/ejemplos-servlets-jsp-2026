@@ -8,7 +8,7 @@ Módulo JAR que demuestra la capa de persistencia con Hibernate 3.x: configuraci
 
 | Mínimo | Recomendado | Compilación destino |
 |--------|-------------|---------------------|
-| **Java 8** | **Java 8 Temurin** | Java 8 (`source/target = 8` en el POM raíz) |
+| **Java 8** | **Java 8 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
 > **Java 8 es obligatorio.** Hibernate 3.6.x usa cglib y javassist para generar proxies de entidades mediante manipulación de bytecode. Estas técnicas son incompatibles con el sistema de módulos de Java 9+ y provocan `IllegalAccessError` o `ClassNotFoundException` en tiempo de ejecución.
 

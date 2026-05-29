@@ -2,12 +2,79 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>11 - Servlet configurado por anotaciones</title>
+    <title>11 — Servlet configurado por @WebServlet</title>
+    <style>
+        body { font-family: monospace; max-width: 720px; margin: 2em auto;
+               background: #1e1e2e; color: #cdd6f4; }
+        h1   { color: #89b4fa; }
+        h2   { color: #cba6f7; margin-top: 1.6em; }
+        p    { line-height: 1.6; color: #a6adc8; }
+        a    { color: #89dceb; }
+        .card { background: #313244; border-radius: 6px;
+                padding: 1em 1.4em; margin: 1em 0; }
+        .card h3 { margin: 0 0 .4em 0; color: #a6e3a1; font-size: 1em; }
+        .card .url { font-size: 1.1em; margin: .4em 0; }
+        .card .desc { color: #a6adc8; font-size: .9em; margin: 0; }
+        pre  { background: #181825; border-left: 3px solid #89b4fa;
+               padding: .8em 1em; overflow-x: auto; border-radius: 4px;
+               font-size: .85em; line-height: 1.5; }
+        .badge { display: inline-block; padding: .15em .5em; border-radius: 3px;
+                 font-size: .8em; font-weight: bold; background: #a6e3a1; color: #1e1e2e; }
+        table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+        td, th { border: 1px solid #45475a; padding: .5em 1em; text-align: left; }
+        th { background: #313244; color: #cba6f7; }
+    </style>
 </head>
 <body>
-    <h1>11 - Servlet configurado por anotaciones</h1>
-    <ul>
-        <li><a href="hola">GET /hola</a></li>
-    </ul>
+
+<h1>11 — Servlet configurado por @WebServlet <span class="badge">Servlet 3.0+</span></h1>
+<p>
+    A partir de <strong>Servlet 3.0 (Java EE 6 / Tomcat 7)</strong> es posible
+    registrar un servlet directamente con la anotación <code>@WebServlet</code>,
+    eliminando la necesidad de declararlo en <code>web.xml</code>.
+</p>
+
+<h2>Servlet disponible</h2>
+
+<div class="card">
+    <h3>HolaMundoServlet</h3>
+    <div class="url"><a href="hola">GET /hola</a></div>
+    <p class="desc">Responde con texto plano. Mapeo declarado con <code>@WebServlet("/hola")</code>.</p>
+</div>
+
+<h2>¿Cómo funciona la anotación?</h2>
+<p>
+    La anotación <code>@WebServlet</code> reemplaza el bloque
+    <code>&lt;servlet&gt;</code> + <code>&lt;servlet-mapping&gt;</code> del web.xml.
+    El contenedor la detecta automáticamente en el arranque.
+</p>
+<pre>@WebServlet("/hola")                  // una URL
+@WebServlet({"/hola", "/hello"})      // varias URLs
+@WebServlet(
+    urlPatterns = "/hola",
+    name        = "holaMundo",
+    initParams  = {
+        @WebInitParam(name = "autor", value = "Curso 2026")
+    }
+)
+public class HolaMundoServlet extends HttpServlet { ... }</pre>
+
+<h2>Atributos principales de @WebServlet</h2>
+<table>
+    <tr><th>Atributo</th><th>Equivalente en web.xml</th><th>Descripción</th></tr>
+    <tr><td><code>urlPatterns</code> / <code>value</code></td><td><code>&lt;url-pattern&gt;</code></td><td>Una o varias URLs que atiende el servlet</td></tr>
+    <tr><td><code>name</code></td><td><code>&lt;servlet-name&gt;</code></td><td>Nombre interno del servlet (opcional)</td></tr>
+    <tr><td><code>initParams</code></td><td><code>&lt;init-param&gt;</code></td><td>Parámetros de inicialización</td></tr>
+    <tr><td><code>loadOnStartup</code></td><td><code>&lt;load-on-startup&gt;</code></td><td>Carga eagerly al arrancar el servidor</td></tr>
+</table>
+
+<h2>Cuándo seguir usando web.xml</h2>
+<p>
+    Las anotaciones no pueden sobreescribirse sin recompilar. En proyectos
+    con múltiples entornos (dev / prod) o cuando el mapeo de URLs lo decide
+    el equipo de operaciones, <code>web.xml</code> sigue siendo necesario.
+    Ver módulo <a href="http://localhost:8010">10-servlet-xml</a>.
+</p>
+
 </body>
 </html>

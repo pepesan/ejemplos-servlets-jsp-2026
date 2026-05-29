@@ -28,6 +28,8 @@ Proyecto Maven multi-módulo (`com.cursosdedesarrollo`). El POM raíz solo defin
 |--------|------|--------|-----------|
 | [10-servlet-xml](10-servlet-xml/README.md) | war | 8010 | Servlet mapeado por `web.xml` |
 | [11-servlet-anotaciones](11-servlet-anotaciones/README.md) | war | 8011 | Servlet mapeado con `@WebServlet` |
+| [12-servlet-lifecycle](12-servlet-lifecycle/README.md) | war | 8012 | Ciclo de vida: `init()`, `service()`, `destroy()`, `load-on-startup`, `init-param` |
+| [13-servlet-request-response](13-servlet-request-response/README.md) | war | 8013 | `HttpServletRequest` (cabeceras, params, cookies, sesión) y `HttpServletResponse` (status codes, Content-Type) |
 
 ### Unidad 3 — JSP y JSTL
 
@@ -78,15 +80,14 @@ Proyecto Maven multi-módulo (`com.cursosdedesarrollo`). El POM raíz solo defin
 
 ## Scripts
 
-Cada módulo tiene `build.sh`, `start.sh`, `stop.sh` y `test.sh`.
+Cada módulo tiene `build.sh`, `start.sh`, `stop.sh` y `test.sh`. Desde la raíz hay scripts para compilar, parar y testear el conjunto, pero **no hay `start.sh` raíz**: cada módulo WAR se arranca individualmente desde su carpeta.
 
-### Raíz — actúa sobre todos los módulos
+### Raíz
 
 ```bash
-./build.sh    # mvn clean package
-./start.sh    # arranca todos los módulos web en paralelo (puertos 8082-8086)
-./stop.sh     # para todos los módulos web
-./test.sh     # mvn test
+./build.sh    # mvn clean package — compila todos los módulos
+./stop.sh     # para todos los módulos web (mata puertos 8010-8013, 8083-8086)
+./test.sh     # mvn test — lanza todos los tests
 ```
 
 ### Por módulo
@@ -132,7 +133,7 @@ mvn clean package -rf 40-struts1
 ```
 <modulo>/
 ├── pom.xml
-├── build.sh / start.sh / stop.sh / test.sh
+├── build.sh / start.sh / stop.sh / test.sh    ← módulos; raíz no tiene start.sh
 ├── README.md
 └── src/
     ├── main/

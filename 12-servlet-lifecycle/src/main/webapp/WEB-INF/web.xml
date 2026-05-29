@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <display-name>12 - Ciclo de Vida del Servlet</display-name>
+
+    <servlet>
+        <servlet-name>cicloVida</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.CicloVidaServlet</servlet-class>
+
+        <!--
+            load-on-startup: el contenedor crea la instancia e invoca init()
+            al arrancar el servidor, no al recibir la primera petición.
+            Valor positivo = orden de carga; -1 (o ausente) = carga perezosa.
+        -->
+        <load-on-startup>1</load-on-startup>
+
+        <!-- Parámetros disponibles en init() a través de ServletConfig -->
+        <init-param>
+            <param-name>autor</param-name>
+            <param-value>Curso de Servlets 2026</param-value>
+        </init-param>
+        <init-param>
+            <param-name>version</param-name>
+            <param-value>1.0</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>cicloVida</servlet-name>
+        <url-pattern>/ciclo-vida</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet que demuestra doGet (mostrar formulario) + doPost (procesar) -->
+    <servlet>
+        <servlet-name>formulario</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.FormularioServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>formulario</servlet-name>
+        <url-pattern>/formulario</url-pattern>
+    </servlet-mapping>
+
+</web-app>

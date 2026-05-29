@@ -8,7 +8,7 @@ Módulo web (WAR) que implementa el patrón Model-View-Controller usando un Serv
 
 | Mínimo | Recomendado | Compilación destino |
 |--------|-------------|---------------------|
-| Java 8 | **Java 11 Temurin** | Java 8 (`source/target = 8` en el POM raíz) |
+| Java 8 | **Java 11 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
 Servlet API 4.0 y JSTL 1.2 son compatibles con Java 8 y 11.
 

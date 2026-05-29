@@ -8,7 +8,7 @@ Módulo web (WAR) que demuestra el uso de JavaServer Pages y la librería están
 
 | Mínimo | Recomendado | Compilación destino |
 |--------|-------------|---------------------|
-| Java 8 | **Java 11 Temurin** | Java 8 (`source/target = 8` en el POM raíz) |
+| Java 8 | **Java 11 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
 JSP 2.3 y JSTL 1.2 son compatibles con Java 8 y 11. Tomcat 9 soporta hasta Java 17.
 

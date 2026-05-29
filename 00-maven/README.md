@@ -8,7 +8,7 @@ Punto de partida. Muestra la estructura mínima de un proyecto Maven, el ciclo d
 
 | Mínimo | Recomendado | Compilación destino |
 |--------|-------------|---------------------|
-| Java 8 | **Java 11 Temurin** | Java 8 (`source/target = 8` en el POM raíz) |
+| Java 8 | **Java 11 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
 Este módulo no usa librerías de terceros, por lo que cualquier JDK ≥ 8 funciona sin problema.
 
@@ -266,7 +266,7 @@ No genera bytecode ni artefacto binario. Se usa en dos casos:
 </dependencyManagement>
 ```
 
-- Ejemplo en este proyecto: el `pom.xml` raíz de `ejemplo-servlets-jsp-2026`.
+- Ejemplo en este proyecto: el `pom.xml` raíz de `ejemplos-servlets-jsp-2026`.
 
 ---
 

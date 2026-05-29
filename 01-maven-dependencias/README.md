@@ -8,7 +8,7 @@ Demuestra los cuatro scopes de dependencias Maven con ejemplos reales en código
 
 | Mínimo | Recomendado | Compilación destino |
 |--------|-------------|---------------------|
-| Java 8 | **Java 11 Temurin** | Java 8 (`source/target = 8` en el POM raíz) |
+| Java 8 | **Java 11 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
 `commons-lang3 3.20` y `logback-classic 1.2.x` son compatibles con Java 8, 11 y 17.
 
