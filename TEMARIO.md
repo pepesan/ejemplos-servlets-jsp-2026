@@ -13,13 +13,13 @@
 
 ## Contenidos
 
-### 1. Manejo de Maven para el manejo de dependencias
+### 0. Manejo de Maven para el manejo de dependencias
 
 - Instalación de Maven
 - Ciclo de vida de un proyecto Maven
 - Control básico de paquetes y dependencias
 
-### M1. Ciclo de Vida del Servlet
+### 1. Ciclo de Vida del Servlet
 
 - Arquitectura del contenedor Servlet (Tomcat/WebLogic).
 - Métodos clave: `init()`, `service()` (`doGet`/`doPost`) y `destroy()`.

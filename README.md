@@ -20,12 +20,14 @@ Proyecto Maven multi-módulo (`com.cursosdedesarrollo`). El POM raíz solo defin
 | [00-maven](00-maven/README.md) | jar | Estructura básica, ciclo de vida, fases |
 | [01-maven-dependencias](01-maven-dependencias/README.md) | jar | Scopes, dependency:tree, exclusiones, repositorios |
 | [02-maven-jar](02-maven-jar/README.md) | jar | JAR estándar, fat-JAR, sources JAR, MANIFEST |
+| [03-maven-profiles](03-maven-profiles/README.md) | jar | Profiles dev/prod/ci, filtering de recursos, activación |
 
 ### Unidad 2 — Servlets
 
 | Módulo | Tipo | Puerto | Contenido |
 |--------|------|--------|-----------|
-| [10-servlet-lifecycle](10-servlet-lifecycle/README.md) | war | 8082 | `init()`, `doGet/doPost`, `destroy()`, request/response |
+| [10-servlet-xml](10-servlet-xml/README.md) | war | 8010 | Servlet mapeado por `web.xml` |
+| [11-servlet-anotaciones](11-servlet-anotaciones/README.md) | war | 8011 | Servlet mapeado con `@WebServlet` |
 
 ### Unidad 3 — JSP y JSTL
 
@@ -90,21 +92,39 @@ Cada módulo tiene `build.sh`, `start.sh`, `stop.sh` y `test.sh`.
 ### Por módulo
 
 ```bash
-./10-servlet-lifecycle/build.sh
-./10-servlet-lifecycle/start.sh   # → http://localhost:8082
-./10-servlet-lifecycle/stop.sh
-./10-servlet-lifecycle/test.sh
+./10-servlet-xml/build.sh
+./10-servlet-xml/start.sh   # → http://localhost:8010
+./10-servlet-xml/stop.sh
+./10-servlet-xml/test.sh
 ```
 
 ## Comandos Maven
 
 ```bash
 mvn clean package                            # compilar todo
-mvn clean package -pl 10-servlet-lifecycle   # compilar un módulo
+mvn clean package -pl 10-servlet-xml         # compilar un módulo
 mvn test                                     # tests de todo
 mvn test -pl 50-hibernate                    # tests de un módulo
-mvn test -pl 10-servlet-lifecycle -Dtest=NombreDelTest
-mvn tomcat7:run -pl 10-servlet-lifecycle     # arrancar módulo web
+mvn test -pl 10-servlet-xml -Dtest=NombreDelTest
+mvn tomcat7:run -pl 10-servlet-xml           # arrancar módulo web
+```
+
+### Flags del reactor multi-módulo
+
+| Flag | Significado | Ejemplo |
+|------|-------------|---------|
+| `-pl <módulo>` | **Project List**: actúa solo sobre el módulo indicado | `mvn test -pl 00-maven` |
+| `-pl m1,m2` | Varios módulos separados por coma | `mvn package -pl 00-maven,01-maven-dependencias` |
+| `-am` | **Also Make**: compila también los módulos de los que depende `-pl` | `mvn package -pl 03-maven-profiles -am` |
+| `-amd` | **Also Make Dependents**: compila también los módulos que dependen de `-pl` | `mvn package -pl 00-maven -amd` |
+| `-rf <módulo>` | **Resume From**: reanuda un build fallido desde el módulo indicado | `mvn package -rf 30-mvc` |
+
+```bash
+# Compilar un módulo y todos los que necesita
+mvn clean package -pl 60-struts1-hibernate -am
+
+# Reanudar desde donde falló sin recompilar desde el inicio
+mvn clean package -rf 40-struts1
 ```
 
 ## Estructura de carpetas (por módulo)

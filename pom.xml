@@ -17,8 +17,11 @@
         <module>00-maven</module>
         <module>01-maven-dependencias</module>
         <module>02-maven-jar</module>
-        <!-- Servlets y JSP -->
-        <module>10-servlet-lifecycle</module>
+        <module>03-maven-profiles</module>
+        <!-- Servlets -->
+        <module>10-servlet-xml</module>
+        <module>11-servlet-anotaciones</module>
+        <!-- JSP -->
         <module>20-jsp-jstl</module>
         <!-- MVC -->
         <module>30-mvc</module>

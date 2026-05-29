@@ -177,7 +177,7 @@ mi-app.war
 
 - Las dependencias con scope `provided` (ej: `javax.servlet-api`) **no se incluyen** en `WEB-INF/lib` porque el contenedor ya las aporta.
 - Plugin responsable: `maven-war-plugin` (incluido por defecto cuando el packaging es `war`).
-- Ejemplos en este proyecto: `10-servlet-lifecycle`, `20-jsp-jstl`, `30-mvc`, `40-struts1`, `60-struts1-hibernate`.
+- Ejemplos en este proyecto: `10-servlet-xml`, `11-servlet-anotaciones`, `20-jsp-jstl`, `30-mvc`, `40-struts1`, `60-struts1-hibernate`.
 
 ```xml
 <!-- Configuración habitual del maven-war-plugin -->
@@ -244,7 +244,7 @@ No genera bytecode ni artefacto binario. Se usa en dos casos:
 
 <modules>
     <module>00-maven</module>
-    <module>10-servlet-lifecycle</module>
+    <module>10-servlet-xml</module>
 </modules>
 ```
 
@@ -284,7 +284,7 @@ No genera bytecode ni artefacto binario. Se usa en dos casos:
 ## Ciclo de vida Maven
 
 ```
-validate → compile → test → package → install
+validate → compile → test → package → verify → install → deploy
 ```
 
 ```bash
@@ -292,9 +292,39 @@ mvn validate        # valida que pom.xml es correcto
 mvn compile         # compila src/main/java → target/classes/
 mvn test            # compila src/test/java y ejecuta los tests
 mvn package         # empaqueta → target/00-maven-1.0-SNAPSHOT.jar
-mvn install         # instala el JAR en ~/.m2/repository/
+mvn verify          # ejecuta checks de integración (incluye test)
+mvn install         # instala el JAR en ~/.m2/repository/ (uso local)
+mvn deploy          # sube el JAR a un repositorio remoto (CI/CD)
 mvn clean           # elimina target/
 mvn dependency:tree # muestra el árbol de dependencias
+```
+
+> `install` y `deploy` difieren en el destino: `install` deja el artefacto en `~/.m2` (solo tu máquina), `deploy` lo publica en Nexus/Artifactory para que otros proyectos del equipo lo consuman.
+
+## Flags del reactor (proyecto multi-módulo)
+
+Cuando el proyecto tiene varios módulos, estos flags controlan qué se compila:
+
+| Flag | Significado | Cuándo usarlo |
+|------|-------------|---------------|
+| `-pl <módulo>` | **Project List**: solo el módulo indicado | Trabajo en un módulo concreto |
+| `-pl m1,m2` | Varios módulos a la vez | Compilar un subconjunto |
+| `-am` | **Also Make**: compila también los módulos de los que depende `-pl` | Cuando `-pl` tiene dependencias internas |
+| `-amd` | **Also Make Dependents**: compila los módulos que usan `-pl` | Verificar que un cambio no rompe nada |
+| `-rf <módulo>` | **Resume From**: reanuda un build fallido desde ahí | Tras corregir un fallo a mitad del reactor |
+
+```bash
+# Solo compilar este módulo
+mvn test -pl 00-maven
+
+# Compilar dos módulos
+mvn package -pl 00-maven,01-maven-dependencias
+
+# Compilar 60-struts1-hibernate y todo lo que necesita
+mvn clean package -pl 60-struts1-hibernate -am
+
+# Reanudar desde 30-mvc después de un fallo
+mvn clean package -rf 30-mvc
 ```
 
 ## Scripts

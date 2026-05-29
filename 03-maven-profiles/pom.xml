@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.cursosdedesarrollo</groupId>
+        <artifactId>ejemplo-servlets-jsp-2026</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>03-maven-profiles</artifactId>
+    <name>03 - Maven: Profiles</name>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!--
+        La propiedad 'entorno' se usa en el código:
+            ConfiguracionApp.leer("entorno")  →  lee System.getProperty("entorno")
+        Cada profile la sobreescribe para que el valor llegue a la JVM durante exec:java y mvn test.
+    -->
+    <profiles>
+
+        <!-- Profile por defecto: desarrollo local -->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <entorno>dev</entorno>
+                <db.url>jdbc:h2:mem:devdb</db.url>
+                <db.usuario>sa</db.usuario>
+                <log.nivel>DEBUG</log.nivel>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources-dev</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <!-- Profile de producción -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <entorno>prod</entorno>
+                <db.url>jdbc:mysql://db.miempresa.com:3306/appdb</db.url>
+                <db.usuario>appuser</db.usuario>
+                <log.nivel>WARN</log.nivel>
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                    <resource>
+                        <directory>src/main/resources-prod</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+
+        <!-- Profile de integración continua (CI) -->
+        <profile>
+            <id>ci</id>
+            <activation>
+                <property>
+                    <name>env.CI</name>
+                </property>
+            </activation>
+            <properties>
+                <entorno>ci</entorno>
+                <db.url>jdbc:h2:mem:cidb</db.url>
+                <db.usuario>sa</db.usuario>
+                <log.nivel>INFO</log.nivel>
+            </properties>
+        </profile>
+
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.cursosdedesarrollo.App</mainClass>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>entorno</key>
+                            <value>${entorno}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <key>db.url</key>
+                            <value>${db.url}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <key>db.usuario</key>
+                            <value>${db.usuario}</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <key>log.nivel</key>
+                            <value>${log.nivel}</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
