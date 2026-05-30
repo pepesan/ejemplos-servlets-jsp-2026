@@ -6,11 +6,25 @@
 <struts-config>
 
     <form-beans>
-        <!-- Definir ActionForms aquí -->
+        <form-bean name="saludoForm" type="com.cursosdedesarrollo.SaludoForm"/>
     </form-beans>
 
     <action-mappings>
-        <!-- Definir Actions aquí -->
+        <!--
+          validate="false": la validación la hace el propio Action,
+          lo que permite mostrar el formulario vacío en el primer GET
+          sin que Struts intercepte con errores de validación.
+        -->
+        <action path="/saludo"
+                type="com.cursosdedesarrollo.SaludoAction"
+                name="saludoForm"
+                scope="request"
+                validate="false">
+            <forward name="entrada" path="/WEB-INF/vistas/entrada.jsp"/>
+            <forward name="exito"   path="/WEB-INF/vistas/resultado.jsp"/>
+        </action>
     </action-mappings>
+
+    <message-resources parameter="ApplicationResources"/>
 
 </struts-config>

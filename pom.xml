@@ -36,10 +36,14 @@
         <module>25-jsp-errores</module>
         <!-- MVC -->
         <module>30-mvc</module>
+        <module>31-mvc-crud</module>
         <!-- Struts 1.x -->
         <module>40-struts1</module>
         <!-- Hibernate -->
         <module>50-hibernate</module>
+        <module>51-hibernate-anotaciones</module>
+        <module>52-hibernate-relaciones</module>
+        <module>53-hibernate-hql</module>
         <!-- Integración -->
         <module>60-struts1-hibernate</module>
     </modules>

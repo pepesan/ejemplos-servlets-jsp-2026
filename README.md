@@ -50,19 +50,25 @@ Proyecto Maven multi-módulo (`com.cursosdedesarrollo`). El POM raíz solo defin
 
 | Módulo | Tipo | Puerto | Contenido |
 |--------|------|--------|-----------|
-| [30-mvc](30-mvc/README.md) | war | 8084 | Patrón Front Controller con Servlet genérico |
+| [30-mvc](30-mvc/README.md) | war | 8084 | Front Controller con `Comando` interface: listar, ver y crear (introducción al patrón) |
+| [31-mvc-crud](31-mvc-crud/README.md) | war | 8031 | CRUD completo: editar, eliminar, filtrar por categoría, formulario JSP reutilizable |
 
 ### Unidad 5 — Struts 1.x
 
 | Módulo | Tipo | Puerto | Contenido |
 |--------|------|--------|-----------|
-| [40-struts1](40-struts1/README.md) | war | 8085 | `ActionForm`, `Action`, `struts-config.xml` |
+| [40-struts1](40-struts1/README.md) | war | 8085 | `ActionForm`, `Action`, `struts-config.xml`; formulario de saludo mínimo |
 
 ### Unidad 6 — Hibernate
 
+> ⚠️ Requiere **JDK 8**. Hibernate 3.6 usa cglib/javassist incompatible con Java 9+.
+
 | Módulo | Tipo | Contenido |
 |--------|------|-----------|
-| [50-hibernate](50-hibernate/README.md) | jar | Sesiones, mapeos hbm.xml, HQL |
+| [50-hibernate](50-hibernate/README.md) | jar | CRUD con XML puro: `hibernate.cfg.xml` + `hbm.xml`, sin ninguna anotación |
+| [51-hibernate-anotaciones](51-hibernate-anotaciones/README.md) | jar | Mismo CRUD con `@Entity`, `@Id`, `@Column`, `@Transient` — `AnnotationConfiguration` |
+| [52-hibernate-relaciones](52-hibernate-relaciones/README.md) | jar | `@ManyToOne`, `@OneToMany`, `@OneToOne`, `@ManyToMany` — unidireccional y bidireccional |
+| [53-hibernate-hql](53-hibernate-hql/README.md) | jar | Herencia (`SINGLE_TABLE`, `JOINED`, `TABLE_PER_CLASS`) + HQL + Criteria API |
 
 ### Unidad 7 — Integración
 
@@ -95,7 +101,7 @@ Cada módulo tiene `build.sh`, `start.sh`, `stop.sh` y `test.sh`. Desde la raíz
 
 ```bash
 ./build.sh    # mvn clean package — compila todos los módulos
-./stop.sh     # para todos los módulos web (mata puertos 8010-8017, 8021-8025, 8083-8086)
+./stop.sh     # para todos los módulos web (mata puertos 8010-8017, 8021-8025, 8031, 8083-8086)
 ./test.sh     # mvn test — lanza todos los tests
 ```
 

@@ -1,0 +1,28 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <!-- Conexión a H2 en memoria -->
+        <property name="connection.driver_class">org.h2.Driver</property>
+        <property name="connection.url">jdbc:h2:mem:cursodb;DB_CLOSE_DELAY=-1</property>
+        <property name="connection.username">sa</property>
+        <property name="connection.password"></property>
+
+        <!-- Dialecto H2 -->
+        <property name="dialect">org.hibernate.dialect.H2Dialect</property>
+
+        <!-- Crea/elimina esquema en cada arranque (ideal para demos y tests) -->
+        <property name="hbm2ddl.auto">create-drop</property>
+
+        <!-- Muestra el SQL generado en consola -->
+        <property name="show_sql">true</property>
+        <property name="format_sql">false</property>
+
+        <!-- Mapeo XML de la entidad Empleado -->
+        <mapping resource="com/cursosdedesarrollo/Empleado.hbm.xml"/>
+
+    </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>31 — MVC CRUD (Agenda de contactos)</title>
+    <style>
+        body { font-family: sans-serif; max-width: 700px; margin: 40px auto; color: #333; }
+        h1   { border-bottom: 2px solid #2ecc71; padding-bottom: 8px; }
+        .card { background: #f5f7fa; border-left: 4px solid #2ecc71; padding: 16px 20px; margin: 20px 0; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
+        th { background: #2ecc71; color: #fff; }
+        pre  { background: #fff; border: 1px solid #ddd; padding: 12px; border-radius: 4px; font-size: 0.85em; }
+        a.btn { display: inline-block; margin-top: 16px; padding: 10px 20px;
+                background: #2ecc71; color: #fff; text-decoration: none; border-radius: 4px; }
+        a.btn:hover { background: #27ae60; }
+    </style>
+</head>
+<body>
+    <h1>31 — MVC CRUD: Agenda de contactos</h1>
+
+    <div class="card">
+        Extiende el patrón Front Controller de <strong>30-mvc</strong> con CRUD completo:
+        editar, eliminar, filtrar por categoría, y una vista JSP reutilizable para crear y editar.
+    </div>
+
+    <h2>Novedades respecto a 30-mvc</h2>
+    <table>
+        <tr><th>Concepto</th><th>Descripción</th></tr>
+        <tr><td><strong>Editar</strong></td><td>Formulario pre-relleno con datos existentes</td></tr>
+        <tr><td><strong>Eliminar</strong></td><td>POST puro con redirect (sin GET que borre datos)</td></tr>
+        <tr><td><strong>Filtrar</strong></td><td>Lista filtrable por categoría vía <code>?categoria=</code></td></tr>
+        <tr><td><strong>JSP reutilizable</strong></td><td><code>formulario.jsp</code> detecta si está en modo crear o editar</td></tr>
+        <tr><td><strong>Validador extraído</strong></td><td><code>ContactoValidator</code> compartido por Crear y Editar</td></tr>
+    </table>
+
+    <h2>Rutas disponibles</h2>
+    <pre>
+  GET  /app/contactos                    → lista (filtro ?categoria=AMIGO|TRABAJO|FAMILIA)
+  GET  /app/contactos/ver?id=X           → detalle
+  GET  /app/contactos/nuevo              → formulario vacío (crear)
+  POST /app/contactos/nuevo              → guardar nuevo contacto
+  GET  /app/contactos/editar?id=X        → formulario pre-relleno (editar)
+  POST /app/contactos/editar?id=X        → actualizar contacto
+  POST /app/contactos/eliminar (id=X)    → eliminar contacto
+    </pre>
+
+    <a class="btn" href="app/contactos">Abrir la agenda</a>
+</body>
+</html>

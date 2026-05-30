@@ -94,6 +94,10 @@ los métodos de negocio son `static` y se invocan directamente.
 ./test.sh   # mvn test → 22 tests, 0 fallos
 ```
 
+## Siguiente paso
+
+[31-mvc-crud](../31-mvc-crud/README.md) extiende este mismo patrón con CRUD completo (editar, eliminar, filtrar) y un formulario JSP reutilizable para crear y editar.
+
 ## Arrancar
 
 ```bash
