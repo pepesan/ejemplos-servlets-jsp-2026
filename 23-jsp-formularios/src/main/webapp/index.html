@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><title>23 — JSP Formularios</title>
+    <style>
+        body{font-family:monospace;max-width:680px;margin:2em auto;background:#1e1e2e;color:#cdd6f4}
+        h1{color:#89b4fa}p{color:#a6adc8;line-height:1.6}a{color:#89dceb}code{color:#a6e3a1}
+        .card{background:#313244;border-radius:6px;padding:1em 1.4em;margin:.7em 0}
+        .card h3{margin:0 0 .4em;color:#a6e3a1;font-size:1em}.card p{margin:0 0 .3em;font-size:.9em}
+        .card a{display:inline-block;margin-top:.5em;background:#45475a;padding:.2em .8em;
+                border-radius:3px;text-decoration:none;color:#cdd6f4;font-size:.85em}
+        .card a:hover{background:#585b70}
+        .flujo{background:#181825;border-radius:4px;padding:.8em 1em;margin:.5em 0;
+               font-size:.88em;line-height:2;color:#cba6f7}
+    </style>
+</head>
+<body>
+<h1>23 — JSP: Formularios con validación y PRG</h1>
+<p>Ciclo completo de un formulario web con validación servidor, re-renderizado
+de errores inline y patrón POST-Redirect-GET para evitar el doble envío.</p>
+
+<div class="flujo">
+  <strong>Con errores:</strong><br>
+  GET /registro → formulario vacío<br>
+  POST /registro → validación falla → <code>forward</code> al formulario con errores<br><br>
+  <strong>Con éxito (PRG):</strong><br>
+  POST /registro → validación ok → <code>sendRedirect</code> → GET /registro?ok=1 → éxito
+</div>
+
+<div class="card">
+    <h3>Formulario de registro</h3>
+    <p>Campos: nombre (min 3), email (@), contraseña (min 6), edad (18-120).<br>
+    Los errores aparecen inline junto al campo. Los valores válidos se conservan.</p>
+    <a href="registro">Abrir formulario</a>
+</div>
+</body>
+</html>

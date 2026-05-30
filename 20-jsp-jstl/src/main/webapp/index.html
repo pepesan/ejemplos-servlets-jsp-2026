@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>20 — JSP y JSTL</title>
+    <style>
+        body  { font-family: monospace; max-width: 780px; margin: 2em auto;
+                background: #1e1e2e; color: #cdd6f4; }
+        h1    { color: #89b4fa; }
+        h2    { color: #cba6f7; margin-top: 1.6em; }
+        p     { line-height: 1.6; color: #a6adc8; }
+        a     { color: #89dceb; }
+        code  { color: #a6e3a1; }
+        .card { background: #313244; border-radius: 6px;
+                padding: 1em 1.4em; margin: .7em 0; }
+        .card h3 { margin: 0 0 .4em; color: #a6e3a1; font-size: 1em; }
+        .card p  { margin: 0 0 .3em; font-size: .9em; }
+        .card a  { display: inline-block; margin-top: .5em; background: #45475a;
+                   padding: .2em .8em; border-radius: 3px; text-decoration: none;
+                   color: #cdd6f4; font-size: .85em; }
+        .card a:hover { background: #585b70; }
+        .tag  { display: inline-block; font-size: .72em; font-weight: bold;
+                padding: .1em .4em; border-radius: 3px; margin-right: .3em; }
+        .jsp  { background: #89b4fa; color: #1e1e2e; }
+        .srv  { background: #fab387; color: #1e1e2e; }
+    </style>
+</head>
+<body>
+
+<h1>20 — JSP y JSTL</h1>
+<p>
+    Colección de páginas JSP que demuestran cada concepto de forma aislada.
+    Un único servlet (<code>DatosServlet</code>) proporciona datos a las páginas
+    que los necesitan.
+</p>
+
+<h2>Páginas JSP — acceso directo</h2>
+
+<div class="card">
+    <h3><span class="tag jsp">JSP</span> directivas.jsp</h3>
+    <p><code>&#37;@ page &#37;</code>, <code>&#37;@ taglib &#37;</code> y
+       <code>&#37;@ include &#37;</code> (incluye el menú de navegación).</p>
+    <a href="directivas.jsp">Abrir</a>
+</div>
+
+<div class="card">
+    <h3><span class="tag jsp">JSP</span> expresiones.jsp</h3>
+    <p>Declaraciones <code>&lt;&#37;! &#37;&gt;</code>, scriptlets <code>&lt;&#37; &#37;&gt;</code>
+       y expresiones <code>&lt;&#37;= &#37;&gt;</code>.</p>
+    <a href="expresiones.jsp">Abrir</a>
+</div>
+
+<div class="card">
+    <h3><span class="tag jsp">JSP</span> objetos-implicitos.jsp</h3>
+    <p>Los 9 objetos que el contenedor inyecta en cada JSP:
+       <code>request</code>, <code>session</code>, <code>application</code>,
+       <code>out</code>, <code>config</code>, <code>page</code>, <code>pageContext</code>,
+       <code>response</code>, <code>exception</code>.</p>
+    <a href="objetos-implicitos.jsp">Abrir</a>
+</div>
+
+<div class="card">
+    <h3><span class="tag jsp">JSP</span> el.jsp</h3>
+    <p>Expression Language: <code>${param.nombre}</code>, <code>${sessionScope.usuario}</code>,
+       operadores aritméticos, lógicos y el operador <code>empty</code>.</p>
+    <a href="el.jsp?nombre=Ana&edad=28">Abrir con ?nombre=Ana&amp;edad=28</a>
+</div>
+
+<h2>Páginas JSP — con datos del servlet</h2>
+
+<div class="card">
+    <h3><span class="tag srv">Servlet</span> → <span class="tag jsp">JSP</span> jstl-core.jsp</h3>
+    <p><code>DatosServlet</code> carga una lista de frutas y productos en el
+       <code>request</code> y hace forward a <code>jstl-core.jsp</code>.
+       Demuestra <code>c:forEach</code>, <code>c:if</code>, <code>c:choose</code>,
+       <code>c:out</code> y <code>c:url</code>.</p>
+    <a href="datos">Abrir vía servlet</a>
+</div>
+
+<div class="card">
+    <h3><span class="tag srv">Servlet</span> → <span class="tag jsp">JSP</span> jstl-fmt.jsp</h3>
+    <p><code>DatosServlet</code> carga fechas y números en el <code>request</code>
+       y hace forward a <code>jstl-fmt.jsp</code>.
+       Demuestra <code>fmt:formatDate</code>, <code>fmt:formatNumber</code>
+       y <code>fmt:setLocale</code>.</p>
+    <a href="datos?vista=fmt">Abrir vía servlet</a>
+</div>
+
+</body>
+</html>

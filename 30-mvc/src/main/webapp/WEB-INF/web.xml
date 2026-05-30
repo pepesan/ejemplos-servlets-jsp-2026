@@ -7,4 +7,14 @@
 
     <display-name>30 - MVC Front Controller</display-name>
 
+    <servlet>
+        <servlet-name>frontController</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.FrontControllerServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>frontController</servlet-name>
+        <url-pattern>/app/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

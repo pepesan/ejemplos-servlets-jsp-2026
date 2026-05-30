@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><title>22 — JSP Include y Layout</title>
+    <style>
+        body{font-family:monospace;max-width:760px;margin:2em auto;background:#1e1e2e;color:#cdd6f4}
+        h1{color:#89b4fa}h2{color:#cba6f7;margin-top:1.6em}p{color:#a6adc8;line-height:1.6}a{color:#89dceb}code{color:#a6e3a1}
+        .card{background:#313244;border-radius:6px;padding:1em 1.4em;margin:.7em 0}
+        .card h3{margin:0 0 .4em;color:#a6e3a1;font-size:1em}.card p{margin:0 0 .3em;font-size:.9em}
+        .card a{display:inline-block;margin-top:.5em;background:#45475a;padding:.2em .8em;
+                border-radius:3px;text-decoration:none;color:#cdd6f4;font-size:.85em}
+        .card a:hover{background:#585b70}
+    </style>
+</head>
+<body>
+<h1>22 — JSP Include y Layout</h1>
+<p>Dos mecanismos de inclusión, distintos objetivos: el estático une ficheros en compilación;
+el dinámico invoca sub-recursos en ejecución y permite pasarles parámetros.</p>
+
+<div class="card">
+    <h3><code>&#37;@ include</code> — inclusión estática</h3>
+    <p>El contenido del fragmento se copia en tiempo de compilación. Las variables
+    del padre son visibles en el fragmento. Un único servlet generado.</p>
+    <a href="estatico.jsp">Abrir</a>
+</div>
+
+<div class="card">
+    <h3><code>&lt;jsp:include&gt;</code> — inclusión dinámica</h3>
+    <p>El contenedor invoca el fragmento como sub-petición en ejecución. Aislado.
+    Permite ruta dinámica calculada en tiempo de ejecución.</p>
+    <a href="dinamico.jsp">Abrir</a>
+</div>
+
+<div class="card">
+    <h3><code>&lt;jsp:param&gt;</code> — componentes parametrizados</h3>
+    <p>La misma plantilla <code>tarjeta.jsp</code> se reutiliza con distintos
+    parámetros (<code>titulo</code>, <code>texto</code>, <code>accentColor</code>).
+    <code>LayoutHelper</code> genera migas de pan desde Java.</p>
+    <a href="con-params.jsp">Abrir</a>
+</div>
+</body>
+</html>

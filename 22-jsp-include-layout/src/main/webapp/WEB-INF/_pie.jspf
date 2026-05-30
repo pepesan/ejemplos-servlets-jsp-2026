@@ -1,0 +1,14 @@
+<%--
+    Fragmento de pie de página — incluido con <%@ include file="WEB-INF/_pie.jspf" %>
+    Al ser inclusión ESTÁTICA, este fragmento comparte el contexto de compilación
+    con la página que lo incluye: puede leer variables locales del padre.
+--%>
+<footer style="margin-top:2em;padding-top:1em;border-top:1px solid #45475a;
+               font-size:.82em;color:#585b70">
+  <%-- 'paginaTitulo' se declara en la página padre con <%! String paginaTitulo ... %> --%>
+  Página: <strong><%= paginaTitulo %></strong>
+  &nbsp;|&nbsp;
+  <a href="/" style="color:#585b70">Inicio</a>
+  &nbsp;|&nbsp;
+  Módulo 22 — JSP Include y Layout
+</footer>

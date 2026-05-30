@@ -30,12 +30,21 @@ Proyecto Maven multi-módulo (`com.cursosdedesarrollo`). El POM raíz solo defin
 | [11-servlet-anotaciones](11-servlet-anotaciones/README.md) | war | 8011 | Servlet mapeado con `@WebServlet` |
 | [12-servlet-lifecycle](12-servlet-lifecycle/README.md) | war | 8012 | Ciclo de vida: `init()`, `service()`, `destroy()`, `load-on-startup`, `init-param` |
 | [13-servlet-request-response](13-servlet-request-response/README.md) | war | 8013 | `HttpServletRequest` (cabeceras, params, cookies, sesión) y `HttpServletResponse` (status codes, Content-Type) |
+| [14-servlet-params](14-servlet-params/README.md) | war | 8014 | Parámetros GET y POST: `getParameter`, `getParameterValues`, formularios HTML |
+| [15-servlet-filtros](15-servlet-filtros/README.md) | war | 8015 | `Filter`, `FilterChain`, `FilterConfig`; filtros de log, charset y autenticación |
+| [16-servlet-cookies](16-servlet-cookies/README.md) | war | 8016 | Creación, lectura y borrado de cookies; atributos `MaxAge`, `HttpOnly`, `Path` |
+| [17-servlet-sesiones](17-servlet-sesiones/README.md) | war | 8017 | `HttpSession`: crear, leer, invalidar; patrón login/logout con sesión |
 
 ### Unidad 3 — JSP y JSTL
 
 | Módulo | Tipo | Puerto | Contenido |
 |--------|------|--------|-----------|
-| [20-jsp-jstl](20-jsp-jstl/README.md) | war | 8083 | Directivas, scriptlets, objetos implícitos, JSTL |
+| [20-jsp-jstl](20-jsp-jstl/README.md) | war | 8083 | Directivas, scriptlets, objetos implícitos, EL y JSTL core/fmt |
+| [21-jsp-datos](21-jsp-datos/README.md) | war | 8021 | Paso de datos Servlet→JSP: tipos primitivos, listas y JavaBeans con EL |
+| [22-jsp-include-layout](22-jsp-include-layout/README.md) | war | 8022 | Include estático (`<%@ include %>`) vs dinámico (`<jsp:include>`), fragmentos y componentes |
+| [23-jsp-formularios](23-jsp-formularios/README.md) | war | 8023 | Ciclo GET/POST, validación server-side, re-relleno de campos, patrón PRG |
+| [24-jsp-jstl-funciones](24-jsp-jstl-funciones/README.md) | war | 8024 | Biblioteca `fn:`: length, substring, replace, split/join, escapeXml |
+| [25-jsp-errores](25-jsp-errores/README.md) | war | 8025 | Manejo de errores: directiva `errorPage` por JSP y `<error-page>` global en `web.xml` |
 
 ### Unidad 4 — MVC
 
@@ -86,7 +95,7 @@ Cada módulo tiene `build.sh`, `start.sh`, `stop.sh` y `test.sh`. Desde la raíz
 
 ```bash
 ./build.sh    # mvn clean package — compila todos los módulos
-./stop.sh     # para todos los módulos web (mata puertos 8010-8013, 8083-8086)
+./stop.sh     # para todos los módulos web (mata puertos 8010-8017, 8021-8025, 8083-8086)
 ./test.sh     # mvn test — lanza todos los tests
 ```
 

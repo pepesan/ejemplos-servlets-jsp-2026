@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <display-name>25 - JSP: Manejo de errores</display-name>
+
+    <servlet>
+        <servlet-name>generar</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.GenerarErrorServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>generar</servlet-name>
+        <url-pattern>/generar</url-pattern>
+    </servlet-mapping>
+
+    <!--
+        ═══════════════════════════════════════════════════════════════
+        PÁGINAS DE ERROR GLOBALES — se aplican a toda la aplicación
+        ═══════════════════════════════════════════════════════════════
+
+        Mecanismo 1: por código HTTP
+            Cuando el contenedor detecta un error HTTP (sendError, recurso
+            inexistente…) busca aquí la página a mostrar.
+
+        Mecanismo 2: por tipo de excepción
+            Cuando una excepción no capturada llega al contenedor, éste
+            busca la entrada más específica para el tipo de la excepción.
+            Si no la encuentra, usa el error-code 500.
+    -->
+
+    <!-- Códigos HTTP -->
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error-400.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error-404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error-500.jsp</location>
+    </error-page>
+
+    <!-- Tipos de excepción -->
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/error-500.jsp</location>
+    </error-page>
+
+</web-app>

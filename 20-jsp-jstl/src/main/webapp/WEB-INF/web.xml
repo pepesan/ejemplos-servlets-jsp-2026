@@ -7,4 +7,13 @@
 
     <display-name>20 - JSP y JSTL</display-name>
 
+    <servlet>
+        <servlet-name>datos</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.DatosServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>datos</servlet-name>
+        <url-pattern>/datos</url-pattern>
+    </servlet-mapping>
+
 </web-app>

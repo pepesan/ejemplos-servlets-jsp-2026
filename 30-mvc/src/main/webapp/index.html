@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>30 — MVC Front Controller</title>
+    <style>
+        body { font-family: sans-serif; max-width: 700px; margin: 40px auto; color: #333; }
+        h1   { border-bottom: 2px solid #4a90d9; padding-bottom: 8px; }
+        .card { background: #f5f7fa; border-left: 4px solid #4a90d9; padding: 16px 20px; margin: 20px 0; border-radius: 4px; }
+        pre  { background: #fff; border: 1px solid #ddd; padding: 12px; border-radius: 4px; font-size: 0.85em; }
+        a.btn { display: inline-block; margin-top: 16px; padding: 10px 20px;
+                background: #4a90d9; color: #fff; text-decoration: none; border-radius: 4px; }
+        a.btn:hover { background: #357ab8; }
+    </style>
+</head>
+<body>
+    <h1>30 — Patrón MVC con Front Controller</h1>
+
+    <div class="card">
+        <strong>Patrón:</strong> Un único servlet (<code>FrontControllerServlet</code>) recibe
+        todas las peticiones bajo <code>/app/*</code>, las enruta al comando correspondiente,
+        y hace forward a la vista JSP.
+    </div>
+
+    <h2>Flujo de la petición</h2>
+    <pre>
+  Navegador
+     │  GET /app/productos
+     ▼
+  FrontControllerServlet  (mapeo /app/*)
+     │  pathInfo = "/productos" → ListarProductosComando
+     ▼
+  ListarProductosComando
+     │  req.setAttribute("productos", ...)
+     │  return "lista.jsp"
+     ▼
+  /WEB-INF/vistas/lista.jsp   (no accesible directamente)
+    </pre>
+
+    <h2>Rutas disponibles</h2>
+    <pre>
+  GET  /app/productos          → lista de productos
+  GET  /app/productos/ver?id=X → detalle de un producto
+  GET  /app/productos/nuevo    → formulario de alta
+  POST /app/productos/nuevo    → guardar y redirigir (PRG)
+    </pre>
+
+    <a class="btn" href="app/productos">Ver catálogo de productos</a>
+</body>
+</html>

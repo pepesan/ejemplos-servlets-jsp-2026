@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>15 — Filtros de Servlet</title>
+    <style>
+        body { font-family: monospace; max-width: 760px; margin: 2em auto;
+               background: #1e1e2e; color: #cdd6f4; }
+        h1   { color: #89b4fa; }
+        h2   { color: #cba6f7; margin-top: 1.6em; }
+        p    { line-height: 1.6; color: #a6adc8; }
+        a    { color: #89dceb; }
+        code { color: #a6e3a1; }
+        .card { background: #313244; border-radius: 6px; padding: 1em 1.4em; margin: .8em 0; }
+        .card h3 { margin: 0 0 .5em 0; color: #a6e3a1; font-size: 1em; }
+        .card p  { margin: 0 0 .3em 0; font-size: .9em; }
+        .links   { display: flex; flex-wrap: wrap; gap: .5em; margin-top: .5em; }
+        .links a { background: #45475a; padding: .25em .7em; border-radius: 3px;
+                   text-decoration: none; font-size: .85em; color: #cdd6f4; }
+        .links a:hover { background: #585b70; }
+        .badge { display: inline-block; padding: .1em .45em; border-radius: 3px;
+                 font-size: .75em; font-weight: bold; margin-right: .3em; }
+        .b-log    { background: #fab387; color: #1e1e2e; }
+        .b-charset{ background: #89dceb; color: #1e1e2e; }
+        .b-auth   { background: #cba6f7; color: #1e1e2e; }
+        .chain { background: #181825; border-radius: 4px; padding: .8em 1.2em;
+                 margin: .8em 0; font-size: .9em; line-height: 2; }
+        .chain .arrow { color: #45475a; }
+        .chain .f { color: #fab387; }
+        .chain .s { color: #89b4fa; }
+    </style>
+</head>
+<body>
+
+<h1>15 — Filtros de Servlet</h1>
+<p>
+    Un <strong>filtro</strong> intercepta las peticiones antes de que lleguen al servlet
+    (y las respuestas antes de que vuelvan al cliente). Se encadenan en el orden declarado
+    en <code>web.xml</code>. Cada filtro decide si pasa la petición al siguiente eslabón
+    con <code>chain.doFilter()</code> o la corta devolviendo una respuesta distinta.
+</p>
+
+<div class="chain">
+    <span class="f">CharsetFilter</span>
+    <span class="arrow"> → </span>
+    <span class="f">LoggingFilter</span>
+    <span class="arrow"> → </span>
+    <span class="f">AuthFilter</span>
+    <span class="arrow"> → </span>
+    <span class="s">Servlet</span>
+    <span class="arrow"> → </span>
+    <span class="f">AuthFilter</span>
+    <span class="arrow"> → </span>
+    <span class="f">LoggingFilter</span>
+    <span class="arrow"> → </span>
+    <span class="f">CharsetFilter</span>
+    <span class="arrow"> → cliente</span>
+</div>
+
+<h2><span class="badge b-charset">CharsetFilter</span> — UTF-8 global</h2>
+<div class="card">
+    <h3>Mapeo: /*</h3>
+    <p>Fija <code>UTF-8</code> en la petición y en la respuesta antes de que ningún otro código
+       acceda a los parámetros o escriba al cliente.</p>
+    <div class="links">
+        <a href="login">Probar (cualquier URL activa el filtro)</a>
+    </div>
+</div>
+
+<h2><span class="badge b-log">LoggingFilter</span> — Log de peticiones</h2>
+<div class="card">
+    <h3>Mapeo: /*</h3>
+    <p>Registra en <code>stdout</code> el método HTTP, la URI y el tiempo de respuesta.
+       Abre la consola de Tomcat mientras navegas para ver las entradas.</p>
+    <div class="links">
+        <a href="login">Genera una entrada de log</a>
+        <a href="protegido/area">Genera otra entrada (redirige)</a>
+    </div>
+</div>
+
+<h2><span class="badge b-auth">AuthFilter</span> — Autenticación de rutas</h2>
+<div class="card">
+    <h3>Mapeo: /protegido/*</h3>
+    <p>Comprueba si el atributo <code>usuario</code> está presente en la sesión.
+       Sin sesión → redirige a <code>/login</code>.
+       Con sesión → deja pasar al servlet.</p>
+    <div class="links">
+        <a href="protegido/area">Intentar acceder sin login (→ redirige)</a>
+        <a href="login">Hacer login primero</a>
+        <a href="logout">Cerrar sesión</a>
+    </div>
+</div>
+
+<h2>Flujo de aprendizaje</h2>
+<ol>
+    <li>Intenta acceder a <a href="protegido/area">/protegido/area</a> sin estar autenticado.
+        Observa la redirección a <code>/login</code>.</li>
+    <li>Abre la consola de Tomcat: verás las entradas de <code>LoggingFilter</code>.</li>
+    <li>Accede a <a href="login">/login</a> y usa <code>admin</code> / <code>admin</code>.</li>
+    <li>Tras el login llegarás a <a href="protegido/area">/protegido/area</a>.</li>
+    <li>Cierra sesión con <a href="logout">/logout</a> y repite el paso 1.</li>
+    <li>Examina el orden de los <code>&lt;filter-mapping&gt;</code> en <code>web.xml</code>:
+        ese orden determina la cadena de filtros.</li>
+</ol>
+
+</body>
+</html>

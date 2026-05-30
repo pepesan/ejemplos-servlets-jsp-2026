@@ -1,0 +1,9 @@
+<nav style="background:#313244;padding:.5em 1em;margin-bottom:1.5em;border-radius:4px;font-size:.85em">
+  <a href="/" style="color:#89dceb;text-decoration:none">Inicio</a> &nbsp;|&nbsp;
+  <a href="/directivas.jsp" style="color:#a6adc8;text-decoration:none">Directivas</a> &nbsp;|&nbsp;
+  <a href="/expresiones.jsp" style="color:#a6adc8;text-decoration:none">Expresiones</a> &nbsp;|&nbsp;
+  <a href="/objetos-implicitos.jsp" style="color:#a6adc8;text-decoration:none">Obj. implícitos</a> &nbsp;|&nbsp;
+  <a href="/el.jsp" style="color:#a6adc8;text-decoration:none">EL</a> &nbsp;|&nbsp;
+  <a href="/datos" style="color:#a6adc8;text-decoration:none">JSTL core</a> &nbsp;|&nbsp;
+  <a href="/datos?vista=fmt" style="color:#a6adc8;text-decoration:none">JSTL fmt</a>
+</nav>

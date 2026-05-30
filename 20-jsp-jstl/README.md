@@ -1,40 +1,78 @@
-# 20 - JSP y JSTL
+# 20 — JSP y JSTL
 
-Módulo web (WAR) que demuestra el uso de JavaServer Pages y la librería estándar de etiquetas JSTL.
+Colección de páginas JSP que demuestran cada concepto de forma aislada.
+Un único servlet (`DatosServlet`) proporciona datos a las páginas que los necesitan.
 
----
+## Estructura
 
-## JDK requerido
-
-| Mínimo | Recomendado | Compilación destino |
-|--------|-------------|---------------------|
-| Java 8 | **Java 11 Temurin** | Java 8 (`release=8` en el POM raíz) |
-
-JSP 2.3 y JSTL 1.2 son compatibles con Java 8 y 11. Tomcat 9 soporta hasta Java 17.
-
-> Para configurar el JDK en IntelliJ IDEA y resolver el error "JDK isn't specified", ver [00-maven/README.md](../00-maven/README.md#configurar-en-intellij-idea).
-
----
-
-## Contenido previsto
-
-- Elementos de una JSP: directives (`<%@ %>`), declarations (`<%! %>`), scriptlets (`<% %>`).
-- Objetos implícitos: `request`, `session`, `application`, `out`.
-- JSTL: etiquetas `<c:forEach>`, `<c:if>`, `<c:choose>`, `<fmt:*>`.
-- Inclusión (`<jsp:include>`) y reenvío (`<jsp:forward>`) de páginas.
-
-## Arranque
-
-```bash
-./start.sh   # Tomcat embebido en http://localhost:8083
-./stop.sh    # Para el proceso en el puerto 8083
+```
+webapp/
+├── index.html              ← portada con enlaces (/)
+├── directivas.jsp          ← @page, @taglib, @include (incluye WEB-INF/_menu.jspf)
+├── expresiones.jsp         ← <%! %>, <% %>, <%= %>
+├── objetos-implicitos.jsp  ← request, session, application, out, config, page, pageContext
+├── el.jsp                  ← ${param.x}, operadores, empty, ternario
+├── jstl-core.jsp           ← c:out, c:set, c:if, c:choose, c:forEach, c:url
+├── jstl-fmt.jsp            ← fmt:formatDate, fmt:formatNumber, fmt:setLocale
+└── WEB-INF/
+    ├── web.xml
+    └── _menu.jspf          ← fragmento de navegación (incluido estáticamente)
 ```
 
-## Scripts
+## Flujo de navegación
+
+| URL | Tipo | JSP destino |
+|-----|------|-------------|
+| `/` | HTML | index.html |
+| `/directivas.jsp` | directo | directivas.jsp |
+| `/expresiones.jsp` | directo | expresiones.jsp |
+| `/objetos-implicitos.jsp` | directo | objetos-implicitos.jsp |
+| `/el.jsp?nombre=Ana` | directo | el.jsp |
+| `/datos` | Servlet → forward | jstl-core.jsp |
+| `/datos?vista=fmt` | Servlet → forward | jstl-fmt.jsp |
+
+## Arrancar
 
 ```bash
-./build.sh   # mvn clean package → genera 20-jsp-jstl-1.0-SNAPSHOT.war
-./start.sh   # mvn tomcat7:run → http://localhost:8083
-./stop.sh    # fuser -k 8083/tcp
-./test.sh    # mvn test
+./start.sh        # http://localhost:8083
+./stop.sh
+./build.sh
+./test.sh
+```
+
+## Pruebas curl
+
+```bash
+# Portada
+curl -s http://localhost:8083/ | grep -o 'JSP y JSTL'
+
+# directivas.jsp — @include activo (el menú está en la página)
+curl -s http://localhost:8083/directivas.jsp | grep -o 'JSTL core'
+
+# expresiones.jsp — scriptlets y expresiones
+curl -s http://localhost:8083/expresiones.jsp | grep -o 'Scripting JSP'
+
+# objetos-implicitos.jsp — muestra método GET
+curl -s http://localhost:8083/objetos-implicitos.jsp | grep -o '>GET<'
+
+# el.jsp sin params → operador ternario muestra "Anonimo"
+curl -s http://localhost:8083/el.jsp | grep -o 'Anonimo'
+
+# el.jsp con params → nombre=Ana visible en la página
+curl -s "http://localhost:8083/el.jsp?nombre=Ana&edad=28" | grep -o '>Ana<'
+
+# EL: 3 + 4 = 7
+curl -s http://localhost:8083/el.jsp | grep -o '>7<'
+
+# Servlet → jstl-core.jsp: c:forEach sobre lista de frutas
+curl -s http://localhost:8083/datos | grep -o 'Manzana'
+
+# Servlet → jstl-core.jsp: productos en tabla
+curl -s http://localhost:8083/datos | grep -o 'Teclado'
+
+# Servlet → jstl-fmt.jsp
+curl -s "http://localhost:8083/datos?vista=fmt" | grep -o 'Biblioteca de formato'
+
+# fmt:setLocale: tabla con distintos locales
+curl -s "http://localhost:8083/datos?vista=fmt" | grep -o 'es_ES'
 ```

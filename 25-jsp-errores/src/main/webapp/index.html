@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>25 — Manejo de errores en JSP</title>
+    <style>
+        body  { font-family: monospace; max-width: 800px; margin: 2em auto;
+                background: #1e1e2e; color: #cdd6f4; }
+        h1    { color: #89b4fa; }
+        h2    { color: #cba6f7; margin-top: 1.6em; }
+        p     { line-height: 1.6; color: #a6adc8; }
+        a     { color: #89dceb; }
+        code  { color: #a6e3a1; }
+        .card { background: #313244; border-radius: 6px; padding: 1em 1.4em; margin: .7em 0; }
+        .card h3 { margin: 0 0 .4em; color: #a6e3a1; font-size: 1em; }
+        .card p  { margin: 0 0 .3em; font-size: .9em; }
+        .links   { display: flex; flex-wrap: wrap; gap: .5em; margin-top: .6em; }
+        .links a { background: #45475a; padding: .25em .8em; border-radius: 3px;
+                   text-decoration: none; font-size: .85em; color: #cdd6f4; }
+        .links a:hover { background: #585b70; }
+        .links a.err { background: #f38ba833; color: #f38ba8; }
+        .links a.err:hover { background: #f38ba855; }
+        .mecanismo { background: #181825; border-left: 3px solid #cba6f7;
+                     padding: .7em 1em; border-radius: 0 4px 4px 0;
+                     margin: .5em 0; font-size: .9em; }
+    </style>
+</head>
+<body>
+
+<h1>25 — Manejo de errores en JSP</h1>
+<p>
+    Dos mecanismos complementarios para gestionar errores en una aplicación web Java:
+    la directiva <code>errorPage</code> (por página JSP) y las entradas
+    <code>&lt;error-page&gt;</code> de <code>web.xml</code> (global).
+</p>
+
+<div class="mecanismo">
+    <strong>Mecanismo 1 — Directiva <code>errorPage</code></strong><br>
+    Cada JSP puede declarar <code>&#37;@ page errorPage="/mi-error.jsp" &#37;</code>.
+    Si lanza una excepción no capturada, el contenedor hace forward a esa JSP,
+    que debe tener <code>isErrorPage="true"</code> para acceder al objeto implícito
+    <code>exception</code>.
+</div>
+
+<div class="mecanismo">
+    <strong>Mecanismo 2 — <code>&lt;error-page&gt;</code> en web.xml</strong><br>
+    Configuración global para códigos HTTP (404, 500…) y tipos de excepción.
+    Se activa cuando el contenedor recibe un <code>sendError()</code> o una
+    excepción no capturada de un servlet o JSP sin <code>errorPage</code>.
+</div>
+
+<h2>Mecanismo 1 — Directiva errorPage (por JSP)</h2>
+
+<div class="card">
+    <h3>demos.jsp — página que puede lanzar excepciones</h3>
+    <p>Usa <code>&#37;@ page errorPage="/mi-error.jsp" &#37;</code>.
+       Selecciona el tipo de error mediante un parámetro URL.</p>
+    <div class="links">
+        <a href="demos.jsp">Sin error (explicación)</a>
+        <a href="demos.jsp?forzar=division" class="err">ArithmeticException (÷0)</a>
+        <a href="demos.jsp?forzar=npe" class="err">NullPointerException</a>
+        <a href="demos.jsp?forzar=custom" class="err">IllegalArgumentException</a>
+    </div>
+</div>
+
+<h2>Mecanismo 2 — Páginas de error globales (web.xml)</h2>
+
+<div class="card">
+    <h3>Errores HTTP — sendError()</h3>
+    <p>El servlet llama a <code>resp.sendError(código, mensaje)</code>.
+       El contenedor busca la entrada <code>&lt;error-code&gt;</code> en web.xml.</p>
+    <div class="links">
+        <a href="generar?tipo=404" class="err">404 Not Found</a>
+        <a href="generar?tipo=500" class="err">500 Internal Error</a>
+        <a href="pagina-que-no-existe.jsp" class="err">404 real (URL inexistente)</a>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Excepciones no capturadas en servlet</h3>
+    <p>El servlet lanza una excepción. El contenedor usa la entrada
+       <code>&lt;exception-type&gt;</code> más específica de web.xml.</p>
+    <div class="links">
+        <a href="generar?tipo=runtime" class="err">RuntimeException</a>
+        <a href="generar?tipo=npe" class="err">NullPointerException</a>
+        <a href="generar?tipo=aritm" class="err">ArithmeticException</a>
+    </div>
+</div>
+
+</body>
+</html>

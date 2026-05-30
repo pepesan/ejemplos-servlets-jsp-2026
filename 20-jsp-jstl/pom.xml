@@ -50,6 +50,7 @@
                 <version>2.2</version>
                 <configuration>
                     <port>8083</port>
+                    <path>/</path>
                 </configuration>
             </plugin>
         </plugins>

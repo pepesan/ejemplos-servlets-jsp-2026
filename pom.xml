@@ -23,8 +23,17 @@
         <module>11-servlet-anotaciones</module>
         <module>12-servlet-lifecycle</module>
         <module>13-servlet-request-response</module>
+        <module>14-servlet-params</module>
+        <module>15-servlet-filtros</module>
+        <module>16-servlet-cookies</module>
+        <module>17-servlet-sesiones</module>
         <!-- JSP -->
         <module>20-jsp-jstl</module>
+        <module>21-jsp-datos</module>
+        <module>22-jsp-include-layout</module>
+        <module>23-jsp-formularios</module>
+        <module>24-jsp-jstl-funciones</module>
+        <module>25-jsp-errores</module>
         <!-- MVC -->
         <module>30-mvc</module>
         <!-- Struts 1.x -->

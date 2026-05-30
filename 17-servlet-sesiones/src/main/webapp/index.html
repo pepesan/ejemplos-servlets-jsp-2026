@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>17 — Sesiones HTTP</title>
+    <style>
+        body { font-family: monospace; max-width: 760px; margin: 2em auto;
+               background: #1e1e2e; color: #cdd6f4; }
+        h1   { color: #89b4fa; }
+        h2   { color: #cba6f7; margin-top: 1.6em; }
+        p    { line-height: 1.6; color: #a6adc8; }
+        a    { color: #89dceb; }
+        code { color: #a6e3a1; }
+        .card { background: #313244; border-radius: 6px; padding: 1em 1.4em; margin: .7em 0; }
+        .card h3 { margin: 0 0 .4em; color: #a6e3a1; font-size: 1em; }
+        .card p  { margin: 0 0 .3em; font-size: .9em; }
+        .card a  { display: inline-block; margin-top: .5em; background: #45475a;
+                   padding: .2em .8em; border-radius: 3px; text-decoration: none;
+                   color: #cdd6f4; font-size: .85em; }
+        .card a:hover { background: #585b70; }
+    </style>
+</head>
+<body>
+<h1>17 — Sesiones HTTP</h1>
+<p>
+    <code>HttpSession</code> permite asociar datos a un usuario concreto durante
+    varias peticiones. El servidor asigna un identificador único (JSESSIONID)
+    que el navegador devuelve mediante una cookie o parámetro de URL.
+</p>
+
+<div class="card">
+    <h3>SesionServlet — ciclo de vida y API</h3>
+    <p>Muestra el ID de sesión, fecha de creación, último acceso, timeout y
+       atributos almacenados. Permite crear la sesión, añadir atributos e
+       invalidarla. Tabla comparativa sesión vs cookie.</p>
+    <a href="sesion">Abrir</a>
+</div>
+
+<div class="card">
+    <h3>ContadorServlet — visitas por usuario</h3>
+    <p>Incrementa un contador guardado en sesión en cada petición.
+       Dos navegadores distintos tienen contadores independientes.
+       Demuestra que la sesión persiste entre peticiones.</p>
+    <a href="contador">Abrir</a>
+</div>
+
+<div class="card">
+    <h3>CarritoServlet — carrito de compra en sesión</h3>
+    <p>Almacena un <code>List&lt;String&gt;</code> en sesión. Permite añadir
+       artículos del catálogo, verlos persistir entre peticiones y vaciar
+       el carrito con <code>session.removeAttribute()</code>.</p>
+    <a href="carrito">Abrir</a>
+</div>
+</body>
+</html>
