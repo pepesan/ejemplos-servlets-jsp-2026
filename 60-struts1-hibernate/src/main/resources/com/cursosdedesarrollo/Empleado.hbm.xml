@@ -1,0 +1,19 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="com.cursosdedesarrollo.Empleado" table="empleados">
+
+        <id name="id" type="long" column="id">
+            <generator class="native"/>
+        </id>
+
+        <property name="nombre"       type="string" column="nombre"       not-null="true" length="100"/>
+        <property name="departamento" type="string" column="departamento" length="80"/>
+        <property name="salario"      type="double" column="salario"/>
+
+    </class>
+
+</hibernate-mapping>

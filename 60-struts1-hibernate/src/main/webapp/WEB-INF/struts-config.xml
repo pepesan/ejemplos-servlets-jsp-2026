@@ -6,11 +6,39 @@
 <struts-config>
 
     <form-beans>
-        <!-- Definir ActionForms aquí -->
+        <form-bean name="empleadoForm" type="com.cursosdedesarrollo.EmpleadoForm"/>
     </form-beans>
 
     <action-mappings>
-        <!-- Definir Actions aquí -->
+
+        <action path="/listar"
+                type="com.cursosdedesarrollo.ListarEmpleadosAction"
+                scope="request"
+                validate="false">
+            <forward name="lista" path="/WEB-INF/vistas/lista.jsp"/>
+        </action>
+
+        <!--
+          validate="false": la acción maneja GET (muestra formulario vacío)
+          y POST (valida manualmente y guarda). Esto evita que Struts dispare
+          validate() en el GET inicial cuando los campos están vacíos.
+        -->
+        <action path="/crear"
+                type="com.cursosdedesarrollo.CrearEmpleadoAction"
+                name="empleadoForm"
+                scope="request"
+                validate="false">
+            <forward name="formulario" path="/WEB-INF/vistas/formulario.jsp"/>
+        </action>
+
+        <action path="/eliminar"
+                type="com.cursosdedesarrollo.EliminarEmpleadoAction"
+                scope="request"
+                validate="false">
+        </action>
+
     </action-mappings>
+
+    <message-resources parameter="ApplicationResources"/>
 
 </struts-config>

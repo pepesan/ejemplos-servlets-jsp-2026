@@ -7,6 +7,10 @@
 
     <display-name>60 - Struts 1.x + Hibernate Clásico</display-name>
 
+    <listener>
+        <listener-class>com.cursosdedesarrollo.HibernateListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>action</servlet-name>
         <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>

@@ -13,6 +13,6 @@
         <property name="hbm2ddl.auto">create-drop</property>
         <property name="show_sql">true</property>
 
-        <!-- Mapeos de entidades -->
+        <mapping resource="com/cursosdedesarrollo/Empleado.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
