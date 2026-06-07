@@ -1,10 +1,16 @@
 <%@ page pageEncoding="UTF-8" %>
 <nav style="background:#313244;padding:.5em 1em;margin-bottom:1.5em;border-radius:4px;font-size:.85em">
-  <a href="/" style="color:#89dceb;text-decoration:none">Inicio</a> &nbsp;|&nbsp;
-  <a href="/directivas.jsp" style="color:#a6adc8;text-decoration:none">Directivas</a> &nbsp;|&nbsp;
-  <a href="/expresiones.jsp" style="color:#a6adc8;text-decoration:none">Expresiones</a> &nbsp;|&nbsp;
-  <a href="/objetos-implicitos.jsp" style="color:#a6adc8;text-decoration:none">Obj. implícitos</a> &nbsp;|&nbsp;
-  <a href="/el.jsp" style="color:#a6adc8;text-decoration:none">EL</a> &nbsp;|&nbsp;
-  <a href="/datos" style="color:#a6adc8;text-decoration:none">JSTL core</a> &nbsp;|&nbsp;
-  <a href="/datos?vista=fmt" style="color:#a6adc8;text-decoration:none">JSTL fmt</a>
+  <a href="${pageContext.request.contextPath}/" style="color:#89dceb;text-decoration:none">Inicio</a> &nbsp;|&nbsp;
+  <a href="${pageContext.request.contextPath}/directivas.jsp"
+     style="text-decoration:none;${pageContext.request.servletPath == '/directivas.jsp'       ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">Directivas</a> &nbsp;|&nbsp;
+  <a href="${pageContext.request.contextPath}/expresiones.jsp"
+     style="text-decoration:none;${pageContext.request.servletPath == '/expresiones.jsp'      ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">Expresiones</a> &nbsp;|&nbsp;
+  <a href="${pageContext.request.contextPath}/objetos-implicitos.jsp"
+     style="text-decoration:none;${pageContext.request.servletPath == '/objetos-implicitos.jsp' ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">Obj. implícitos</a> &nbsp;|&nbsp;
+  <a href="${pageContext.request.contextPath}/el.jsp"
+     style="text-decoration:none;${pageContext.request.servletPath == '/el.jsp'               ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">EL</a> &nbsp;|&nbsp;
+  <a href="${pageContext.request.contextPath}/datos"
+     style="text-decoration:none;${pageContext.request.servletPath == '/jstl-core.jsp'        ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">JSTL core</a> &nbsp;|&nbsp;
+  <a href="${pageContext.request.contextPath}/datos?vista=fmt"
+     style="text-decoration:none;${pageContext.request.servletPath == '/jstl-fmt.jsp'         ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">JSTL fmt</a>
 </nav>
