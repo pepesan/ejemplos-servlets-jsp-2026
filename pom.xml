@@ -48,6 +48,7 @@
         <module>53-hibernate-hql</module>
         <!-- Integración -->
         <module>60-struts1-hibernate</module>
+        <module>61-struts1-hibernate-crud</module>
     </modules>
 
     <properties>

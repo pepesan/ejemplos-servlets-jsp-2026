@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+
+    <form-beans>
+        <form-bean name="empleadoForm" type="com.cursosdedesarrollo.EmpleadoForm"/>
+    </form-beans>
+
+    <action-mappings>
+        <!--
+          Un único <action> atiende todas las operaciones.
+          "parameter" indica el parámetro del request que selecciona el método.
+          validate="false": la validación se llama manualmente en guardar().
+        -->
+        <action path="/empleados"
+                type="com.cursosdedesarrollo.EmpleadoCrudDispatchAction"
+                name="empleadoForm"
+                scope="request"
+                validate="false"
+                parameter="method">
+
+            <forward name="lista"      path="/WEB-INF/vistas/lista.jsp"/>
+            <forward name="detalle"    path="/WEB-INF/vistas/detalle.jsp"/>
+            <forward name="formulario" path="/WEB-INF/vistas/formulario.jsp"/>
+            <!-- PRG: guardar y eliminar redirigen a listar para evitar reenvíos -->
+            <forward name="exito"      path="/empleados.do?method=listar" redirect="true"/>
+        </action>
+    </action-mappings>
+
+    <message-resources parameter="ApplicationResources"/>
+
+</struts-config>

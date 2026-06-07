@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>61 — Struts 1.x + Hibernate: CRUD completo</title>
+    <style>
+        body  { font-family: sans-serif; max-width: 780px; margin: 40px auto; color: #333; }
+        h1    { border-bottom: 2px solid #2980b9; padding-bottom: 8px; }
+        .card { background: #eaf2fb; border-left: 4px solid #2980b9;
+                padding: 16px 20px; margin: 20px 0; border-radius: 4px; }
+        .warn { background: #fff3cd; border-left: 4px solid #f0ad4e;
+                padding: 10px 14px; border-radius: 4px; margin: 12px 0; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
+        th { background: #2980b9; color: #fff; }
+        pre { background: #fff; border: 1px solid #ddd; padding: 12px;
+              border-radius: 4px; font-size: 0.85em; overflow-x: auto; }
+        a.btn { display: inline-block; margin-top: 16px; padding: 12px 24px;
+                background: #2980b9; color: #fff; text-decoration: none;
+                border-radius: 4px; font-size: 1.05em; }
+        a.btn:hover { background: #2471a3; }
+    </style>
+</head>
+<body>
+    <h1>61 — Struts 1.x + Hibernate: CRUD completo</h1>
+
+    <div class="warn">⚠️ Requiere <strong>JDK 8</strong>. Struts 1.3.x y Hibernate 3.6.x son incompatibles con Java 9+.</div>
+
+    <div class="card">
+        Resumen del curso: <strong>Struts 1.x</strong> (DispatchAction) +
+        <strong>Hibernate 3.6</strong> (mapeo hbm.xml) + <strong>H2</strong> en memoria.
+        CRUD completo de <em>Empleado</em>: listar, buscar, mostrar, añadir, editar y borrar.
+    </div>
+
+    <h2>Capas de la aplicación</h2>
+    <table>
+        <tr><th>Capa</th><th>Clase / Fichero</th><th>Responsabilidad</th></tr>
+        <tr><td><strong>Vista</strong></td><td><code>lista.jsp</code>, <code>detalle.jsp</code>, <code>formulario.jsp</code></td><td>Render HTML; usa JSTL + tags Struts</td></tr>
+        <tr><td><strong>Controlador</strong></td><td><code>EmpleadoCrudDispatchAction</code></td><td>Recibe la petición, coordina modelo y vista</td></tr>
+        <tr><td><strong>Modelo — Form</strong></td><td><code>EmpleadoForm</code></td><td>Transporta datos del formulario; valida</td></tr>
+        <tr><td><strong>Modelo — Entidad</strong></td><td><code>Empleado</code></td><td>POJO mapeado a tabla <code>empleados</code></td></tr>
+        <tr><td><strong>Modelo — DAO</strong></td><td><code>EmpleadoDao</code></td><td>Acceso a BD mediante Hibernate Sessions</td></tr>
+        <tr><td><strong>Infraestructura</strong></td><td><code>HibernateUtil</code>, <code>HibernateListener</code></td><td>SessionFactory singleton; lifecycle de la app</td></tr>
+    </table>
+
+    <h2>URLs disponibles</h2>
+    <table>
+        <tr><th>URL</th><th>Método</th><th>Operación</th></tr>
+        <tr><td><code>/empleados.do?method=listar</code></td>             <td>GET</td>  <td>Lista todos los empleados</td></tr>
+        <tr><td><code>/empleados.do?method=listar&amp;busqueda=X</code></td><td>GET</td><td>Filtra por nombre o departamento</td></tr>
+        <tr><td><code>/empleados.do?method=mostrar&amp;id=X</code></td>   <td>GET</td>  <td>Ficha de detalle</td></tr>
+        <tr><td><code>/empleados.do?method=nuevo</code></td>              <td>GET</td>  <td>Formulario vacío</td></tr>
+        <tr><td><code>/empleados.do?method=editar&amp;id=X</code></td>    <td>GET</td>  <td>Formulario relleno con datos de BD</td></tr>
+        <tr><td><code>/empleados.do?method=guardar</code></td>            <td>POST</td> <td>Alta o actualización (PRG)</td></tr>
+        <tr><td><code>/empleados.do?method=eliminar</code></td>           <td>POST</td> <td>Borrado (PRG)</td></tr>
+    </table>
+
+    <a class="btn" href="empleados.do?method=listar">Ver lista de empleados</a>
+</body>
+</html>
