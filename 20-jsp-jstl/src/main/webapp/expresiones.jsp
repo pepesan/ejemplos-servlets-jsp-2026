@@ -20,8 +20,7 @@ pre{background:#181825;border-left:3px solid #89b4fa;padding:.8em 1em;
 </head>
 <body>
 
-<%-- Navegación rápida --%>
-<p style="margin:0 0 1.5em"><a href="/">← Inicio</a></p>
+<%@ include file="WEB-INF/_menu.jspf" %>
 
 <h1>Scripting JSP: declaraciones, scriptlets y expresiones</h1>
 <p>Son los tres elementos de scripting de JSP. En proyectos modernos

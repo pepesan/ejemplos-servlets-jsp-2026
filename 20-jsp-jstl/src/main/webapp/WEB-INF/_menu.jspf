@@ -1,3 +1,4 @@
+<%@ page pageEncoding="UTF-8" %>
 <nav style="background:#313244;padding:.5em 1em;margin-bottom:1.5em;border-radius:4px;font-size:.85em">
   <a href="/" style="color:#89dceb;text-decoration:none">Inicio</a> &nbsp;|&nbsp;
   <a href="/directivas.jsp" style="color:#a6adc8;text-decoration:none">Directivas</a> &nbsp;|&nbsp;

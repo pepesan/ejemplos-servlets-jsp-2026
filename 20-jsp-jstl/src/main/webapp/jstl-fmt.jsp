@@ -21,7 +21,7 @@ td:first-child{color:#89b4fa}
 </head>
 <body>
 
-<p style="margin:0 0 1.5em"><a href="/">← Inicio</a></p>
+<%@ include file="WEB-INF/_menu.jspf" %>
 
 <h1>JSTL — Biblioteca de formato (<code>fmt:</code>)</h1>
 <p>Esta página se sirve a través de <code>DatosServlet</code>, que deposita

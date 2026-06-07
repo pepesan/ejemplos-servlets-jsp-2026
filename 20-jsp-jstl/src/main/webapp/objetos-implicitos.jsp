@@ -27,7 +27,7 @@ td:nth-child(2){color:#fab387}
     application.setAttribute("appNombre", "20-jsp-jstl");
 %>
 
-<p style="margin:0 0 1.5em"><a href="/">← Inicio</a></p>
+<%@ include file="WEB-INF/_menu.jspf" %>
 
 <h1>Objetos implícitos JSP</h1>
 <p>El contenedor JSP inyecta automáticamente estos 9 objetos en cada página.

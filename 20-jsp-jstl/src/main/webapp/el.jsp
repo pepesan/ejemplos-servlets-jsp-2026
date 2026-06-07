@@ -22,7 +22,7 @@ td:nth-child(2){color:#fab387}
 </head>
 <body>
 
-<p style="margin:0 0 1.5em"><a href="/">← Inicio</a></p>
+<%@ include file="WEB-INF/_menu.jspf" %>
 
 <h1>Expression Language (EL)</h1>
 <p>EL permite leer atributos, parámetros y propiedades de beans
