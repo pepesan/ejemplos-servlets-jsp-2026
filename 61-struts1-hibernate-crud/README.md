@@ -3,7 +3,8 @@
 Resumen del curso. CRUD completo de **Empleado** (listar, buscar, mostrar, añadir, editar, borrar)
 con el stack completo: **Struts 1.x DispatchAction** + **Hibernate 3.6** (mapeo `hbm.xml`) + **H2** en memoria.
 
-> ⚠️ **Java 8 obligatorio.** Struts 1.3.x y Hibernate 3.6.x son incompatibles con Java 9+.
+> ⚠️ **Recomendado: Java 8.** El `start.sh` incluye `--add-opens java.base/java.lang=ALL-UNNAMED`
+> para que Javassist funcione en Java 9+. Si aun así hay problemas usar JDK 8:
 > `sdk install java 8.0.412-tem && sdk use java 8.0.412-tem`
 
 ## Capas de la aplicación

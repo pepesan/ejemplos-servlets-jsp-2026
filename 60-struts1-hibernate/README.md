@@ -10,9 +10,9 @@ Módulo web (WAR) que integra Struts 1.x como capa web y Hibernate 3.x como capa
 |--------|-------------|---------------------|
 | **Java 8** | **Java 8 Temurin** | Java 8 (`release=8` en el POM raíz) |
 
-> **Java 8 es obligatorio.** Struts 1.3.x usa reflexión sobre campos privados; Hibernate 3.6.x usa cglib/javassist para proxies de entidades. Ambos fallan con Java 9+.
+> **Recomendado: Java 8.** Struts 1.3.x usa reflexión sobre campos privados; Hibernate 3.6.x usa Javassist para proxies de entidades. El `start.sh` incluye `--add-opens java.base/java.lang=ALL-UNNAMED` para que funcione en Java 9+ (suprime el `InaccessibleObjectException` de Javassist). Si aun así hay problemas, usar JDK 8.
 
-### Configurar Java 8 con SDKMAN
+### Configurar Java 8 con SDKMAN (opcional)
 
 ```bash
 sdk install java 8.0.412-tem
