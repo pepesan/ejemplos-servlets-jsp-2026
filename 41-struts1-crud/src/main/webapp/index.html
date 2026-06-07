@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>41 — Struts 1.x: CRUD en memoria</title>
+    <style>
+        body  { font-family: sans-serif; max-width: 760px; margin: 40px auto; color: #333; }
+        h1    { border-bottom: 2px solid #e67e22; padding-bottom: 8px; }
+        .card { background: #fef9f0; border-left: 4px solid #e67e22;
+                padding: 16px 20px; margin: 20px 0; border-radius: 4px; }
+        .warn { background: #fff3cd; border-left: 4px solid #f0ad4e;
+                padding: 10px 14px; border-radius: 4px; margin: 12px 0; font-size: 0.9em; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
+        th { background: #e67e22; color: #fff; }
+        pre { background: #fff; border: 1px solid #ddd; padding: 12px;
+              border-radius: 4px; font-size: 0.85em; overflow-x: auto; }
+        a.btn { display: inline-block; margin-top: 16px; padding: 12px 24px;
+                background: #e67e22; color: #fff; text-decoration: none;
+                border-radius: 4px; font-size: 1.05em; }
+        a.btn:hover { background: #ca6f1e; }
+    </style>
+</head>
+<body>
+    <h1>41 — Struts 1.x: CRUD en memoria</h1>
+
+    <div class="warn">⚠️ Requiere <strong>JDK 8</strong>. Struts 1.3.x no es compatible con Java 9+.</div>
+
+    <div class="card">
+        CRUD completo de <strong>Contactos</strong> (crear, listar, editar, eliminar)
+        usando cinco Actions distintos sobre un repositorio en memoria.
+        Amplía el ejemplo 40 mostrando cómo un único <code>ActionForm</code>
+        es compartido por varias Actions y cómo aplicar el patrón PRG con redirecciones.
+    </div>
+
+    <h2>Actions del módulo</h2>
+    <table>
+        <tr><th>URL</th><th>Método</th><th>Action</th><th>Resultado</th></tr>
+        <tr><td><code>/listar.do</code></td>      <td>GET</td>  <td><code>ListarAction</code></td>  <td>Vista con la tabla de contactos</td></tr>
+        <tr><td><code>/ver.do?id=X</code></td>  <td>GET</td>  <td><code>VerAction</code></td>     <td>Ficha de detalle del contacto</td></tr>
+        <tr><td><code>/nuevo.do</code></td>    <td>GET</td>  <td><code>NuevoAction</code></td>   <td>Formulario vacío</td></tr>
+        <tr><td><code>/editar.do?id=X</code></td><td>GET</td><td><code>EditarAction</code></td>  <td>Formulario con datos del contacto</td></tr>
+        <tr><td><code>/guardar.do</code></td>  <td>POST</td> <td><code>GuardarAction</code></td> <td>Valida y crea/actualiza; redirige a la lista (PRG)</td></tr>
+        <tr><td><code>/eliminar.do</code></td> <td>POST</td> <td><code>EliminarAction</code></td><td>Borra y redirige a la lista (PRG)</td></tr>
+    </table>
+
+    <h2>Flujo resumido</h2>
+    <pre>
+  GET /listar.do
+     → ListarAction → request["contactos"] → lista.jsp
+
+  GET /nuevo.do
+     → NuevoAction → ContactoForm.reset() → formulario.jsp (vacío)
+
+  GET /editar.do?id=3
+     → EditarAction → carga Contacto(3) en ContactoForm → formulario.jsp (relleno)
+
+  POST /guardar.do  nombre=Ana&amp;email=ana@x.com&amp;id=
+     → GuardarAction → valida → guarda → redirect /listar.do   (PRG)
+
+  POST /guardar.do  nombre=  (campo vacío)
+     → GuardarAction → errores → forward formulario.jsp (valores preservados)
+
+  POST /eliminar.do  id=3
+     → EliminarAction → elimina → redirect /listar.do   (PRG)
+    </pre>
+
+    <a class="btn" href="listar.do">Ver lista de contactos</a>
+</body>
+</html>

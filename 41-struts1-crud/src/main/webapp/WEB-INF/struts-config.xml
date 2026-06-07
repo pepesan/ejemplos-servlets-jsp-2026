@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+
+    <!--
+      Un único form-bean reutilizado por nuevo, editar y guardar.
+      EliminarAction y ListarAction no necesitan form.
+    -->
+    <form-beans>
+        <form-bean name="contactoForm" type="com.cursosdedesarrollo.ContactoForm"/>
+    </form-beans>
+
+    <action-mappings>
+
+        <!-- GET /ver.do?id=X → muestra el detalle de un contacto -->
+        <action path="/ver"
+                type="com.cursosdedesarrollo.VerAction">
+            <forward name="detalle" path="/WEB-INF/vistas/detalle.jsp"/>
+            <forward name="lista"   path="/listar.do" redirect="true"/>
+        </action>
+
+        <!-- GET /listar.do → muestra la tabla de contactos -->
+        <action path="/listar"
+                type="com.cursosdedesarrollo.ListarAction">
+            <forward name="lista" path="/WEB-INF/vistas/lista.jsp"/>
+        </action>
+
+        <!-- GET /nuevo.do → formulario en blanco para crear -->
+        <action path="/nuevo"
+                type="com.cursosdedesarrollo.NuevoAction"
+                name="contactoForm"
+                scope="request"
+                validate="false">
+            <forward name="formulario" path="/WEB-INF/vistas/formulario.jsp"/>
+        </action>
+
+        <!--
+          GET /editar.do?id=X → carga el contacto en el form y muestra el formulario.
+          EditarAction sobreescribe los campos del form con los datos del repositorio.
+        -->
+        <action path="/editar"
+                type="com.cursosdedesarrollo.EditarAction"
+                name="contactoForm"
+                scope="request"
+                validate="false">
+            <forward name="formulario" path="/WEB-INF/vistas/formulario.jsp"/>
+            <forward name="lista"      path="/listar.do" redirect="true"/>
+        </action>
+
+        <!--
+          POST /guardar.do → valida y persiste; en error reenvía al formulario,
+          en éxito redirige a la lista (patrón PRG).
+        -->
+        <action path="/guardar"
+                type="com.cursosdedesarrollo.GuardarAction"
+                name="contactoForm"
+                scope="request"
+                validate="false">
+            <forward name="formulario" path="/WEB-INF/vistas/formulario.jsp"/>
+            <forward name="lista"      path="/listar.do" redirect="true"/>
+        </action>
+
+        <!-- POST /eliminar.do → borra y redirige a la lista (PRG) -->
+        <action path="/eliminar"
+                type="com.cursosdedesarrollo.EliminarAction">
+            <forward name="lista" path="/listar.do" redirect="true"/>
+        </action>
+
+    </action-mappings>
+
+    <message-resources parameter="ApplicationResources"/>
+
+</struts-config>

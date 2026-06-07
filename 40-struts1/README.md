@@ -19,27 +19,130 @@ muestra un saludo personalizado. Introduce los tres pilares del framework:
 
 ## Flujo de la petición
 
-```
-GET /saludo.do
-   │
-   ▼ ActionServlet (web.xml: *.do → ActionServlet)
-   │  Lee struts-config.xml → path="/saludo" → SaludoAction
-   │  Crea SaludoForm, puebla campos desde parámetros del request
-   ▼
-SaludoAction.execute()
-   │  nombre vacío (primer acceso) → forward "entrada"
-   ▼
-/WEB-INF/vistas/entrada.jsp   (muestra el formulario)
+### Visión general
 
-─────────────────────────────────────────
-POST /saludo.do  nombre=Ana
-   ▼ ActionServlet → SaludoForm poblado → SaludoAction.execute()
-   │  nombre="Ana" → OK
-   │  request.setAttribute("saludo", "¡Hola, Ana!")
-   │  forward "exito"
-   ▼
-/WEB-INF/vistas/resultado.jsp
 ```
+Navegador
+   │  GET /saludo.do
+   ▼
+ActionServlet  ───────────────────────────────────────────────────────────┐
+   │ 1. busca path="/saludo" en struts-config.xml                         │
+   │ 2. instancia SaludoForm (o reutiliza si scope="session")             │
+   │ 3. llama a SaludoForm.reset()                                        │ struts-config.xml
+   │ 4. puebla SaludoForm vía reflexión:                                  │  ─ form-bean → clase Java
+   │       setNombre(request.getParameter("nombre"))                      │  ─ action   → Action + Form
+   │ 5. (validate="false" → omite SaludoForm.validate())                  │  ─ forward  → vistas JSP
+   │ 6. llama a SaludoAction.execute(mapping, form, req, res)             │
+   ▼                                                                      │
+SaludoAction                                                              │
+   │  casting: SaludoForm saludoForm = (SaludoForm) form                  │
+   │  validarNombre(saludoForm.getNombre())                               │
+   │     └─ null / vacío → forward "entrada"  ───────────────────────────►JSP entrada.jsp
+   │     └─ válido       → setAttribute("saludo", "¡Hola, Ana!")          │
+   │                       forward "exito"   ───────────────────────────►JSP resultado.jsp
+   └──────────────────────────────────────────────────────────────────────┘
+```
+
+### Paso a paso detallado
+
+**1. `web.xml` → toda URL `*.do` llega a `ActionServlet`**
+
+```xml
+<servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+</servlet-mapping>
+```
+
+`ActionServlet` es el Front Controller del framework. El desarrollador nunca lo toca.
+
+---
+
+**2. `ActionServlet` localiza el mapping en `struts-config.xml`**
+
+La URL `/saludo.do` tiene path `/saludo`. Struts busca:
+
+```xml
+<action path="/saludo"
+        type="com.cursosdedesarrollo.SaludoAction"   ← qué Action instanciar
+        name="saludoForm"                             ← qué Form usar (enlaza con <form-bean>)
+        scope="request"                               ← dónde guardar el Form
+        validate="false">
+```
+
+El atributo `name="saludoForm"` resuelve al `<form-bean>` declarado más arriba:
+
+```xml
+<form-bean name="saludoForm" type="com.cursosdedesarrollo.SaludoForm"/>
+```
+
+---
+
+**3. `ActionServlet` prepara el `ActionForm`**
+
+Con `scope="request"`, Struts crea una instancia nueva de `SaludoForm` en cada petición.
+Primero llama a `reset()` para dejarlo limpio, luego lo **puebla automáticamente por reflexión**:
+por cada parámetro del request llama al setter correspondiente del Form.
+
+```
+request.getParameter("nombre") → "Ana"
+         ↓  reflexión
+saludoForm.setNombre("Ana")
+```
+
+El desarrollador no escribe este mapeo: basta que el nombre del campo HTML coincida
+con el nombre de la propiedad del Form (`<html:text property="nombre"` → `setNombre`).
+
+---
+
+**4. `validate="false"`: por qué no se llama a `SaludoForm.validate()`**
+
+Con `validate="true"`, Struts llamaría a `SaludoForm.validate()` *antes* de llegar al Action.
+Si devuelve errores, Struts reenviaría directamente al forward `"input"` sin pasar por el Action.
+
+Aquí se usa `validate="false"` para que el Action sea el único punto de validación.
+Esto permite mostrar el formulario vacío en el GET inicial sin que Struts intercepte con errores.
+
+---
+
+**5. `SaludoAction.execute()` recibe el Form ya poblado**
+
+```java
+public ActionForward execute(ActionMapping mapping, ActionForm form,
+                             HttpServletRequest request, HttpServletResponse response) {
+    SaludoForm saludoForm = (SaludoForm) form;   // casting seguro: Struts ya creó el tipo correcto
+    String errorKey = validarNombre(saludoForm.getNombre());
+    ...
+}
+```
+
+El Action trabaja con el Form como si fuera un DTO: lee los valores ya limpios,
+aplica la lógica de negocio y decide qué vista mostrar.
+
+---
+
+**6. `ActionForward`: el Action indica a Struts dónde continuar**
+
+```java
+return mapping.findForward("entrada");   // → /WEB-INF/vistas/entrada.jsp
+return mapping.findForward("exito");     // → /WEB-INF/vistas/resultado.jsp
+```
+
+`mapping.findForward("nombre")` busca el `<forward>` declarado dentro del `<action>` en
+`struts-config.xml`. Struts hace internamente un `RequestDispatcher.forward()`.
+El Action nunca escribe rutas absolutas de vistas: solo nombres lógicos.
+
+---
+
+### Resumen de responsabilidades
+
+| Componente | Responsabilidad | Lo escribe |
+|---|---|---|
+| `ActionServlet` | Front Controller, orquesta todo el ciclo | El framework (nunca el dev) |
+| `struts-config.xml` | Relaciona URLs, Forms y Actions; declara los forwards | El desarrollador |
+| `SaludoForm` | JavaBean que transporta los datos del formulario; poblado automáticamente por reflexión | El desarrollador |
+| `SaludoAction` | Lógica de negocio; valida, construye el resultado y elige el forward | El desarrollador |
+| JSP (`entrada.jsp`, `resultado.jsp`) | Vista; lee atributos del request o valores del Form | El desarrollador |
 
 ## Clases Java
 

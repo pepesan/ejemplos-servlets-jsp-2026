@@ -39,6 +39,7 @@
         <module>31-mvc-crud</module>
         <!-- Struts 1.x -->
         <module>40-struts1</module>
+        <module>41-struts1-crud</module>
         <!-- Hibernate -->
         <module>50-hibernate</module>
         <module>51-hibernate-anotaciones</module>
