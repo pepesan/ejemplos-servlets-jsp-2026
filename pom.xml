@@ -40,6 +40,7 @@
         <!-- Struts 1.x -->
         <module>40-struts1</module>
         <module>41-struts1-crud</module>
+        <module>42-struts1-dispatch</module>
         <!-- Hibernate -->
         <module>50-hibernate</module>
         <module>51-hibernate-anotaciones</module>

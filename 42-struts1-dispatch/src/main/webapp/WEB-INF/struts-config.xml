@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+
+    <form-beans>
+        <form-bean name="contactoForm" type="com.cursosdedesarrollo.ContactoForm"/>
+    </form-beans>
+
+    <action-mappings>
+        <!--
+          Un único <action> gestiona todo el CRUD.
+          "parameter" indica qué parámetro del request decide el método a invocar.
+
+          Módulo 41: 6 <action> → 6 clases Action separadas
+          Módulo 42: 1 <action> → 1 clase DispatchAction con 6 métodos
+        -->
+        <action path="/contactos"
+                type="com.cursosdedesarrollo.ContactoDispatchAction"
+                name="contactoForm"
+                scope="request"
+                validate="false"
+                parameter="method">
+
+            <forward name="lista"      path="/WEB-INF/vistas/lista.jsp"/>
+            <forward name="detalle"    path="/WEB-INF/vistas/detalle.jsp"/>
+            <forward name="formulario" path="/WEB-INF/vistas/formulario.jsp"/>
+            <!--
+              "exito" usa redirect="true": el navegador hace un nuevo GET a /listar,
+              implementando el patrón PRG y evitando reenvíos al pulsar F5.
+            -->
+            <forward name="exito" path="/contactos.do?method=listar" redirect="true"/>
+        </action>
+    </action-mappings>
+
+    <message-resources parameter="ApplicationResources"/>
+
+</struts-config>

@@ -5,7 +5,7 @@
          http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-    <display-name>41 - Struts 1.x: CRUD en memoria</display-name>
+    <display-name>42 - Struts 1.x: DispatchAction CRUD</display-name>
 
     <!--
       Tomcat decodifica el cuerpo POST como ISO-8859-1 por defecto.
