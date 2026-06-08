@@ -3,3 +3,6 @@ CLAUDE.md
 .idea/*
 **/target/
 ejemplos-servlets-jsp-2026.iml
+.project
+.classpath
+.settings
