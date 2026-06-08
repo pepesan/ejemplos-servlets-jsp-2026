@@ -64,7 +64,7 @@ public class OneToManyTest {
         assertNotNull(leido);
         // leido.getCategoria() no existe — no hay ese campo en Articulo
         Categoria catLeida = (Categoria) s2.createQuery(
-                "from Categoria c join c.articulos a where a.id = :aid")
+                "select c from Categoria c join c.articulos a where a.id = :aid")
                 .setLong("aid", artId)
                 .uniqueResult();
         assertNotNull(catLeida);

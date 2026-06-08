@@ -30,15 +30,22 @@ public class Empleado {
     @JoinColumn(name = "departamento_id")
     private Departamento departamento;
 
+    /** Lado dueño: la FK perfil_id vive en la tabla empleados. cascade=ALL propaga save/delete al Perfil. */
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "perfil_id")
+    private Perfil perfil;
+
     public Empleado() {}
     public Empleado(String nombre, double salario) { this.nombre = nombre; this.salario = salario; }
 
-    public Long         getId()                      { return id; }
-    public void         setId(Long id)               { this.id = id; }
-    public String       getNombre()                  { return nombre; }
-    public void         setNombre(String n)          { this.nombre = n; }
-    public double       getSalario()                 { return salario; }
-    public void         setSalario(double s)         { this.salario = s; }
-    public Departamento getDepartamento()            { return departamento; }
+    public Long         getId()                         { return id; }
+    public void         setId(Long id)                  { this.id = id; }
+    public String       getNombre()                     { return nombre; }
+    public void         setNombre(String n)             { this.nombre = n; }
+    public double       getSalario()                    { return salario; }
+    public void         setSalario(double s)            { this.salario = s; }
+    public Departamento getDepartamento()               { return departamento; }
     public void         setDepartamento(Departamento d) { this.departamento = d; }
+    public Perfil       getPerfil()                     { return perfil; }
+    public void         setPerfil(Perfil p)             { this.perfil = p; }
 }

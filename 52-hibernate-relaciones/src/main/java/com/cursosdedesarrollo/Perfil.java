@@ -20,6 +20,9 @@ public class Perfil {
     @Column(length = 400)
     private String bio;
 
+    @Column(length = 200)
+    private String linkedin;
+
     /**
      * Lado inverso: no genera FK. mappedBy apunta al campo "perfil" en Usuario.
      * fetch=LAZY: no carga el Usuario al cargar el Perfil.
@@ -29,11 +32,14 @@ public class Perfil {
 
     public Perfil() {}
     public Perfil(String bio) { this.bio = bio; }
+    public Perfil(String bio, String linkedin) { this.bio = bio; this.linkedin = linkedin; }
 
-    public Long    getId()                  { return id; }
-    public void    setId(Long id)           { this.id = id; }
-    public String  getBio()                 { return bio; }
-    public void    setBio(String bio)       { this.bio = bio; }
-    public Usuario getUsuario()             { return usuario; }
-    public void    setUsuario(Usuario u)    { this.usuario = u; }
+    public Long    getId()                   { return id; }
+    public void    setId(Long id)            { this.id = id; }
+    public String  getBio()                  { return bio; }
+    public void    setBio(String bio)        { this.bio = bio; }
+    public String  getLinkedin()             { return linkedin; }
+    public void    setLinkedin(String l)     { this.linkedin = l; }
+    public Usuario getUsuario()              { return usuario; }
+    public void    setUsuario(Usuario u)     { this.usuario = u; }
 }
