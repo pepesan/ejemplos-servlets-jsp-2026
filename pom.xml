@@ -49,6 +49,9 @@
         <module>51-hibernate-anotaciones</module>
         <module>52-hibernate-relaciones</module>
         <module>53-hibernate-hql</module>
+        <module>54-hibernate-herencia</module>
+        <module>55-hibernate-mysql</module>
+        <module>56-hibernate-postgresql</module>
         <!-- Integración -->
         <module>60-struts1-hibernate</module>
         <module>61-struts1-hibernate-crud</module>

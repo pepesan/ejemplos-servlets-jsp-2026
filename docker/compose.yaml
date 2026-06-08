@@ -1,0 +1,63 @@
+services:
+
+  # ── MySQL 8 ────────────────────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: cursosdev-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cursosdb
+      MYSQL_USER: curso
+      MYSQL_PASSWORD: curso123
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "curso", "-pcurso123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── phpMyAdmin (cliente web MySQL) ─────────────────────────────────────────
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: cursosdev-phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: curso
+      PMA_PASSWORD: curso123
+    ports:
+      - "8888:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # ── PostgreSQL 16 ──────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16
+    container_name: cursosdev-postgres
+    environment:
+      POSTGRES_DB: cursosdb
+      POSTGRES_USER: curso
+      POSTGRES_PASSWORD: curso123
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U curso -d cursosdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Adminer (cliente web PostgreSQL y MySQL) ───────────────────────────────
+  adminer:
+    image: adminer:4
+    container_name: cursosdev-adminer
+    ports:
+      - "8889:8080"
+    depends_on:
+      - postgres
+      - mysql
+

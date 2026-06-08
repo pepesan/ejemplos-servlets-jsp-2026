@@ -1,0 +1,44 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <property name="connection.driver_class">org.h2.Driver</property>
+        <property name="connection.url">jdbc:h2:mem:cursodb54;DB_CLOSE_DELAY=-1</property>
+        <property name="connection.username">sa</property>
+        <property name="connection.password"></property>
+
+        <property name="dialect">org.hibernate.dialect.H2Dialect</property>
+        <property name="hbm2ddl.auto">create-drop</property>
+        <property name="show_sql">true</property>
+
+        <!-- ── SINGLE_TABLE (singletable) ─────────────────────────────────
+             Una tabla "personas" con columna discriminadora "tipo".
+             Persona es la raíz; Cliente y Empleado son subclases.         -->
+        <mapping class="com.cursosdedesarrollo.singletable.Persona"/>
+        <mapping class="com.cursosdedesarrollo.singletable.Cliente"/>
+        <mapping class="com.cursosdedesarrollo.singletable.Empleado"/>
+
+        <!-- ── JOINED (joined) ────────────────────────────────────────────
+             Tabla "vehiculos" + tablas propias "coches" y "motos" con FK.  -->
+        <mapping class="com.cursosdedesarrollo.joined.Vehiculo"/>
+        <mapping class="com.cursosdedesarrollo.joined.Coche"/>
+        <mapping class="com.cursosdedesarrollo.joined.Moto"/>
+
+        <!-- ── TABLE_PER_CLASS (tableperclass) ────────────────────────────
+             Sin tabla base. "cuentas_corriente" y "cuentas_ahorro" tienen
+             todas las columnas de la superclase repetidas.                 -->
+        <mapping class="com.cursosdedesarrollo.tableperclass.Cuenta"/>
+        <mapping class="com.cursosdedesarrollo.tableperclass.CuentaCorriente"/>
+        <mapping class="com.cursosdedesarrollo.tableperclass.CuentaAhorro"/>
+
+        <!-- ── @MappedSuperclass (mappedsuperclass) ───────────────────────
+             EntidadAuditable NO es @Entity: no se registra aquí.
+             Solo se registran las subclases concretas.                     -->
+        <mapping class="com.cursosdedesarrollo.mappedsuperclass.Pedido"/>
+        <mapping class="com.cursosdedesarrollo.mappedsuperclass.Factura"/>
+
+    </session-factory>
+</hibernate-configuration>
