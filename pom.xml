@@ -27,6 +27,7 @@
         <module>15-servlet-filtros</module>
         <module>16-servlet-cookies</module>
         <module>17-servlet-sesiones</module>
+        <module>18-servlet-patrones</module>
         <!-- JSP -->
         <module>20-jsp-jstl</module>
         <module>21-jsp-datos</module>

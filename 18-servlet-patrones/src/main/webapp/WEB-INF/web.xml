@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+         http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <display-name>18 - Patrones de URL en Servlets</display-name>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PRIORIDAD DE RESOLUCIÓN (Servlet Spec §12.2):
+           1. Coincidencia exacta        /exacto
+           2. Prefijo wildcard           /catalogo/*  (el más largo entre los que coincidan)
+           3. Extensión                  *.do
+           4. Servlet por defecto        /
+         ═══════════════════════════════════════════════════════════════════ -->
+
+    <!-- 1. Coincidencia exacta: solo /exacto, ninguna variación -->
+    <servlet>
+        <servlet-name>exacto</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.ExactoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>exacto</servlet-name>
+        <url-pattern>/exacto</url-pattern>
+    </servlet-mapping>
+
+    <!-- 2. Prefijo wildcard: /catalogo/ y todo lo que haya debajo -->
+    <servlet>
+        <servlet-name>catalogo</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.CatalogoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>catalogo</servlet-name>
+        <url-pattern>/catalogo/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- 3. Extensión: cualquier URL que termine en .do, sin importar el path -->
+    <servlet>
+        <servlet-name>extension</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.ExtensionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>extension</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+
+    <!-- 4. Servlet por defecto: captura todo lo que no coincide con nada anterior.
+         Reemplaza al servlet interno de Tomcat que sirve ficheros estáticos. -->
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.DefaultServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!-- Patrón especial: cadena vacía "" mapea exactamente la raíz del contexto -->
+    <servlet>
+        <servlet-name>raiz</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.RaizServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>raiz</servlet-name>
+        <url-pattern></url-pattern>  <!-- cadena vacía -->
+    </servlet-mapping>
+
+    <!-- Explicación de /* (sin registrarlo para no romper los otros demos) -->
+    <servlet>
+        <servlet-name>comodinTotal</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.ComodinTotalServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>comodinTotal</servlet-name>
+        <url-pattern>/comodin-total</url-pattern>
+    </servlet-mapping>
+
+    <!-- Tabla de referencia: exact match en /patrones -->
+    <servlet>
+        <servlet-name>patrones</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.ResumenServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>patrones</servlet-name>
+        <url-pattern>/patrones</url-pattern>
+    </servlet-mapping>
+
+    <!-- MultiPatronServlet y RegistroServlet NO aparecen aquí:
+         MultiPatronServlet usa @WebServlet(urlPatterns={"buscar","search","encuentra"})
+         RegistroServlet es registrado por RegistroListener.contextInitialized() -->
+
+</web-app>

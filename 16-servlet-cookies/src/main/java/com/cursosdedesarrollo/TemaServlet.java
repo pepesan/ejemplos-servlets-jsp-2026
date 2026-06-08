@@ -24,7 +24,9 @@ public class TemaServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String temaActual = leerTema(req.getCookies());
+        Cookie[] cookiesEntrada = req.getCookies();
+        boolean  tieneCookie    = tieneCookieTema(cookiesEntrada);
+        String   temaActual     = leerTema(cookiesEntrada);
 
         resp.setContentType("text/html;charset=UTF-8");
         PrintWriter out = resp.getWriter();
@@ -33,39 +35,88 @@ public class TemaServlet extends HttpServlet {
         Html.nav(out);
 
         out.println("<h1>Ejemplo práctico: preferencia de tema</h1>");
-        out.println("<p class='sub'>La preferencia se guarda en una cookie persistente de "
-                + DIAS_EXPIRA + " días.</p>");
+        out.println("<p class='sub'>Caso de uso real: guardar una preferencia del usuario "
+                + "sin sesión ni base de datos, solo con una cookie persistente.</p>");
 
-        out.println("<h2>Tema activo: <strong>" + Html.esc(temaActual) + "</strong></h2>");
+        // ── Estado actual ────────────────────────────────────────────────────
+        out.println("<h2>Estado actual</h2>");
+        if (tieneCookie) {
+            out.println("<p class='ok'>&#10003; El navegador ha enviado la cookie <code>tema="
+                    + Html.esc(temaActual) + "</code>. Preferencia cargada.</p>");
+        } else {
+            out.println("<p class='nota'>&#9432; No hay cookie <code>tema</code>. "
+                    + "Se usa el valor por defecto: <strong>" + TEMA_DEFECTO + "</strong>.</p>");
+        }
+        out.println("<p>Tema activo: <strong>" + Html.esc(temaActual) + "</strong></p>");
 
+        // ── Selector ─────────────────────────────────────────────────────────
+        out.println("<h2>Cambiar preferencia</h2>");
         String[] temas = {"oscuro", "claro", "sistema"};
         out.println("<form method='post' action='/tema'>");
         for (String t : temas) {
+            boolean activo = t.equals(temaActual);
             out.println("<button type='submit' name='tema' value='" + t + "' "
-                    + (t.equals(temaActual) ? "style='background:#a6e3a1;color:#1e1e2e'" : "")
-                    + ">" + t + "</button> ");
+                    + (activo ? "style='background:#a6e3a1;color:#1e1e2e'" : "")
+                    + ">" + t + (activo ? " ✓" : "") + "</button> ");
         }
         out.println("</form>");
+        out.println("<p class='nota'>Al pulsar un botón: POST → el servidor graba la cookie → "
+                + "redirect 302 → GET (patrón PRG). Recarga la página y la cookie ya estará.</p>");
 
-        out.println("<h2>Cookie en el navegador</h2>");
+        // ── Flujo HTTP ───────────────────────────────────────────────────────
+        out.println("<h2>Flujo HTTP completo</h2>");
         out.println("<pre>");
-        out.println("Set-Cookie: tema=" + Html.esc(temaActual)
-                + "; Max-Age=" + CookieServlet.diasASegundos(DIAS_EXPIRA)
+        out.println("── 1ª visita (sin cookie) ──────────────────────────────────────");
+        out.println("GET /tema HTTP/1.1");
+        out.println("  → No hay cabecera Cookie: tema=...");
+        out.println("  → El servlet usa el valor por defecto: \"" + TEMA_DEFECTO + "\"");
+        out.println("");
+        out.println("── El usuario pulsa un botón ────────────────────────────────────");
+        out.println("POST /tema HTTP/1.1");
+        out.println("tema=claro");
+        out.println("");
+        out.println("  Respuesta del servidor:");
+        out.println("  HTTP/1.1 302 Found");
+        out.println("  Set-Cookie: tema=claro; Max-Age=" + CookieServlet.diasASegundos(DIAS_EXPIRA)
                 + "; Path=/");
+        out.println("  Location: /tema");
+        out.println("");
+        out.println("── Visitas siguientes (con cookie) ──────────────────────────────");
+        out.println("GET /tema HTTP/1.1");
+        out.println("Cookie: tema=claro              ← el navegador la envía solo");
+        out.println("  → req.getCookies() devuelve la cookie");
+        out.println("  → leerTema() extrae \"claro\" y lo usa");
         out.println("</pre>");
 
-        out.println("<h2>Código del servlet</h2>");
+        // ── Cookie recibida ahora ─────────────────────────────────────────────
+        out.println("<h2>Cabecera Cookie recibida en esta petición</h2>");
+        if (tieneCookie) {
+            out.println("<pre>Cookie: tema=" + Html.esc(temaActual) + "</pre>");
+        } else {
+            out.println("<pre class='nota'>(cabecera Cookie ausente — sin cookie de tema)</pre>");
+        }
+
+        // ── Código clave ─────────────────────────────────────────────────────
+        out.println("<h2>Código clave</h2>");
         out.println("<pre>");
-        out.println("// Leer la preferencia guardada:");
-        out.println("Cookie[] cookies = req.getCookies();");
-        out.println("String tema = buscarValor(cookies, \"tema\");  // \"oscuro\" si no existe");
+        out.println("// doGet: leer la preferencia guardada");
+        out.println("String tema = leerTema(req.getCookies()); // defecto si no existe");
         out.println("");
-        out.println("// Guardar la nueva preferencia:");
-        out.println("Cookie c = new Cookie(\"tema\", nuevaTema);");
-        out.println("c.setMaxAge(30 * 24 * 60 * 60);  // 30 días");
-        out.println("c.setPath(\"/\");");
+        out.println("// doPost: guardar la nueva preferencia y redirigir (PRG)");
+        out.println("Cookie c = new Cookie(\"tema\", nuevoTema);");
+        out.println("c.setMaxAge(" + DIAS_EXPIRA + " * 24 * 60 * 60); // "
+                + DIAS_EXPIRA + " días = " + CookieServlet.diasASegundos(DIAS_EXPIRA) + " s");
+        out.println("c.setPath(\"/\");          // visible en toda la app");
         out.println("resp.addCookie(c);");
-        out.println("resp.sendRedirect(\"/tema\");  // PRG");
+        out.println("resp.sendRedirect(\"/tema\"); // PRG: evita reenvío del POST al recargar");
+        out.println("");
+        out.println("// Buscar una cookie por nombre:");
+        out.println("static String leerTema(Cookie[] cookies) {");
+        out.println("    if (cookies == null) return TEMA_DEFECTO;");
+        out.println("    for (Cookie c : cookies)");
+        out.println("        if (\"tema\".equals(c.getName())) return c.getValue();");
+        out.println("    return TEMA_DEFECTO;");
+        out.println("}");
         out.println("</pre>");
 
         out.println("<p><a href='/cookies'>← Volver a inspección de cookies</a></p>");
@@ -87,6 +138,13 @@ public class TemaServlet extends HttpServlet {
         resp.addCookie(c);
 
         resp.sendRedirect("/tema");
+    }
+
+    static boolean tieneCookieTema(Cookie[] cookies) {
+        if (cookies == null) return false;
+        for (Cookie c : cookies)
+            if (NOMBRE_COOKIE.equals(c.getName())) return true;
+        return false;
     }
 
     /** Lee el valor de la cookie de tema; devuelve el valor por defecto si no existe. */

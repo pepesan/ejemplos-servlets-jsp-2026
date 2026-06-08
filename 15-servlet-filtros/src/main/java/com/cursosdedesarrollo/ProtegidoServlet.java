@@ -48,7 +48,7 @@ public class ProtegidoServlet extends HttpServlet {
         out.println("<li>Si no hay usuario → <code>resp.sendRedirect(\"/login\")</code>.</li>");
         out.println("</ol>");
 
-        out.println("<p><a href='logout'>Cerrar sesión</a> &nbsp;|&nbsp; <a href='/'>← Inicio</a></p>");
+        out.println("<p><a href='" + req.getContextPath() + "/logout'>Cerrar sesión</a> &nbsp;|&nbsp; <a href='/'>← Inicio</a></p>");
         Html.pie(out);
     }
 }

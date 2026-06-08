@@ -43,7 +43,8 @@ public class CookieServlet extends HttpServlet {
             case "borrar":
                 String nombre = nvl(req.getParameter("nombre"));
                 if (!nombre.isEmpty()) {
-                    resp.addCookie(crearEliminar(nombre));
+                    resp.addCookie(crearEliminar(nombre, "/"));
+                    resp.addCookie(crearEliminar(nombre, "/cookies")); // cubre demo-segura (Path=/cookies)
                 }
                 resp.sendRedirect("/cookies");
                 return;
@@ -51,7 +52,8 @@ public class CookieServlet extends HttpServlet {
                 Cookie[] todas = req.getCookies();
                 if (todas != null) {
                     for (Cookie c : todas) {
-                        resp.addCookie(crearEliminar(c.getName()));
+                        resp.addCookie(crearEliminar(c.getName(), "/"));
+                        resp.addCookie(crearEliminar(c.getName(), "/cookies"));
                     }
                 }
                 resp.sendRedirect("/cookies");
@@ -75,7 +77,7 @@ public class CookieServlet extends HttpServlet {
         } else {
             out.println("<table>");
             out.println("<tr><th>Nombre</th><th>Valor</th><th>Path</th>"
-                    + "<th>Max-Age</th><th>HttpOnly</th><th>Secure</th><th>Acción</th></tr>");
+                    + "<th>Max-Age</th><th>HttpOnly*</th><th>Secure*</th><th>Acción</th></tr>");
             for (Cookie c : cookies) {
                 out.println("<tr>");
                 out.println("<td><code>" + Html.esc(c.getName()) + "</code></td>");
@@ -83,15 +85,16 @@ public class CookieServlet extends HttpServlet {
                 String path = c.getPath();
                 out.println("<td>" + Html.esc(path != null ? path : "(no establecido)") + "</td>");
                 out.println("<td>" + (c.getMaxAge() == -1 ? "sesión" : c.getMaxAge() + " s") + "</td>");
-                out.println("<td class='" + (c.isHttpOnly() ? "ok" : "ko") + "'>"
-                        + (c.isHttpOnly() ? "sí" : "no") + "</td>");
-                out.println("<td class='" + (c.getSecure() ? "ok" : "ko") + "'>"
-                        + (c.getSecure() ? "sí" : "no") + "</td>");
+                out.println("<td class='nota'>n/d</td>");
+                out.println("<td class='nota'>n/d</td>");
                 out.println("<td><a href='/cookies?accion=borrar&nombre="
                         + Html.esc(c.getName()) + "'>Borrar</a></td>");
                 out.println("</tr>");
             }
             out.println("</table>");
+            out.println("<p class='nota'>(*) El navegador solo envía <code>nombre=valor</code> en la cabecera "
+                    + "<code>Cookie</code>; los atributos HttpOnly, Secure y Path no viajan de vuelta "
+                    + "al servidor. Son visibles en DevTools → Application → Cookies.</p>");
             out.println("<p><a href='/cookies?accion=borrar-todas'>Borrar todas</a></p>");
         }
 
@@ -156,9 +159,13 @@ public class CookieServlet extends HttpServlet {
     }
 
     static Cookie crearEliminar(String nombre) {
+        return crearEliminar(nombre, "/");
+    }
+
+    static Cookie crearEliminar(String nombre, String path) {
         Cookie c = new Cookie(nombre, "");
         c.setMaxAge(0);   // Max-Age=0 → el navegador borra la cookie inmediatamente
-        c.setPath("/");
+        c.setPath(path);  // debe coincidir con el Path original de la cookie
         return c;
     }
 
