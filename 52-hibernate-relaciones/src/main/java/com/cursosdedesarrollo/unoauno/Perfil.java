@@ -1,4 +1,4 @@
-package com.cursosdedesarrollo;
+package com.cursosdedesarrollo.unoauno;
 
 import javax.persistence.*;
 
@@ -23,10 +23,7 @@ public class Perfil {
     @Column(length = 200)
     private String linkedin;
 
-    /**
-     * Lado inverso: no genera FK. mappedBy apunta al campo "perfil" en Usuario.
-     * fetch=LAZY: no carga el Usuario al cargar el Perfil.
-     */
+    /** Lado inverso: no genera FK. mappedBy apunta al campo "perfil" en Usuario. */
     @OneToOne(mappedBy = "perfil", fetch = FetchType.LAZY)
     private Usuario usuario;
 

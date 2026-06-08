@@ -1,4 +1,4 @@
-package com.cursosdedesarrollo;
+package com.cursosdedesarrollo.muchosamuchos;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ public class Actor {
     public Actor() {}
     public Actor(String nombre) { this.nombre = nombre; }
 
-    public Long          getId()                       { return id; }
-    public void          setId(Long id)                { this.id = id; }
-    public String        getNombre()                   { return nombre; }
-    public void          setNombre(String n)           { this.nombre = n; }
-    public List<Pelicula> getPeliculas()               { return peliculas; }
-    public void          setPeliculas(List<Pelicula> p){ this.peliculas = p; }
+    public Long           getId()                        { return id; }
+    public void           setId(Long id)                 { this.id = id; }
+    public String         getNombre()                    { return nombre; }
+    public void           setNombre(String n)            { this.nombre = n; }
+    public List<Pelicula> getPeliculas()                 { return peliculas; }
+    public void           setPeliculas(List<Pelicula> p) { this.peliculas = p; }
 }

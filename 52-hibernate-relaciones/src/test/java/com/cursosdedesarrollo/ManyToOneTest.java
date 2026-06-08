@@ -1,5 +1,7 @@
 package com.cursosdedesarrollo;
 
+import com.cursosdedesarrollo.unoamuchos.Departamento;
+import com.cursosdedesarrollo.unoamuchos.Empleado;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;

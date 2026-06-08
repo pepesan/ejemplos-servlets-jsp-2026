@@ -14,29 +14,29 @@
         <property name="hbm2ddl.auto">create-drop</property>
         <property name="show_sql">true</property>
 
-        <!-- OneToOne unidireccional -->
-        <mapping class="com.cursosdedesarrollo.Pasaporte"/>
-        <mapping class="com.cursosdedesarrollo.Persona"/>
+        <!-- ── OneToOne (unoauno) ──────────────────────────────────── -->
+        <!-- Unidireccional: Persona → Pasaporte -->
+        <mapping class="com.cursosdedesarrollo.unoauno.Pasaporte"/>
+        <mapping class="com.cursosdedesarrollo.unoauno.Persona"/>
+        <!-- Bidireccional: Usuario ↔ Perfil -->
+        <mapping class="com.cursosdedesarrollo.unoauno.Perfil"/>
+        <mapping class="com.cursosdedesarrollo.unoauno.Usuario"/>
 
-        <!-- OneToOne bidireccional -->
-        <mapping class="com.cursosdedesarrollo.Perfil"/>
-        <mapping class="com.cursosdedesarrollo.Usuario"/>
+        <!-- ── OneToMany (unoamuchos) ──────────────────────────────── -->
+        <!-- Unidireccional: Categoria → Articulo -->
+        <mapping class="com.cursosdedesarrollo.unoamuchos.Articulo"/>
+        <mapping class="com.cursosdedesarrollo.unoamuchos.Categoria"/>
+        <!-- Bidireccional: Departamento ↔ Empleado -->
+        <mapping class="com.cursosdedesarrollo.unoamuchos.Empleado"/>
+        <mapping class="com.cursosdedesarrollo.unoamuchos.Departamento"/>
 
-        <!-- OneToMany unidireccional -->
-        <mapping class="com.cursosdedesarrollo.Articulo"/>
-        <mapping class="com.cursosdedesarrollo.Categoria"/>
-
-        <!-- OneToMany bidireccional -->
-        <mapping class="com.cursosdedesarrollo.Empleado"/>
-        <mapping class="com.cursosdedesarrollo.Departamento"/>
-
-        <!-- ManyToMany unidireccional -->
-        <mapping class="com.cursosdedesarrollo.Etiqueta"/>
-        <mapping class="com.cursosdedesarrollo.Producto"/>
-
-        <!-- ManyToMany bidireccional -->
-        <mapping class="com.cursosdedesarrollo.Actor"/>
-        <mapping class="com.cursosdedesarrollo.Pelicula"/>
+        <!-- ── ManyToMany (muchosamuchos) ────────────────────────── -->
+        <!-- Unidireccional: Producto → Etiqueta -->
+        <mapping class="com.cursosdedesarrollo.muchosamuchos.Etiqueta"/>
+        <mapping class="com.cursosdedesarrollo.muchosamuchos.Producto"/>
+        <!-- Bidireccional: Pelicula ↔ Actor -->
+        <mapping class="com.cursosdedesarrollo.muchosamuchos.Actor"/>
+        <mapping class="com.cursosdedesarrollo.muchosamuchos.Pelicula"/>
 
     </session-factory>
 </hibernate-configuration>

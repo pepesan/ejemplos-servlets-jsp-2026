@@ -1,4 +1,4 @@
-package com.cursosdedesarrollo;
+package com.cursosdedesarrollo.unoauno;
 
 import javax.persistence.*;
 
@@ -21,10 +21,7 @@ public class Usuario {
     @Column(nullable = false, length = 60)
     private String login;
 
-    /**
-     * Lado dueño: genera la columna perfil_id en la tabla usuarios.
-     * cascade=ALL asegura que Perfil se guarda/borra junto con Usuario.
-     */
+    /** Lado dueño: genera la columna perfil_id en la tabla usuarios. */
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "perfil_id")
     private Perfil perfil;
@@ -32,12 +29,12 @@ public class Usuario {
     public Usuario() {}
     public Usuario(String login) { this.login = login; }
 
-    public Long   getId()                   { return id; }
-    public void   setId(Long id)            { this.id = id; }
-    public String getLogin()                { return login; }
-    public void   setLogin(String l)        { this.login = l; }
-    public Perfil getPerfil()               { return perfil; }
-    public void   setPerfil(Perfil p)       {
+    public Long   getId()               { return id; }
+    public void   setId(Long id)        { this.id = id; }
+    public String getLogin()            { return login; }
+    public void   setLogin(String l)    { this.login = l; }
+    public Perfil getPerfil()           { return perfil; }
+    public void   setPerfil(Perfil p)   {
         this.perfil = p;
         if (p != null) p.setUsuario(this);  // mantiene coherencia bidireccional
     }

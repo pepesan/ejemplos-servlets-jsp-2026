@@ -1,4 +1,4 @@
-package com.cursosdedesarrollo;
+package com.cursosdedesarrollo.unoauno;
 
 import javax.persistence.*;
 

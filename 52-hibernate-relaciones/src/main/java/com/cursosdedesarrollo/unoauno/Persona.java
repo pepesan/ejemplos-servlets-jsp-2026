@@ -1,4 +1,4 @@
-package com.cursosdedesarrollo;
+package com.cursosdedesarrollo.unoauno;
 
 import javax.persistence.*;
 
@@ -29,10 +29,10 @@ public class Persona {
     public Persona() {}
     public Persona(String nombre) { this.nombre = nombre; }
 
-    public Long      getId()                       { return id; }
-    public void      setId(Long id)                { this.id = id; }
-    public String    getNombre()                   { return nombre; }
-    public void      setNombre(String n)           { this.nombre = n; }
-    public Pasaporte getPasaporte()                { return pasaporte; }
-    public void      setPasaporte(Pasaporte p)     { this.pasaporte = p; }
+    public Long       getId()                       { return id; }
+    public void       setId(Long id)                { this.id = id; }
+    public String     getNombre()                   { return nombre; }
+    public void       setNombre(String n)           { this.nombre = n; }
+    public Pasaporte  getPasaporte()                { return pasaporte; }
+    public void       setPasaporte(Pasaporte p)     { this.pasaporte = p; }
 }

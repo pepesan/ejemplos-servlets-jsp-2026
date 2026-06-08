@@ -1,5 +1,9 @@
 package com.cursosdedesarrollo;
 
+import com.cursosdedesarrollo.muchosamuchos.Actor;
+import com.cursosdedesarrollo.muchosamuchos.Etiqueta;
+import com.cursosdedesarrollo.muchosamuchos.Pelicula;
+import com.cursosdedesarrollo.muchosamuchos.Producto;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.cursosdedesarrollo;
+package com.cursosdedesarrollo.unoamuchos;
 
 import javax.persistence.*;
 
@@ -6,8 +6,8 @@ import javax.persistence.*;
  * OneToMany UNIDIRECCIONAL — lado pasivo ("muchos").
  *
  * Esta clase no tiene ningún campo @ManyToOne. Categoria tiene la FK
- * en su tabla join o como @JoinColumn, pero Articulo no sabe a qué
- * Categoria pertenece. No se puede navegar Articulo → Categoria.
+ * en su tabla via @JoinColumn, pero Articulo no sabe a qué Categoria
+ * pertenece. No se puede navegar Articulo → Categoria.
  */
 @Entity
 @Table(name = "articulos")

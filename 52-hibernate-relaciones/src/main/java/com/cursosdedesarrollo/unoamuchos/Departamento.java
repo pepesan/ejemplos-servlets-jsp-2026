@@ -1,4 +1,4 @@
-package com.cursosdedesarrollo;
+package com.cursosdedesarrollo.unoamuchos;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -36,10 +36,10 @@ public class Departamento {
         e.setDepartamento(this);
     }
 
-    public Long          getId()                          { return id; }
-    public void          setId(Long id)                   { this.id = id; }
-    public String        getNombre()                      { return nombre; }
-    public void          setNombre(String n)              { this.nombre = n; }
-    public List<Empleado> getEmpleados()                  { return empleados; }
-    public void          setEmpleados(List<Empleado> e)   { this.empleados = e; }
+    public Long           getId()                          { return id; }
+    public void           setId(Long id)                   { this.id = id; }
+    public String         getNombre()                      { return nombre; }
+    public void           setNombre(String n)              { this.nombre = n; }
+    public List<Empleado> getEmpleados()                   { return empleados; }
+    public void           setEmpleados(List<Empleado> e)   { this.empleados = e; }
 }

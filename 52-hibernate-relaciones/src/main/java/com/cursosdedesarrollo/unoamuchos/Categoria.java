@@ -1,4 +1,4 @@
-package com.cursosdedesarrollo;
+package com.cursosdedesarrollo.unoamuchos;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -34,10 +34,10 @@ public class Categoria {
     public Categoria() {}
     public Categoria(String nombre) { this.nombre = nombre; }
 
-    public Long          getId()                         { return id; }
-    public void          setId(Long id)                  { this.id = id; }
-    public String        getNombre()                     { return nombre; }
-    public void          setNombre(String n)             { this.nombre = n; }
-    public List<Articulo> getArticulos()                 { return articulos; }
-    public void          setArticulos(List<Articulo> a)  { this.articulos = a; }
+    public Long           getId()                         { return id; }
+    public void           setId(Long id)                  { this.id = id; }
+    public String         getNombre()                     { return nombre; }
+    public void           setNombre(String n)             { this.nombre = n; }
+    public List<Articulo> getArticulos()                  { return articulos; }
+    public void           setArticulos(List<Articulo> a)  { this.articulos = a; }
 }
