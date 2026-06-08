@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>27 – WebJars</title>
+    <!-- Bootstrap desde WebJar (versión exacta hardcodeada) -->
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-light p-4">
+
+<div class="container">
+    <h1 class="text-primary mb-1">27 — WebJars</h1>
+    <p class="text-secondary mb-4">
+        Distribuir bibliotecas JS/CSS como dependencias Maven. Sin descargas manuales,
+        sin commits de ficheros minificados, versiones gestionadas por el pom.xml.
+    </p>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card bg-secondary-subtle border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">Demo jQuery</h5>
+                    <p class="card-text text-secondary small">
+                        Contador interactivo, petición AJAX al servidor,
+                        manipulación del DOM. jQuery 3.7.1 desde WebJar.
+                    </p>
+                    <a href="demo-jquery.jsp" class="btn btn-warning btn-sm">Abrir →</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-secondary-subtle border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title text-info">Demo Bootstrap</h5>
+                    <p class="card-text text-secondary small">
+                        Componentes Bootstrap: modal, toast, tooltips, alertas.
+                        Bootstrap 5.3.3 desde WebJar.
+                    </p>
+                    <a href="demo-bootstrap.jsp" class="btn btn-info btn-sm">Abrir →</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-secondary-subtle border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Demo sin versión (<code>/wj/</code>)</h5>
+                    <p class="card-text text-secondary small">
+                        <code>WebjarsServlet</code> resuelve la versión automáticamente.
+                        Cambias la versión en el pom.xml sin tocar las JSPs.
+                    </p>
+                    <a href="demo-versionless.jsp" class="btn btn-success btn-sm">Abrir →</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-secondary-subtle border-secondary">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">Referencia</h5>
+                    <p class="card-text text-secondary small">
+                        Tabla de rutas, cómo funciona Tomcat con JARs,
+                        convenciones de WebJars, lista de librerías disponibles.
+                    </p>
+                    <a href="referencia.jsp" class="btn btn-danger btn-sm">Abrir →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="h5 text-primary">¿Cómo funciona?</h2>
+    <p>
+        Los WebJars empaquetan las bibliotecas JS/CSS en JARs Maven siguiendo la
+        convención <code>META-INF/resources/webjars/{nombre}/{version}/</code>.
+        Tomcat 7+ sirve esa carpeta automáticamente, igual que sirve el contenido
+        de <code>webapp/</code>. Solo hace falta añadir la dependencia al pom.xml.
+    </p>
+    <pre class="bg-black text-success p-3 rounded small">&lt;dependency&gt;
+    &lt;groupId&gt;org.webjars&lt;/groupId&gt;
+    &lt;artifactId&gt;jquery&lt;/artifactId&gt;
+    &lt;version&gt;3.7.1&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;!-- Referencia en JSP --&gt;
+&lt;script src="${pageContext.request.contextPath}/webjars/jquery/3.7.1/jquery.min.js"&gt;&lt;/script&gt;</pre>
+</div>
+
+<script src="/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

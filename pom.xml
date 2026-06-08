@@ -35,6 +35,8 @@
         <module>23-jsp-formularios</module>
         <module>24-jsp-jstl-funciones</module>
         <module>25-jsp-errores</module>
+        <module>26-jsp-estaticos</module>
+        <module>27-jsp-webjars</module>
         <!-- MVC -->
         <module>30-mvc</module>
         <module>31-mvc-crud</module>

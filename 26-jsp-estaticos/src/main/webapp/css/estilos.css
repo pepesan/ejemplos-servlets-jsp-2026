@@ -1,0 +1,65 @@
+/* ── Reset mínimo ────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Base ─────────────────────────────────────────────────────────────── */
+body {
+    font-family: 'Segoe UI', system-ui, monospace;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    max-width: 860px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    line-height: 1.6;
+}
+
+/* ── Indicator de que el CSS cargó ───────────────────────────────────── */
+body::after {
+    content: '✓ CSS cargado correctamente';
+    display: block;
+    background: #a6e3a1;
+    color: #1e1e2e;
+    padding: .4em 1em;
+    border-radius: 4px;
+    font-size: .85em;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Tipografía ──────────────────────────────────────────────────────── */
+h1 { color: #89b4fa; font-size: 1.6rem; margin-bottom: .3em; }
+h2 { color: #cba6f7; font-size: 1.1rem; margin-top: 1.6em; margin-bottom: .5em; }
+p  { color: #a6adc8; margin-bottom: .8em; }
+a  { color: #89dceb; }
+code, pre { font-family: monospace; color: #a6e3a1; }
+
+/* ── Bloques de código ───────────────────────────────────────────────── */
+pre {
+    background: #181825;
+    border-left: 3px solid #89b4fa;
+    padding: .8em 1em;
+    overflow-x: auto;
+    border-radius: 0 4px 4px 0;
+    font-size: .88em;
+    margin-bottom: 1em;
+}
+
+/* ── Tabla ───────────────────────────────────────────────────────────── */
+table { border-collapse: collapse; width: 100%; margin: .8em 0 1.2em; }
+th, td { border: 1px solid #45475a; padding: .45em .9em; text-align: left; font-size: .9em; }
+th { background: #313244; color: #cba6f7; }
+
+/* ── Alertas ─────────────────────────────────────────────────────────── */
+.ok   { background: #1e3a2b; border-left: 4px solid #a6e3a1; padding: .6em 1em; border-radius: 0 4px 4px 0; margin-bottom: .8em; }
+.ko   { background: #3a1e2b; border-left: 4px solid #f38ba8; padding: .6em 1em; border-radius: 0 4px 4px 0; margin-bottom: .8em; }
+.nota { background: #313244; padding: .6em 1em; border-radius: 4px; font-size: .88em; color: #a6adc8; margin-bottom: .8em; }
+
+/* ── Navegación ──────────────────────────────────────────────────────── */
+nav {
+    background: #313244;
+    padding: .5em 1em;
+    border-radius: 4px;
+    font-size: .85em;
+    margin-bottom: 1.5em;
+}
+nav a { color: #a6adc8; text-decoration: none; margin-right: 1.2em; }
+nav a:hover { color: #cdd6f4; }

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>26 – JSP: Recursos estáticos</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+<nav>
+    <a href="/">Inicio</a>
+    <a href="demo-correcto.jsp">✓ Correcto</a>
+    <a href="demo-incorrecto.jsp">✗ Incorrecto</a>
+    <a href="api/demo">Forward servlet</a>
+    <a href="WEB-INF/privado.html">WEB-INF (404)</a>
+</nav>
+
+<h1>26 — Recursos estáticos con JSP</h1>
+<p>
+    Tomcat sirve automáticamente los ficheros de <code>webapp/</code>
+    mediante su servlet por defecto. Las JSP y los servlets pueden
+    referenciarlos, pero la forma en que se construye la URL importa mucho.
+</p>
+
+<h2>Demos</h2>
+<table>
+    <tr>
+        <th>Demo</th>
+        <th>Qué muestra</th>
+    </tr>
+    <tr>
+        <td><a href="demo-correcto.jsp">demo-correcto.jsp</a></td>
+        <td>CSS y JS cargados con <code>${pageContext.request.contextPath}</code>. Funciona siempre.</td>
+    </tr>
+    <tr>
+        <td><a href="demo-incorrecto.jsp">demo-incorrecto.jsp</a></td>
+        <td>Rutas relativas sin contextPath. Funciona accediendo directamente, <strong>falla si la URL cambia</strong>.</td>
+    </tr>
+    <tr>
+        <td><a href="api/demo">GET /api/demo</a> (servlet → forward)</td>
+        <td>ForwardServlet delega en una JSP dentro de <code>WEB-INF/vistas/</code>.
+            La URL del navegador es <code>/api/demo</code>: las rutas relativas se rompen.</td>
+    </tr>
+    <tr>
+        <td><a href="WEB-INF/privado.html">WEB-INF/privado.html</a></td>
+        <td>Debe devolver <strong>404</strong>: Tomcat bloquea el acceso directo a <code>WEB-INF/</code>.</td>
+    </tr>
+</table>
+
+<h2>Estructura de carpetas</h2>
+<pre>
+webapp/
+├── index.html            ← accesible en /
+├── css/
+│   └── estilos.css       ← accesible en /css/estilos.css
+├── js/
+│   └── demo.js           ← accesible en /js/demo.js
+├── demo-correcto.jsp     ← accesible en /demo-correcto.jsp
+├── demo-incorrecto.jsp   ← accesible en /demo-incorrecto.jsp
+└── WEB-INF/
+    ├── web.xml           ← nunca accesible desde el navegador
+    ├── privado.html      ← nunca accesible desde el navegador
+    └── vistas/
+        └── forward.jsp   ← solo accesible via forward/include
+</pre>
+
+<script src="js/demo.js"></script>
+<div id="js-status">✗ JS no cargó (o está desactivado)</div>
+
+</body>
+</html>
