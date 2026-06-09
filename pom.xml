@@ -40,6 +40,7 @@
         <!-- MVC -->
         <module>30-mvc</module>
         <module>31-mvc-crud</module>
+        <module>32-mvc-servlet-jsp</module>
         <!-- Struts 1.x -->
         <module>40-struts1</module>
         <module>41-struts1-crud</module>

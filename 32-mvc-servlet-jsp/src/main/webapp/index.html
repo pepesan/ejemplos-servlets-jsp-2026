@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>32 – MVC: Front Controller + Controller + JSP/JSTL</title>
+    <style>
+        body  { font-family: sans-serif; max-width: 700px; margin: 40px auto; color: #333; }
+        h1    { border-bottom: 2px solid #3498db; padding-bottom: 8px; }
+        h2    { color: #555; }
+        ul    { line-height: 2; }
+        a     { color: #3498db; }
+        code  { background: #f0f4f8; padding: 2px 6px; border-radius: 3px; font-size: 0.9em; }
+        pre   { background: #f0f4f8; padding: 14px; border-radius: 6px; font-size: 0.9em; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>32 – MVC: Front Controller + Controller + JSP/JSTL</h1>
+
+    <p>Patrón MVC con Front Controller que delega en un controlador por recurso:</p>
+    <pre>
+Petición HTTP
+  → FrontControllerServlet  (único servlet, @WebServlet("/app/*"))
+      → AlumnoController.listar(req, resp)
+           req.setAttribute("alumnos",  lista)
+           req.setAttribute("notaMedia", media)
+           return "lista.jsp"
+      → forward → WEB-INF/vistas/lista.jsp
+                   ${alumnos}, ${notaMedia}, &lt;c:forEach&gt;…
+    </pre>
+
+    <h2>Acciones</h2>
+    <ul>
+        <li><a href="app/alumnos">Lista de alumnos</a>
+            → <code>AlumnoController.listar()</code> → <code>lista.jsp</code></li>
+    </ul>
+
+    <h2>Clases principales</h2>
+    <ul>
+        <li><code>FrontControllerServlet</code> — mapea rutas a métodos del controller</li>
+        <li><code>AlumnoController</code> — toda la lógica: listar, ver, guardar…</li>
+        <li><code>Accion</code> — interfaz funcional: <code>String ejecutar(req, resp)</code></li>
+        <li><code>modelo/Alumno</code> + <code>AlumnoRepositorio</code> — datos en memoria</li>
+    </ul>
+</body>
+</html>
