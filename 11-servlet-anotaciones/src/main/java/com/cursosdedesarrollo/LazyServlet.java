@@ -13,7 +13,7 @@ import java.io.PrintWriter;
  * init() se llama en la primera petición, no al arrancar el servidor.
  * Comparar con LoadOnStartupServlet para ver la diferencia de tiempos.
  */
-@WebServlet("/perezoso")
+@WebServlet(urlPatterns = "/perezoso", loadOnStartup = 0)
 public class LazyServlet extends HttpServlet {
 
     private long initMs;

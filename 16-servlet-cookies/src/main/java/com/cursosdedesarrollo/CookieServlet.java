@@ -154,6 +154,7 @@ public class CookieServlet extends HttpServlet {
     static Cookie crearSegura(String nombre, String valor) {
         Cookie c = new Cookie(nombre, valor);
         c.setHttpOnly(true);
+        // c.setSecure(true);
         c.setPath("/cookies");
         return c;
     }

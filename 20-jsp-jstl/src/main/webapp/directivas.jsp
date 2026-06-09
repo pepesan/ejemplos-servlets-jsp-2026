@@ -1,26 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
          import="java.util.Date" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="WEB-INF/_cabecera.jspf" %>
 <%@ include file="WEB-INF/_menu.jspf" %>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Directivas JSP</title>
-<style>
-body{font-family:monospace;max-width:860px;margin:2em auto;background:#1e1e2e;color:#cdd6f4}
-h1{color:#89b4fa}h2{color:#cba6f7;margin-top:1.6em}p{line-height:1.6;color:#a6adc8}
-a{color:#89dceb}code{color:#a6e3a1}
-pre{background:#181825;border-left:3px solid #89b4fa;padding:.8em 1em;
-    overflow-x:auto;border-radius:0 4px 4px 0;font-size:.88em;line-height:1.6}
-.resultado{background:#1e1e2e;border-left:3px solid #a6e3a1;padding:.6em 1em;
-           margin-top:-.2em;font-size:.9em}
-.nota{background:#313244;padding:.6em 1em;border-radius:4px;font-size:.88em;
-      color:#a6adc8;margin:.5em 0}
-</style>
-</head>
-<body>
-
 <h1>Directivas JSP</h1>
 <p>Las directivas son instrucciones para el compilador JSP. Se escriben con
 <code>&#37;@</code> y se procesan en tiempo de <strong>compilación</strong>,
@@ -91,5 +73,4 @@ El menú de navegación que aparece arriba se incluyó así:</p>
 </div>
 
 <p><a href="/">← Inicio</a> &nbsp;|&nbsp; <a href="expresiones.jsp">Siguiente: Expresiones →</a></p>
-</body>
-</html>
+<%@ include file="WEB-INF/_pie.jspf" %>

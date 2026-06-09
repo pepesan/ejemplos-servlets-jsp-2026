@@ -21,7 +21,7 @@ import java.util.Enumeration;
     urlPatterns = "/config",
     initParams  = {
         @WebInitParam(name = "autor",        value = "Curso de Servlets 2026"),
-        @WebInitParam(name = "version",      value = "1.0"),
+        @WebInitParam(name = "version",      value = "2.0"),
         @WebInitParam(name = "idioma",       value = "es"),
         @WebInitParam(name = "maxResultados", value = "50")
     }
