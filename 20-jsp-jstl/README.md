@@ -13,10 +13,20 @@ webapp/
 ├── objetos-implicitos.jsp  ← request, session, application, out, config, page, pageContext
 ├── el.jsp                  ← ${param.x}, operadores, empty, ternario
 ├── jstl-core.jsp           ← c:out, c:set, c:if, c:choose, c:forEach, c:url
-├── jstl-fmt.jsp            ← fmt:formatDate, fmt:formatNumber, fmt:setLocale
+├── jstl-fmt.jsp            ← fmt:formatDate, fmt:formatNumber, fmt:setLocale, fmt:parseDate,
+│                              fmt:message + fmt:setBundle/fmt:bundle + fmt:param (i18n)
+├── jstl-fn.jsp             ← fn:length, fn:toUpperCase/toLowerCase/trim, fn:contains,
+│                              fn:startsWith/endsWith/indexOf, fn:substring/Before/After,
+│                              fn:replace, fn:split/join, fn:escapeXml
 └── WEB-INF/
     ├── web.xml
     └── _menu.jspf          ← fragmento de navegación (incluido estáticamente)
+
+src/main/resources/
+├── mensajes.properties     ← bundle español (defecto)
+├── mensajes_en.properties  ← bundle inglés
+├── mensajes_de.properties  ← bundle alemán
+└── mensajes_fr.properties  ← bundle francés
 ```
 
 ## Flujo de navegación
@@ -28,6 +38,7 @@ webapp/
 | `/expresiones.jsp` | directo | expresiones.jsp |
 | `/objetos-implicitos.jsp` | directo | objetos-implicitos.jsp |
 | `/el.jsp?nombre=Ana` | directo | el.jsp |
+| `/jstl-fn.jsp` | directo | jstl-fn.jsp |
 | `/datos` | Servlet → forward | jstl-core.jsp |
 | `/datos?vista=fmt` | Servlet → forward | jstl-fmt.jsp |
 
@@ -75,4 +86,19 @@ curl -s "http://localhost:8083/datos?vista=fmt" | grep -o 'Biblioteca de formato
 
 # fmt:setLocale: tabla con distintos locales
 curl -s "http://localhost:8083/datos?vista=fmt" | grep -o 'es_ES'
+
+# fmt:message: bundle cargado (clave bienvenida en español)
+curl -s "http://localhost:8083/datos?vista=fmt" | grep -o 'Bienvenido'
+
+# fmt:message: bundle en inglés
+curl -s "http://localhost:8083/datos?vista=fmt" | grep -o 'Welcome'
+
+# jstl-fn.jsp: acceso directo sin servlet
+curl -s http://localhost:8083/jstl-fn.jsp | grep -o 'Biblioteca de funciones'
+
+# fn:toUpperCase sobre CSV
+curl -s http://localhost:8083/jstl-fn.jsp | grep -o 'JAVA'
+
+# fn:join: resultado con separador
+curl -s http://localhost:8083/jstl-fn.jsp | grep -o 'java | servlet'
 ```

@@ -71,32 +71,54 @@ ${fn:toLowerCase(s)}
 
 <%-- ══════════════════════════════ BÚSQUEDA Y POSICIÓN ══════════ --%>
 <h2>3. <code>fn:contains</code>, <code>fn:startsWith</code>, <code>fn:endsWith</code>, <code>fn:indexOf</code></h2>
+<p>
+  <code>fn:contains</code>, <code>fn:startsWith</code> y <code>fn:endsWith</code>
+  devuelven <code>boolean</code> (true/false) y son case-sensitive.<br>
+  <code>fn:containsIgnoreCase</code> hace lo mismo ignorando mayúsculas/minúsculas.<br>
+  <code>fn:indexOf</code> devuelve la posición (base 0) de la primera ocurrencia,
+  o <strong>-1</strong> si no se encuentra.<br>
+  Recuerda que <code>s = "&nbsp;&nbsp;Hola, Mundo JSP!&nbsp;&nbsp;"</code> tiene espacios al inicio y al final,
+  por eso <code>fn:startsWith</code> y <code>fn:endsWith</code> necesitan <code>fn:trim</code> primero.
+</p>
 
 <pre>
-${fn:contains(s, 'JSP')}                        &lt;!-- true --&gt;
-${fn:containsIgnoreCase(s, 'hola')}             &lt;!-- true --&gt;
-${fn:startsWith(fn:trim(s), 'Hola')}            &lt;!-- true --&gt;
-${fn:endsWith(fn:trim(s), '!')}                 &lt;!-- true --&gt;
-${fn:indexOf(s, 'Mundo')}                       &lt;!-- posición --&gt;
+&lt;!-- s = "  Hola, Mundo JSP!  " --&gt;
+${fn:contains(s, 'JSP')}               &lt;!-- true: 'JSP' aparece en s --&gt;
+${fn:contains(s, 'java')}              &lt;!-- false: case-sensitive, 'java' != 'JSP' --&gt;
+${fn:containsIgnoreCase(s, 'hola')}    &lt;!-- true: ignora mayúsculas --&gt;
+${fn:startsWith(s, 'Hola')}            &lt;!-- false: s empieza por espacios --&gt;
+${fn:startsWith(fn:trim(s), 'Hola')}   &lt;!-- true: tras trim ya empieza por 'Hola' --&gt;
+${fn:endsWith(fn:trim(s), '!')}        &lt;!-- true: tras trim termina en '!' --&gt;
+${fn:indexOf(s, 'Mundo')}              &lt;!-- 8: posición base 0 --&gt;
+${fn:indexOf(s, 'xyz')}                &lt;!-- -1: no encontrado --&gt;
 </pre>
 
 <table>
 <tr><th>Función</th><th>Código</th><th>Resultado</th></tr>
-<tr><td><code>fn:contains</code></td>
+<tr><td><code>fn:contains</code> (encontrado)</td>
     <td><code>\${fn:contains(s, 'JSP')}</code></td>
     <td>${fn:contains(s, 'JSP')}</td></tr>
+<tr><td><code>fn:contains</code> (no encontrado — case-sensitive)</td>
+    <td><code>\${fn:contains(s, 'java')}</code></td>
+    <td>${fn:contains(s, 'java')}</td></tr>
 <tr><td><code>fn:containsIgnoreCase</code></td>
     <td><code>\${fn:containsIgnoreCase(s, 'hola')}</code></td>
     <td>${fn:containsIgnoreCase(s, 'hola')}</td></tr>
-<tr><td><code>fn:startsWith</code></td>
+<tr><td><code>fn:startsWith</code> sin trim (falla por espacios)</td>
+    <td><code>\${fn:startsWith(s, 'Hola')}</code></td>
+    <td>${fn:startsWith(s, 'Hola')}</td></tr>
+<tr><td><code>fn:startsWith</code> con trim</td>
     <td><code>\${fn:startsWith(fn:trim(s), 'Hola')}</code></td>
     <td>${fn:startsWith(fn:trim(s), 'Hola')}</td></tr>
-<tr><td><code>fn:endsWith</code></td>
+<tr><td><code>fn:endsWith</code> con trim</td>
     <td><code>\${fn:endsWith(fn:trim(s), '!')}</code></td>
     <td>${fn:endsWith(fn:trim(s), '!')}</td></tr>
-<tr><td><code>fn:indexOf</code></td>
+<tr><td><code>fn:indexOf</code> (encontrado → posición base 0)</td>
     <td><code>\${fn:indexOf(s, 'Mundo')}</code></td>
     <td>${fn:indexOf(s, 'Mundo')}</td></tr>
+<tr><td><code>fn:indexOf</code> (no encontrado → -1)</td>
+    <td><code>\${fn:indexOf(s, 'xyz')}</code></td>
+    <td>${fn:indexOf(s, 'xyz')}</td></tr>
 </table>
 
 

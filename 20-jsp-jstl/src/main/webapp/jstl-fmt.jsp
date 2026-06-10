@@ -117,7 +117,122 @@ Navidad: &lt;fmt:formatDate value="${navidad}" type="date" dateStyle="full" /&gt
   Navidad: <strong><fmt:formatDate value="${navidad}" type="date" dateStyle="full" /></strong>
 </div>
 
-<p><a href="/">← Inicio</a> &nbsp;|&nbsp;
-   <a href="datos">← JSTL core</a></p>
+
+<%-- ══════════════════════════════════════ fmt:message ═══════════ --%>
+<h2>5. <code>fmt:message</code> — internacionalización (i18n)</h2>
+<p>Los textos se guardan en ficheros <code>.properties</code> en el classpath
+(<code>src/main/resources/mensajes*.properties</code>).
+<code>fmt:setBundle</code> carga el bundle; <code>fmt:message</code> obtiene
+la cadena por clave; <code>fmt:param</code> rellena los marcadores <code>{0}</code>, <code>{1}</code>…</p>
+
+<pre>
+&lt;fmt:setLocale  value="es_ES" /&gt;
+&lt;fmt:setBundle  basename="mensajes" /&gt;
+&lt;fmt:message    key="bienvenida" /&gt;
+&lt;fmt:message    key="saludo"&gt;
+    &lt;fmt:param value="Ana" /&gt;
+    &lt;fmt:param value="3"   /&gt;
+&lt;/fmt:message&gt;
+</pre>
+
+<div class="resultado">
+  <fmt:setLocale value="es_ES" />
+  <fmt:setBundle basename="mensajes" />
+  <fmt:message key="bienvenida" /><br>
+  <fmt:message key="saludo"><fmt:param value="Ana" /><fmt:param value="3" /></fmt:message>
+</div>
+
+<h2>5b. Mismo bundle en varios idiomas</h2>
+<p><code>fmt:setLocale</code> hace que <code>fmt:setBundle</code> cargue
+<code>mensajes_en.properties</code>, <code>mensajes_de.properties</code>, etc.</p>
+
+<table>
+  <tr>
+    <th>Locale</th>
+    <th><code>bienvenida</code></th>
+    <th><code>saludo</code> (Ana, 3)</th>
+    <th>Botones</th>
+  </tr>
+  <tr>
+    <td>es (defecto)</td>
+    <td>
+      <fmt:setLocale value="es" />
+      <fmt:setBundle basename="mensajes" />
+      <fmt:message key="bienvenida" />
+    </td>
+    <td><fmt:message key="saludo"><fmt:param value="Ana" /><fmt:param value="3" /></fmt:message></td>
+    <td>
+      <fmt:message key="btn.guardar" /> /
+      <fmt:message key="btn.cancelar" /> /
+      <fmt:message key="btn.eliminar" />
+    </td>
+  </tr>
+  <tr>
+    <td>en</td>
+    <td>
+      <fmt:setLocale value="en" />
+      <fmt:setBundle basename="mensajes" />
+      <fmt:message key="bienvenida" />
+    </td>
+    <td><fmt:message key="saludo"><fmt:param value="Ana" /><fmt:param value="3" /></fmt:message></td>
+    <td>
+      <fmt:message key="btn.guardar" /> /
+      <fmt:message key="btn.cancelar" /> /
+      <fmt:message key="btn.eliminar" />
+    </td>
+  </tr>
+  <tr>
+    <td>de</td>
+    <td>
+      <fmt:setLocale value="de" />
+      <fmt:setBundle basename="mensajes" />
+      <fmt:message key="bienvenida" />
+    </td>
+    <td><fmt:message key="saludo"><fmt:param value="Ana" /><fmt:param value="3" /></fmt:message></td>
+    <td>
+      <fmt:message key="btn.guardar" /> /
+      <fmt:message key="btn.cancelar" /> /
+      <fmt:message key="btn.eliminar" />
+    </td>
+  </tr>
+  <tr>
+    <td>fr</td>
+    <td>
+      <fmt:setLocale value="fr" />
+      <fmt:setBundle basename="mensajes" />
+      <fmt:message key="bienvenida" />
+    </td>
+    <td><fmt:message key="saludo"><fmt:param value="Ana" /><fmt:param value="3" /></fmt:message></td>
+    <td>
+      <fmt:message key="btn.guardar" /> /
+      <fmt:message key="btn.cancelar" /> /
+      <fmt:message key="btn.eliminar" />
+    </td>
+  </tr>
+</table>
+
+<h2>5c. <code>fmt:bundle</code> — scope local</h2>
+<p>Alternativa a <code>fmt:setBundle</code>: aplica el bundle solo dentro del bloque,
+sin modificar el locale de página.</p>
+
+<pre>
+&lt;fmt:bundle basename="mensajes"&gt;
+    &lt;fmt:message key="btn.guardar" /&gt;
+    &lt;fmt:message key="btn.cancelar" /&gt;
+&lt;/fmt:bundle&gt;
+</pre>
+
+<div class="resultado">
+  <fmt:setLocale value="es" />
+  <fmt:bundle basename="mensajes">
+    Guardar → <strong><fmt:message key="btn.guardar" /></strong> &nbsp;|&nbsp;
+    Cancelar → <strong><fmt:message key="btn.cancelar" /></strong> &nbsp;|&nbsp;
+    Eliminar → <strong><fmt:message key="btn.eliminar" /></strong>
+  </fmt:bundle>
+</div>
+
+<p><a href="${pageContext.request.contextPath}/">← Inicio</a> &nbsp;|&nbsp;
+   <a href="datos">← JSTL core</a> &nbsp;|&nbsp;
+   <a href="jstl-fn.jsp">Siguiente: JSTL fn →</a></p>
 </body>
 </html>

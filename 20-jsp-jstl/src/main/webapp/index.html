@@ -66,6 +66,16 @@
     <a href="el.jsp?nombre=Ana&edad=28">Abrir con ?nombre=Ana&amp;edad=28</a>
 </div>
 
+<div class="card">
+    <h3><span class="tag jsp">JSP</span> jstl-fn.jsp</h3>
+    <p>Biblioteca de funciones <code>fn:</code>: <code>fn:length</code>, <code>fn:toUpperCase</code>,
+       <code>fn:toLowerCase</code>, <code>fn:trim</code>, <code>fn:contains</code>,
+       <code>fn:startsWith</code>, <code>fn:endsWith</code>, <code>fn:indexOf</code>,
+       <code>fn:substring</code>, <code>fn:replace</code>, <code>fn:split</code>,
+       <code>fn:join</code> y <code>fn:escapeXml</code>. Acceso directo, sin servlet.</p>
+    <a href="jstl-fn.jsp">Abrir</a>
+</div>
+
 <h2>Páginas JSP — con datos del servlet</h2>
 
 <div class="card">
@@ -81,19 +91,11 @@
     <h3><span class="tag srv">Servlet</span> → <span class="tag jsp">JSP</span> jstl-fmt.jsp</h3>
     <p><code>DatosServlet</code> carga fechas y números en el <code>request</code>
        y hace forward a <code>jstl-fmt.jsp</code>.
-       Demuestra <code>fmt:formatDate</code>, <code>fmt:formatNumber</code>
-       y <code>fmt:setLocale</code>.</p>
+       Demuestra <code>fmt:formatDate</code>, <code>fmt:formatNumber</code>,
+       <code>fmt:setLocale</code>, <code>fmt:parseDate</code> y
+       <code>fmt:message</code> con <code>fmt:setBundle</code> /
+       <code>fmt:bundle</code> y <code>fmt:param</code> (i18n en es, en, de, fr).</p>
     <a href="datos?vista=fmt">Abrir vía servlet</a>
-</div>
-
-<div class="card">
-    <h3><span class="tag jsp">JSP</span> jstl-fn.jsp</h3>
-    <p>Biblioteca de funciones <code>fn:</code>: <code>fn:length</code>, <code>fn:toUpperCase</code>,
-       <code>fn:toLowerCase</code>, <code>fn:trim</code>, <code>fn:contains</code>,
-       <code>fn:startsWith</code>, <code>fn:endsWith</code>, <code>fn:indexOf</code>,
-       <code>fn:substring</code>, <code>fn:replace</code>, <code>fn:split</code>,
-       <code>fn:join</code> y <code>fn:escapeXml</code>. Acceso directo, sin servlet.</p>
-    <a href="jstl-fn.jsp">Abrir</a>
 </div>
 
 </body>
