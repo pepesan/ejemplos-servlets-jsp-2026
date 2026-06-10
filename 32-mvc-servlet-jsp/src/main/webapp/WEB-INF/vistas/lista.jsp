@@ -2,12 +2,22 @@
 <%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
-  Atributos recibidos del controlador (AlumnoController.listar · request scope):
-    alumnos   → List<Alumno>  — lista completa de alumnos
-    total     → int           — número total de alumnos
-    aprobados → long          — alumnos con nota >= 5
-    suspensos → long          — alumnos con nota < 5
-    notaMedia → double        — media aritmética de todas las notas
+  Vista:       lista.jsp
+  Controller:  AlumnoController.listar(req, resp)
+
+  El controller hace req.setAttribute(clave, valor) y esta JSP lo lee con EL ${clave}.
+  La tabla muestra cada setAttribute, el tipo Java y cómo se usa en la vista:
+
+    setAttribute("alumnos",   List<Alumno>) → ${alumnos}    → <c:forEach items="${alumnos}" var="a">
+    setAttribute("total",     int)          → ${total}      → texto directo
+    setAttribute("aprobados", long)         → ${aprobados}  → texto directo
+    setAttribute("suspensos", long)         → ${suspensos}  → texto directo
+    setAttribute("notaMedia", double)       → ${notaMedia}  → <fmt:formatNumber value="${notaMedia}">
+
+  Propiedades del objeto Alumno accesibles con EL dentro del forEach
+  (EL llama al getter correspondiente: ${a.nombre} → a.getNombre()):
+
+    ${a.id}  ${a.nombre}  ${a.email}  ${a.nota}  ${a.activo}  ${a.aprobado}  ${a.fechaAlta}
 --%>
 <!DOCTYPE html>
 <html lang="es">

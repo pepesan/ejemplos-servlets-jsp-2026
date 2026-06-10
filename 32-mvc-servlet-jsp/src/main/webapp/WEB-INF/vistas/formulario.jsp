@@ -1,10 +1,25 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
-  Atributos recibidos del controlador (AlumnoController.formularioNuevo / .formularioEditar / .guardar):
-    alumno   → Alumno              — objeto a editar (vacío si es nuevo; con datos si hay error de validación)
-    esNuevo  → boolean             — true = alta nueva, false = edición
-    errores  → Map<String,String>  — mapa campo → mensaje (solo presente si hubo errores de validación)
+  Vista:       formulario.jsp
+  Controllers: AlumnoController.formularioNuevo()  → esNuevo=true,  alumno vacío
+               AlumnoController.formularioEditar() → esNuevo=false, alumno con datos
+               AlumnoController.guardar()          → en caso de error de validación
+
+  Atributos recibidos via setAttribute:
+
+    setAttribute("alumno",  Alumno)             → ${alumno}
+      Pre-rellena los campos del formulario. Para nuevo, el objeto está vacío.
+      Para editar o tras un error de validación, tiene los datos ya introducidos.
+      Uso: value="<c:out value='${alumno.nombre}'/>"
+
+    setAttribute("esNuevo", boolean)            → ${esNuevo}
+      Controla el título, el botón y si se incluye el campo oculto con el id.
+      Uso: <c:if test="${esNuevo}">Crear alumno</c:if>
+
+    setAttribute("errores", Map<String,String>) → ${errores}   (solo si hay errores)
+      Mapa campo → mensaje.  Se accede por clave: ${errores.nombre} → errores.get("nombre")
+      Uso: <c:if test="${not empty errores.nombre}"> muestra el mensaje de error del campo
 --%>
 <!DOCTYPE html>
 <html lang="es">

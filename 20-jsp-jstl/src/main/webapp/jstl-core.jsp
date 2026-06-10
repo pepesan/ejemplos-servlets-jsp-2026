@@ -168,7 +168,7 @@ Tras remove: ${saludo}
   <a href="${urlEl}">Abrir el.jsp con esos params</a>
 </div>
 
-<p><a href="/">← Inicio</a> &nbsp;|&nbsp;
+<p><a href="${pageContext.request.contextPath}/">← Inicio</a> &nbsp;|&nbsp;
    <a href="el.jsp">← EL</a> &nbsp;|&nbsp;
    <a href="datos?vista=fmt">Siguiente: JSTL fmt →</a></p>
 </body>

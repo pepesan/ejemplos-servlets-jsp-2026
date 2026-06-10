@@ -10,14 +10,48 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controlador de alumnos.
- * Cada método:
- *   1. Lee parámetros del request
- *   2. Ejecuta la lógica de negocio usando el repositorio (modelo)
- *   3. Pone los datos en el request con setAttribute  ← punto clave
- *   4. Devuelve el nombre de la vista o una instrucción de redirección
+ * Controlador de alumnos (C en MVC).
  *
- * El FrontControllerServlet es quien decide si hacer forward o redirect.
+ * <p>Cada método sigue siempre la misma estructura:</p>
+ * <ol>
+ *   <li>Lee parámetros HTTP del request ({@code req.getParameter(...)}).</li>
+ *   <li>Invoca al repositorio (modelo) para obtener o modificar datos.</li>
+ *   <li><strong>Pone los datos en el request con {@code setAttribute}</strong>
+ *       para que la vista los lea con EL ({@code ${nombre}}).</li>
+ *   <li>Devuelve el nombre del JSP o {@code "redirect:..."};
+ *       es {@link FrontControllerServlet} quien ejecuta el forward/redirect.</li>
+ * </ol>
+ *
+ * <h3>Tabla de métodos</h3>
+ * <pre>
+ *   Método              Ruta (registrada en FrontControllerServlet)
+ *   ──────────────────────────────────────────────────────────────────────
+ *   listar()            GET  /app/alumnos           → lista.jsp
+ *   ver()               GET  /app/alumnos/ver        → detalle.jsp
+ *   formularioNuevo()   GET  /app/alumnos/nuevo      → formulario.jsp
+ *   formularioEditar()  GET  /app/alumnos/editar     → formulario.jsp
+ *   guardar()           POST /app/alumnos/guardar    → formulario.jsp (error)
+ *                                                    → redirect (ok)
+ *   eliminar()          POST /app/alumnos/eliminar   → redirect
+ * </pre>
+ *
+ * <h3>Contrato setAttribute → EL por vista</h3>
+ * <pre>
+ *   lista.jsp
+ *     setAttribute("alumnos",   List&lt;Alumno&gt;) → ${alumnos}  en &lt;c:forEach&gt;
+ *     setAttribute("total",     int)           → ${total}
+ *     setAttribute("aprobados", long)          → ${aprobados}
+ *     setAttribute("suspensos", long)          → ${suspensos}
+ *     setAttribute("notaMedia", double)        → ${notaMedia} en &lt;fmt:formatNumber&gt;
+ *
+ *   detalle.jsp
+ *     setAttribute("alumno", Alumno)           → ${alumno.nombre}, ${alumno.nota}…
+ *
+ *   formulario.jsp
+ *     setAttribute("alumno",  Alumno)          → value="${alumno.nombre}"… (pre-relleno)
+ *     setAttribute("esNuevo", boolean)         → &lt;c:if test="${esNuevo}"&gt;
+ *     setAttribute("errores", Map&lt;String,String&gt;) → ${errores.nombre} (mensajes)
+ * </pre>
  */
 public class AlumnoController {
 

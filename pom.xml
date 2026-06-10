@@ -56,6 +56,7 @@
         <!-- Integración -->
         <module>60-struts1-hibernate</module>
         <module>61-struts1-hibernate-crud</module>
+        <module>62-mvc-hibernate</module>
     </modules>
 
     <properties>

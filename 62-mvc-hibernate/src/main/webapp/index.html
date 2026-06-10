@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>62 – MVC Front Controller + Hibernate + H2</title>
+    <style>
+        body { font-family: sans-serif; max-width: 700px; margin: 40px auto; color: #333; }
+        h1   { border-bottom: 2px solid #27ae60; padding-bottom: 8px; }
+        pre  { background: #f0f4f8; padding: 14px; border-radius: 6px; font-size: 0.9em; }
+        a    { color: #27ae60; }
+        code { background: #f0f4f8; padding: 2px 6px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>62 – MVC Front Controller + Hibernate + H2</h1>
+
+    <p>Mismo patrón que el módulo 32, añadiendo Hibernate como capa de persistencia:</p>
+    <pre>
+Petición HTTP
+  → FrontControllerServlet  (@WebServlet("/app/*"))
+      → EmpleadoController.listar(req, resp)
+           dao.listarTodos()   ← Hibernate consulta H2 en memoria
+           req.setAttribute("empleados", lista)
+           return "lista.jsp"
+      → forward → WEB-INF/vistas/lista.jsp
+                   ${empleados}  /  &lt;c:forEach&gt;  /  &lt;fmt:formatNumber&gt;
+    </pre>
+
+    <h2>Acciones</h2>
+    <ul>
+        <li><a href="app/empleados">Lista de empleados</a></li>
+    </ul>
+
+    <h2>Componentes clave</h2>
+    <ul>
+        <li><code>FrontControllerServlet</code> — único servlet, tabla de rutas</li>
+        <li><code>EmpleadoController</code> — lógica: listar, ver, guardar…</li>
+        <li><code>EmpleadoDao</code> — acceso a datos con Hibernate Session</li>
+        <li><code>HibernateListener</code> — inicia/cierra la SessionFactory</li>
+        <li><code>modelo/Empleado.hbm.xml</code> — mapeo entidad ↔ tabla H2</li>
+    </ul>
+</body>
+</html>

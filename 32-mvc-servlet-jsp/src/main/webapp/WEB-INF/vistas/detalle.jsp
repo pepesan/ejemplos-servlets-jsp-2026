@@ -2,8 +2,22 @@
 <%@ taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
-  Atributos recibidos del controlador (AlumnoController.ver · request scope):
-    alumno → Alumno — objeto completo con id, nombre, email, nota, activo, fechaAlta
+  Vista:       detalle.jsp
+  Controller:  AlumnoController.ver(req, resp)
+
+  El controller hace req.setAttribute("alumno", alumno) y esta JSP lo lee con EL:
+
+    setAttribute("alumno", Alumno) → ${alumno}
+
+  Propiedades del objeto Alumno (EL llama al getter; isX() para booleanos):
+
+    ${alumno.id}        →  getId()
+    ${alumno.nombre}    →  getNombre()
+    ${alumno.email}     →  getEmail()
+    ${alumno.nota}      →  getNota()        usada en <fmt:formatNumber value="${alumno.nota}">
+    ${alumno.activo}    →  isActivo()       usada en <c:if test="${alumno.activo}">
+    ${alumno.aprobado}  →  isAprobado()     propiedad calculada (nota >= 5), sin campo propio
+    ${alumno.fechaAlta} →  getFechaAlta()   usada en <fmt:formatDate value="${alumno.fechaAlta}">
 --%>
 <!DOCTYPE html>
 <html lang="es">

@@ -12,5 +12,7 @@
   <a href="${pageContext.request.contextPath}/datos"
      style="text-decoration:none;${pageContext.request.servletPath == '/jstl-core.jsp'        ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">JSTL core</a> &nbsp;|&nbsp;
   <a href="${pageContext.request.contextPath}/datos?vista=fmt"
-     style="text-decoration:none;${pageContext.request.servletPath == '/jstl-fmt.jsp'         ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">JSTL fmt</a>
+     style="text-decoration:none;${pageContext.request.servletPath == '/jstl-fmt.jsp'         ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">JSTL fmt</a> &nbsp;|&nbsp;
+  <a href="${pageContext.request.contextPath}/jstl-fn.jsp"
+     style="text-decoration:none;${pageContext.request.servletPath == '/jstl-fn.jsp'          ? 'color:#cdd6f4;font-weight:bold' : 'color:#a6adc8'}">JSTL fn</a>
 </nav>

@@ -10,16 +10,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Único punto de entrada HTTP. Decide qué método del Controller invocar
- * según la ruta y el verbo HTTP, y luego delega el forward/redirect.
+ * Único punto de entrada HTTP de la aplicación (patrón Front Controller).
+ * Intercepta TODAS las peticiones bajo {@code /app/*} y decide qué método
+ * del controller invocar según la ruta y el verbo HTTP.
  *
- * Flujo:
- *   Petición → FrontControllerServlet.service()
- *                  → AlumnoController.metodo(req, resp)
- *                       → req.setAttribute(...)   (datos para la vista)
- *                       → return "lista.jsp"       (nombre de la vista)
- *                  → forward  a WEB-INF/vistas/lista.jsp
- *                  ← respuesta HTML generada por JSTL/EL
+ * <h3>Flujo de una petición GET /app/alumnos</h3>
+ * <pre>
+ *   1. Tomcat  →  service(req, resp)
+ *   2. getPathInfo()  →  "/alumnos"
+ *   3. getAcciones.get("/alumnos")  →  controller::listar  (referencia a método)
+ *   4. controller.listar(req, resp)
+ *        req.setAttribute("alumnos", lista)   ← datos al request scope
+ *        return "lista.jsp"
+ *   5. forward a WEB-INF/vistas/lista.jsp
+ *        ${alumnos}   ← EL lee el atributo del request
+ * </pre>
+ *
+ * <h3>¿Por qué service() en vez de doGet() + doPost()?</h3>
+ * Se sobreescribe {@code service()} para poder elegir el mapa de acciones
+ * (GET o POST) antes de despachar. Si usásemos doGet/doPost tendríamos
+ * código duplicado o necesitaríamos un método auxiliar.
+ *
+ * <h3>Tabla de rutas registradas en init()</h3>
+ * <pre>
+ *   GET  /app/alumnos          →  AlumnoController.listar()
+ *   GET  /app/alumnos/ver      →  AlumnoController.ver()
+ *   GET  /app/alumnos/nuevo    →  AlumnoController.formularioNuevo()
+ *   GET  /app/alumnos/editar   →  AlumnoController.formularioEditar()
+ *   POST /app/alumnos/guardar  →  AlumnoController.guardar()
+ *   POST /app/alumnos/eliminar →  AlumnoController.eliminar()
+ * </pre>
  */
 @WebServlet("/app/*")
 public class FrontControllerServlet extends HttpServlet {
@@ -50,7 +70,12 @@ public class FrontControllerServlet extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String path = req.getPathInfo();   // p.ej. "/alumnos", "/alumnos/ver"
+        // getPathInfo() devuelve la parte del path DESPUÉS del patrón del servlet (/app).
+        // Ejemplos:  GET /app/alumnos     → "/alumnos"
+        //            GET /app/alumnos/ver → "/alumnos/ver"
+        //            GET /app             → null   (sin barra final)
+        //            GET /app/            → "/"
+        String path = req.getPathInfo();
 
         // Raíz → redirigir a la lista
         if (path == null || path.equals("/")) {
