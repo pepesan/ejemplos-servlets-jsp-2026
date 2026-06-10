@@ -3,35 +3,99 @@
 <head>
     <meta charset="UTF-8"><title>23 — JSP Formularios</title>
     <style>
-        body{font-family:monospace;max-width:680px;margin:2em auto;background:#1e1e2e;color:#cdd6f4}
-        h1{color:#89b4fa}p{color:#a6adc8;line-height:1.6}a{color:#89dceb}code{color:#a6e3a1}
+        body{font-family:monospace;max-width:720px;margin:2em auto;background:#1e1e2e;color:#cdd6f4}
+        h1{color:#89b4fa}h2{color:#cba6f7;margin-top:1.6em}
+        p{color:#a6adc8;line-height:1.6}a{color:#89dceb}code{color:#a6e3a1}
         .card{background:#313244;border-radius:6px;padding:1em 1.4em;margin:.7em 0}
-        .card h3{margin:0 0 .4em;color:#a6e3a1;font-size:1em}.card p{margin:0 0 .3em;font-size:.9em}
-        .card a{display:inline-block;margin-top:.5em;background:#45475a;padding:.2em .8em;
+        .card h3{margin:0 0 .4em;color:#a6e3a1;font-size:1em}
+        .card p{margin:0 0 .3em;font-size:.9em;color:#a6adc8}
+        .card .enlaces{margin-top:.6em;display:flex;gap:.5em;flex-wrap:wrap}
+        .card a{display:inline-block;background:#45475a;padding:.2em .8em;
                 border-radius:3px;text-decoration:none;color:#cdd6f4;font-size:.85em}
         .card a:hover{background:#585b70}
         .flujo{background:#181825;border-radius:4px;padding:.8em 1em;margin:.5em 0;
                font-size:.88em;line-height:2;color:#cba6f7}
+        .tag{display:inline-block;font-size:.72em;font-weight:bold;padding:.1em .4em;
+             border-radius:3px;margin-right:.3em}
+        .nuevo{background:#a6e3a1;color:#1e1e2e}
+        .concepto{background:#181825;border-left:3px solid #cba6f7;padding:.3em .8em;
+                  font-size:.82em;color:#a6adc8;margin:.5em 0}
+        .form-preview{background:#181825;border-radius:4px;padding:.8em 1em;margin:.6em 0}
+        .form-preview .fp-campo{margin:.45em 0}
+        .form-preview .fp-label{font-size:.78em;color:#cba6f7;display:block;margin-bottom:.15em}
+        .form-preview .fp-input{background:#313244;border:1px solid #45475a;border-radius:3px;
+                                padding:.3em .6em;font-size:.8em;color:#585b70;width:100%;
+                                box-sizing:border-box;font-family:monospace}
+        .fp-hint{font-size:.72em;color:#585b70;margin-top:.1em;display:block}
     </style>
 </head>
 <body>
 <h1>23 — JSP: Formularios con validación y PRG</h1>
-<p>Ciclo completo de un formulario web con validación servidor, re-renderizado
-de errores inline y patrón POST-Redirect-GET para evitar el doble envío.</p>
+<p>Dos ejemplos complementarios del ciclo completo de formulario web: validación en servidor,
+errores inline junto al campo y patrón POST-Redirect-GET para evitar el doble envío.</p>
 
 <div class="flujo">
-  <strong>Con errores:</strong><br>
-  GET /registro → formulario vacío<br>
-  POST /registro → validación falla → <code>forward</code> al formulario con errores<br><br>
-  <strong>Con éxito (PRG):</strong><br>
-  POST /registro → validación ok → <code>sendRedirect</code> → GET /registro?ok=1 → éxito
+  <strong>Flujo con errores:</strong><br>
+  GET /servlet → muestra form → POST /servlet → validación falla
+  → <code>forward</code> al form con errores y valores conservados<br><br>
+  <strong>Flujo con éxito (PRG):</strong><br>
+  POST /servlet → validación ok → <code>sendRedirect</code> → GET /servlet?ok=1 → confirmación
 </div>
 
+<h2>Ejemplo 1 — Formulario de alta (campos vacíos)</h2>
+
 <div class="card">
-    <h3>Formulario de registro</h3>
-    <p>Campos: nombre (min 3), email (@), contraseña (min 6), edad (18-120).<br>
-    Los errores aparecen inline junto al campo. Los valores válidos se conservan.</p>
-    <a href="registro">Abrir formulario</a>
+    <h3>Registro de usuario</h3>
+    <p>Formulario de alta con todos los campos vacíos. Demuestra validación servidor y
+    conservación de valores al re-renderizar con errores.</p>
+    <div class="form-preview">
+        <div class="fp-campo">
+            <span class="fp-label">Nombre *</span>
+            <div class="fp-input">Mínimo 3 caracteres</div>
+            <span class="fp-hint">obligatorio · min 3 chars · <code>validarNombre()</code></span>
+        </div>
+        <div class="fp-campo">
+            <span class="fp-label">Correo electrónico *</span>
+            <div class="fp-input">usuario@ejemplo.com</div>
+            <span class="fp-hint">obligatorio · debe contener @ · <code>validarEmail()</code></span>
+        </div>
+        <div class="fp-campo">
+            <span class="fp-label">Contraseña *</span>
+            <div class="fp-input">••••••</div>
+            <span class="fp-hint">obligatoria · min 6 chars · <code>type="password"</code> no conserva valor</span>
+        </div>
+        <div class="fp-campo">
+            <span class="fp-label">Edad *</span>
+            <div class="fp-input" style="width:120px">18 – 120</div>
+            <span class="fp-hint">obligatoria · entero · entre 18 y 120 · <code>validarEdad()</code></span>
+        </div>
+    </div>
+    <div class="enlaces">
+        <a href="registro">Abrir formulario</a>
+    </div>
 </div>
+
+<h2>Ejemplo 2 — Formulario de edición (datos pre-cargados) <span class="tag nuevo">NUEVO</span></h2>
+
+<div class="card">
+    <h3>Editar perfil existente</h3>
+    <p>Carga un perfil de la "BD" en memoria y pre-rellena todos los campos del formulario.
+    Muestra las tres técnicas de pre-relleno en JSP:</p>
+    <div class="concepto">
+        <code>value="&lt;c:out value='${bean.campo}'/&gt;"</code>
+        → inputs de texto<br>
+        <code>${bean.rol eq 'admin' ? 'selected' : ''}</code>
+        → opción activa en <code>&lt;select&gt;</code><br>
+        <code>${bean.activo ? 'checked' : ''}</code>
+        → checkbox booleano
+    </div>
+    <p>Tres usuarios de demo con rol y estado distintos para comparar el pre-relleno:</p>
+    <div class="enlaces">
+        <a href="editar?id=1">Ana García — admin, activo</a>
+        <a href="editar?id=2">Luis Martínez — editor, activo</a>
+        <a href="editar?id=3">Carmen López — usuario, inactivo</a>
+    </div>
+</div>
+
 </body>
 </html>

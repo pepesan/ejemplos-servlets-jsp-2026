@@ -56,8 +56,8 @@ public class RegistroServlet extends HttpServlet {
             return;
         }
 
-        // Éxito: guardar nombre en sesión y redirigir (PRG)
-        req.getSession(true).setAttribute("usuarioRegistrado", bean.getNombre());
+        // Éxito: guardar bean en sesión y redirigir (PRG)
+        req.getSession(true).setAttribute("usuarioRegistrado", bean);
         resp.sendRedirect(req.getContextPath() + "/registro?ok=1");
     }
 

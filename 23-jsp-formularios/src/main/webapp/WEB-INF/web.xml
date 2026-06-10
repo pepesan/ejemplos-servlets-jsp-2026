@@ -13,4 +13,13 @@
         <servlet-name>registro</servlet-name>
         <url-pattern>/registro</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>editar</servlet-name>
+        <servlet-class>com.cursosdedesarrollo.EditarPerfilServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>editar</servlet-name>
+        <url-pattern>/editar</url-pattern>
+    </servlet-mapping>
 </web-app>

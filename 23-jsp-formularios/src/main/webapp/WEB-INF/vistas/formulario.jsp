@@ -26,6 +26,9 @@ button:hover{background:#b4d0f7}
 </head>
 <body>
 
+<p><a href="${pageContext.request.contextPath}/">← Inicio</a>
+   &nbsp;|&nbsp;
+   <a href="${pageContext.request.contextPath}/editar">Editar perfil →</a></p>
 <h1>Formulario de registro</h1>
 <p>Ejemplo del ciclo GET→POST→forward/redirect con validación y patrón PRG.</p>
 
