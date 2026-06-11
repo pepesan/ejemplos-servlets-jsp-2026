@@ -40,8 +40,8 @@
                 </tr>
                 <c:forEach var="p" items="${productos}">
                     <tr>
-                        <td>${p.id}</td>
-                        <td><c:out value="${p.nombre}"/></td>
+                        <td><c:out value="${p.id}"/></td>
+                        <td><a href="${pageContext.request.contextPath}/app/productos/ver?id=${p.id}"><c:out value="${p.nombre}"/></a></td>
                         <td><fmt:formatNumber value="${p.precio}" type="currency" currencySymbol="€"
                                               maxFractionDigits="2" minFractionDigits="2"/></td>
                         <td>

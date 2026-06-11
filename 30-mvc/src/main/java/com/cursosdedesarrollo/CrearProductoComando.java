@@ -19,22 +19,22 @@ public class CrearProductoComando implements Comando {
 
     private String post(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
-        String nombre    = req.getParameter("nombre");
+        String nombre    = req.getParameter("nombre").trim();
         String precioStr = req.getParameter("precio");
+        Producto p = new Producto(nombre, Double.parseDouble(precioStr));
 
         Map<String, String> errores = new LinkedHashMap<>();
         String e;
-        if ((e = validarNombre(nombre))    != null) errores.put("nombre", e);
+        if ((e = validarNombre(p.getNombre()))    != null) errores.put("nombre", e);
         if ((e = validarPrecio(precioStr)) != null) errores.put("precio", e);
 
         if (!errores.isEmpty()) {
-            req.setAttribute("nombre",  nombre);
-            req.setAttribute("precio",  precioStr);
+            req.setAttribute("producto",  p);
             req.setAttribute("errores", errores);
             return "formulario.jsp";
         }
 
-        ProductoRepositorio.guardar(new Producto(nombre.trim(), Double.parseDouble(precioStr.trim())));
+        ProductoRepositorio.guardar(p);
         resp.sendRedirect(req.getContextPath() + "/app/productos");
         return null;
     }

@@ -20,7 +20,7 @@
     <h1>Detalle del producto</h1>
 
     <table>
-        <tr><th>ID</th>     <td>${producto.id}</td></tr>
+        <tr><th>ID</th>     <td><c:out value="${producto.id}"/></td></tr>
         <tr><th>Nombre</th> <td><c:out value="${producto.nombre}"/></td></tr>
         <tr>
             <th>Precio</th>

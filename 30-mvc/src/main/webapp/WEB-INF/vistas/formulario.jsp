@@ -26,7 +26,7 @@
 
         <label for="nombre">Nombre</label>
         <input type="text" id="nombre" name="nombre"
-               value="<c:out value='${nombre}'/>"
+               value="<c:out value='${producto.getNombre()}'/>"
                class="${not empty errores.nombre ? 'error' : ''}">
         <c:if test="${not empty errores.nombre}">
             <div class="msg-error"><c:out value="${errores.nombre}"/></div>
@@ -34,7 +34,7 @@
 
         <label for="precio">Precio (€)</label>
         <input type="text" id="precio" name="precio"
-               value="<c:out value='${precio}'/>"
+               value="<c:out value='${producto.getPrecio()}'/>"
                class="${not empty errores.precio ? 'error' : ''}">
         <c:if test="${not empty errores.precio}">
             <div class="msg-error"><c:out value="${errores.precio}"/></div>
