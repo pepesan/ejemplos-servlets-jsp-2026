@@ -5,7 +5,11 @@
          http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <!-- UTF-8 en el cuerpo de los POST antes de que los servlets lean parámetros -->
+    <!--
+      Tomcat decodifica el cuerpo POST como ISO-8859-1 por defecto.
+      Este filtro llama a request.setCharacterEncoding("UTF-8") ANTES de que
+      cualquier servlet lea parámetros, evitando corrupción de caracteres (ej. "José" → "JosÃ©").
+    -->
     <filter>
         <filter-name>encodingFilter</filter-name>
         <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>

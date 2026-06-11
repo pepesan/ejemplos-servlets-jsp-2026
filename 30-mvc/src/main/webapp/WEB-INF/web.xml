@@ -7,6 +7,24 @@
 
     <display-name>30 - MVC Front Controller</display-name>
 
+    <!--
+      Tomcat decodifica el cuerpo POST como ISO-8859-1 por defecto.
+      Este filtro llama a request.setCharacterEncoding("UTF-8") ANTES de que
+      cualquier servlet lea parámetros, evitando corrupción de caracteres (ej. "José" → "JosÃ©").
+    -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>frontController</servlet-name>
         <servlet-class>com.cursosdedesarrollo.FrontControllerServlet</servlet-class>
