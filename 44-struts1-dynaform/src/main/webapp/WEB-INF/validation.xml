@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC
+        "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+        "http://commons.apache.org/dtds/validator_1_3_0.dtd">
+
+<!--
+  Las reglas son idénticas a las del módulo 43-A.
+  Lo que cambia es que "registroForm" ya no tiene una clase Java:
+  sus campos están declarados como <form-property> en struts-config.xml.
+-->
+<form-validation>
+    <formset>
+        <form name="registroForm">
+
+            <field property="nombre" depends="required,minlength,maxlength">
+                <arg position="0" key="label.nombre"/>
+                <arg position="1" name="minlength" key="${var:minlength}" resource="false"/>
+                <arg position="1" name="maxlength" key="${var:maxlength}" resource="false"/>
+                <var><var-name>minlength</var-name><var-value>2</var-value></var>
+                <var><var-name>maxlength</var-name><var-value>50</var-value></var>
+            </field>
+
+            <field property="email" depends="required,email">
+                <arg position="0" key="label.email"/>
+            </field>
+
+            <field property="edad" depends="required,integer,intRange">
+                <arg position="0" key="label.edad"/>
+                <arg position="1" name="intRange" key="${var:min}" resource="false"/>
+                <arg position="2" name="intRange" key="${var:max}" resource="false"/>
+                <var><var-name>min</var-name><var-value>1</var-value></var>
+                <var><var-name>max</var-name><var-value>120</var-value></var>
+            </field>
+
+        </form>
+    </formset>
+</form-validation>

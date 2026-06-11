@@ -28,6 +28,7 @@
         <module>16-servlet-cookies</module>
         <module>17-servlet-sesiones</module>
         <module>18-servlet-patrones</module>
+        <module>19-servlet-upload-file</module>
         <!-- JSP -->
         <module>20-jsp-jstl</module>
         <module>21-jsp-datos</module>
@@ -46,6 +47,7 @@
         <module>41-struts1-crud</module>
         <module>42-struts1-dispatch</module>
         <module>43-struts1-validacion</module>
+        <module>44-struts1-dynaform</module>
         <!-- Hibernate -->
         <module>50-hibernate</module>
         <module>51-hibernate-anotaciones</module>

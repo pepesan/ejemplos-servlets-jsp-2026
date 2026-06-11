@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>44 — Struts 1.x: DynaValidatorForm</title>
+    <style>
+        * { box-sizing: border-box; }
+        body  { font-family: sans-serif; max-width: 720px; margin: 40px auto; color: #333; padding: 0 16px; }
+        h1    { border-bottom: 3px solid #8e44ad; padding-bottom: 10px; }
+        h2    { margin-top: 32px; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        p     { line-height: 1.65; margin: 8px 0; }
+        code  { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: .92em; }
+        pre   { background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 4px;
+                padding: 14px 16px; overflow-x: auto; font-size: .88em; line-height: 1.5; }
+        table { border-collapse: collapse; width: 100%; margin-top: 14px; font-size: .93em; }
+        th, td { padding: 9px 12px; border: 1px solid #ddd; text-align: left; }
+        th    { background: #f0f0f0; }
+        .row-43 { background: #e8f4fd; }
+        .row-44 { background: #f5eef8; }
+        .cta  { display: inline-block; margin-top: 16px; padding: 10px 24px; background: #8e44ad;
+                color: #fff; border-radius: 4px; text-decoration: none; font-size: 1.05em; font-weight: bold; }
+        .cta:hover { background: #7d3c98; }
+        .nota { background: #f5eef8; border-left: 4px solid #8e44ad;
+                padding: 10px 14px; border-radius: 4px; margin: 14px 0; font-size: .93em; }
+    </style>
+</head>
+<body>
+
+<h1>44 — Struts 1.x: DynaValidatorForm</h1>
+
+<p>
+    Formulario de registro idéntico al del módulo 43-A (nombre, email, edad con
+    Struts Validator), pero <strong>sin ninguna clase Java para el form</strong>.
+    Los campos se declaran en <code>struts-config.xml</code> y Struts los gestiona
+    en tiempo de ejecución mediante <code>DynaValidatorForm</code>.
+</p>
+
+<a class="cta" href="formulario.do">Abrir formulario →</a>
+
+<h2>Diferencia con el módulo 43-A</h2>
+
+<table>
+    <tr>
+        <th></th>
+        <th>Módulo 43-A</th>
+        <th>Módulo 44</th>
+    </tr>
+    <tr class="row-43">
+        <td><strong>Clase Java del form</strong></td>
+        <td><code>RegistroForm extends ValidatorForm</code></td>
+        <td>No existe</td>
+    </tr>
+    <tr class="row-44">
+        <td><strong>Declaración de campos</strong></td>
+        <td>Propiedades Java (<code>private String nombre</code>)</td>
+        <td><code>&lt;form-property&gt;</code> en struts-config.xml</td>
+    </tr>
+    <tr class="row-43">
+        <td><strong>Acceso en la Action</strong></td>
+        <td><code>form.getNombre()</code></td>
+        <td><code>(String) dynaForm.get("nombre")</code></td>
+    </tr>
+    <tr class="row-44">
+        <td><strong>Acceso en el JSP</strong></td>
+        <td><code>${registroForm.nombre}</code></td>
+        <td>igual — DynaBean es transparente para EL</td>
+    </tr>
+    <tr class="row-43">
+        <td><strong>validation.xml</strong></td>
+        <td>idéntico</td>
+        <td>idéntico</td>
+    </tr>
+    <tr class="row-44">
+        <td><strong>Tests unitarios del form</strong></td>
+        <td>Sí (getter/setter sin contenedor)</td>
+        <td>No aplica (sin clase Java)</td>
+    </tr>
+</table>
+
+<h2>Declaración del form en struts-config.xml</h2>
+
+<pre>&lt;!-- 43-A: tipo personalizado que extiende ValidatorForm --&gt;
+&lt;form-bean name="registroForm"
+           type="com.cursosdedesarrollo.RegistroForm"/&gt;
+
+&lt;!-- 44: tipo dinámico de Struts + campos declarados en XML --&gt;
+&lt;form-bean name="registroForm"
+           type="org.apache.struts.validator.DynaValidatorForm"&gt;
+    &lt;form-property name="nombre" type="java.lang.String" initial=""/&gt;
+    &lt;form-property name="email"  type="java.lang.String" initial=""/&gt;
+    &lt;form-property name="edad"   type="java.lang.String" initial=""/&gt;
+&lt;/form-bean&gt;</pre>
+
+<div class="nota">
+    <strong>¿Cuándo usar DynaValidatorForm?</strong><br>
+    Cuando el formulario es simple y no necesita lógica personalizada (constructores,
+    métodos de negocio, conversiones). Para formularios complejos o que necesitan
+    <code>validate()</code> propio, sigue siendo mejor una clase Java explícita.
+</div>
+
+<h2>Acceso a los valores en la Action</h2>
+
+<pre>DynaValidatorForm dynaForm = (DynaValidatorForm) form;
+
+String nombre = (String) dynaForm.get("nombre");  // cast explícito al tipo declarado
+String email  = (String) dynaForm.get("email");
+String edad   = (String) dynaForm.get("edad");</pre>
+
+<h2>Estructura de archivos</h2>
+
+<pre>44-struts1-dynaform/
+├── src/main/java/com/cursosdedesarrollo/
+│   ├── RegistroAction.java             ← usa DynaValidatorForm.get()
+│   ├── Utf8MessageResources.java       ← .properties en UTF-8
+│   └── Utf8MessageResourcesFactory.java
+├── src/main/resources/
+│   └── ApplicationResources.properties
+└── src/main/webapp/WEB-INF/
+    ├── struts-config.xml   ← &lt;form-property&gt; en lugar de clase Java
+    ├── validation.xml      ← idéntico al módulo 43-A
+    ├── web.xml
+    └── vistas/
+        ├── formulario.jsp
+        └── exito.jsp</pre>
+
+</body>
+</html>

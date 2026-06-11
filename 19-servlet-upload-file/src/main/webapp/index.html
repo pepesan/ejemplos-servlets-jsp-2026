@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>19 — Subida de ficheros</title>
+    <style>
+        body { font-family: monospace; max-width: 760px; margin: 2em auto;
+               background: #1e1e2e; color: #cdd6f4; }
+        h1   { color: #89b4fa; }
+        h2   { color: #cba6f7; margin-top: 1.6em; }
+        p    { line-height: 1.6; color: #a6adc8; }
+        a    { color: #89dceb; }
+        code { color: #a6e3a1; }
+        .card { background: #313244; border-radius: 6px; padding: 1em 1.4em; margin: .7em 0; }
+        .card h3 { margin: 0 0 .4em; color: #a6e3a1; font-size: 1em; }
+        .card p  { margin: 0 0 .3em; font-size: .9em; }
+        .card a  { display: inline-block; margin-top: .5em; background: #45475a;
+                   padding: .2em .8em; border-radius: 3px; text-decoration: none;
+                   color: #cdd6f4; font-size: .85em; }
+        .card a:hover { background: #585b70; }
+    </style>
+</head>
+<body>
+<h1>19 — Subida de ficheros con <code>@MultipartConfig</code></h1>
+<p>
+    Demuestra cómo aceptar ficheros enviados con
+    <code>enctype="multipart/form-data"</code> desde Servlet 3.0 usando la
+    anotación <code>@MultipartConfig</code> y la API <code>request.getPart()</code>.
+    No se necesita ninguna librería externa (Apache Commons FileUpload, etc.).
+</p>
+
+<div class="card">
+    <h3>SubirFicheroServlet — subida con validación de tipo y tamaño</h3>
+    <p>
+        Formulario <code>multipart/form-data</code> con <code>&lt;input type="file"&gt;</code>
+        y un campo de texto normal. El servlet valida el tipo MIME (imagen, PDF, TXT)
+        y el tamaño (máx. 2 MB), extrae el nombre original del header
+        <code>Content-Disposition</code>, sanea el nombre para evitar path traversal
+        y guarda el fichero en el directorio temporal del servidor con
+        <code>Part.write()</code>.
+    </p>
+    <a href="subir">Abrir formulario</a>
+</div>
+</body>
+</html>

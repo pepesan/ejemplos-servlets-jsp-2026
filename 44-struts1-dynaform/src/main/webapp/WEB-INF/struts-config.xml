@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+
+    <form-beans>
+        <!--
+          DynaValidatorForm: Struts instancia esta clase en tiempo de ejecución
+          y crea las propiedades dinámicamente a partir de los <form-property>.
+          NO existe ninguna clase RegistroForm.java en el proyecto.
+
+          Compara con módulo 43-A donde sí había RegistroForm.java:
+            módulo 43-A → public class RegistroForm extends ValidatorForm { ... }
+            módulo 44   → <form-bean type="DynaValidatorForm"> + <form-property>
+        -->
+        <form-bean name="registroForm"
+                   type="org.apache.struts.validator.DynaValidatorForm">
+            <form-property name="nombre" type="java.lang.String" initial=""/>
+            <form-property name="email"  type="java.lang.String" initial=""/>
+            <form-property name="edad"   type="java.lang.String" initial=""/>
+        </form-bean>
+    </form-beans>
+
+    <action-mappings>
+
+        <!-- GET /formulario.do: muestra el formulario vacío -->
+        <action path="/formulario"
+                name="registroForm"
+                scope="request"
+                validate="false"
+                forward="/WEB-INF/vistas/formulario.jsp"/>
+
+        <!--
+          POST /registro.do: Struts llama a DynaValidatorForm.validate()
+          antes de RegistroAction.execute(). Las reglas vienen de validation.xml.
+        -->
+        <action path="/registro"
+                type="com.cursosdedesarrollo.RegistroAction"
+                name="registroForm"
+                scope="request"
+                validate="true"
+                input="/WEB-INF/vistas/formulario.jsp">
+            <forward name="exito" path="/WEB-INF/vistas/exito.jsp"/>
+        </action>
+
+    </action-mappings>
+
+    <message-resources parameter="ApplicationResources"
+                       factory="com.cursosdedesarrollo.Utf8MessageResourcesFactory"/>
+
+    <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+        <set-property property="pathnames"
+                      value="/org/apache/struts/validator/validator-rules.xml,
+                             /WEB-INF/validation.xml"/>
+    </plug-in>
+
+</struts-config>
