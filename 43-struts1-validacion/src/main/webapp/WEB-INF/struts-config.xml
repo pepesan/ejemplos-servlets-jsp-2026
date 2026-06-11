@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+
+    <form-beans>
+        <!-- Ejemplo A: validación declarativa con Struts Validator (validation.xml) -->
+        <form-bean name="registroForm" type="com.cursosdedesarrollo.RegistroForm"/>
+        <!-- Ejemplo B: validación programática sobreescribiendo ActionForm.validate() -->
+        <form-bean name="contactoForm" type="com.cursosdedesarrollo.ContactoForm"/>
+    </form-beans>
+
+    <action-mappings>
+
+        <!-- ─── EJEMPLO A: Struts Validator (validation.xml) ─────────────────── -->
+
+        <action path="/formulario"
+                type="com.cursosdedesarrollo.MostrarFormularioAction"
+                name="registroForm"
+                scope="request"
+                validate="false">
+            <forward name="formulario" path="/WEB-INF/vistas/formulario.jsp"/>
+        </action>
+
+        <!--
+          validate="true" → Struts llama a RegistroForm.validate() (de ValidatorForm),
+                            que ejecuta las reglas de validation.xml ANTES de execute().
+          input="..."     → destino si hay errores (sin llamar a execute()).
+        -->
+        <action path="/registro"
+                type="com.cursosdedesarrollo.RegistroAction"
+                name="registroForm"
+                scope="request"
+                validate="true"
+                input="/WEB-INF/vistas/formulario.jsp">
+            <forward name="exito" path="/WEB-INF/vistas/exito.jsp"/>
+        </action>
+
+        <!-- ─── EJEMPLO B: ActionForm.validate() programático ────────────────── -->
+
+        <action path="/mostrarContacto"
+                type="com.cursosdedesarrollo.MostrarFormularioAction"
+                name="contactoForm"
+                scope="request"
+                validate="false">
+            <forward name="formulario" path="/WEB-INF/vistas/formularioContacto.jsp"/>
+        </action>
+
+        <!--
+          validate="true" → Struts llama a ContactoForm.validate() (sobreescrito en Java)
+                            ANTES de ContactoAction.execute().
+          input="..."     → destino si hay errores.
+        -->
+        <action path="/contacto"
+                type="com.cursosdedesarrollo.ContactoAction"
+                name="contactoForm"
+                scope="request"
+                validate="true"
+                input="/WEB-INF/vistas/formularioContacto.jsp">
+            <forward name="exito" path="/WEB-INF/vistas/exitoContacto.jsp"/>
+        </action>
+
+    </action-mappings>
+
+    <!--
+      factory: subclase que sobreescribe loadLocale() para leer el .properties como UTF-8.
+      Sin esto, PropertyMessageResources usa PropertyResourceBundle(InputStream) → ISO-8859-1.
+    -->
+    <message-resources parameter="ApplicationResources"
+                       factory="com.cursosdedesarrollo.Utf8MessageResourcesFactory"/>
+
+    <!--
+      ValidatorPlugIn carga las reglas al arrancar (solo necesario para el Ejemplo A).
+    -->
+    <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+        <set-property property="pathnames"
+                      value="/org/apache/struts/validator/validator-rules.xml,/WEB-INF/validation.xml"/>
+    </plug-in>
+
+</struts-config>

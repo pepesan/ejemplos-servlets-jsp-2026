@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>43 — Struts 1.x: Dónde poner la validación</title>
+    <style>
+        * { box-sizing: border-box; }
+        body  { font-family: sans-serif; max-width: 760px; margin: 40px auto; color: #333; padding: 0 16px; }
+        h1    { border-bottom: 3px solid #555; padding-bottom: 10px; margin-bottom: 6px; }
+        h2    { margin-top: 36px; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        h3    { margin-top: 20px; color: #555; }
+        p     { line-height: 1.65; margin: 8px 0; }
+        code  { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: .92em; }
+        pre   { background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 4px;
+                padding: 14px 16px; overflow-x: auto; font-size: .88em; line-height: 1.5; }
+
+        /* Tabla comparativa */
+        table { border-collapse: collapse; width: 100%; margin-top: 14px; font-size: .93em; }
+        th, td { padding: 9px 12px; border: 1px solid #ddd; text-align: left; }
+        th     { background: #f0f0f0; font-weight: bold; }
+        .row-a { background: #e8f4fd; }
+        .row-b { background: #eafaf1; }
+
+        /* Tarjetas de ejemplos */
+        .card  { border: 1px solid #ddd; border-radius: 6px; padding: 18px 22px; margin-top: 18px; }
+        .card-a { border-left: 5px solid #2980b9; }
+        .card-b { border-left: 5px solid #27ae60; }
+        .card h3 { margin-top: 0; }
+        .card-a h3 { color: #2980b9; }
+        .card-b h3 { color: #27ae60; }
+        .card a  { font-weight: bold; font-size: 1.05em; display: inline-block; margin-top: 8px;
+                   padding: 8px 18px; border-radius: 4px; color: #fff; text-decoration: none; }
+        .card-a a { background: #2980b9; }
+        .card-a a:hover { background: #1f6fa0; }
+        .card-b a { background: #27ae60; }
+        .card-b a:hover { background: #1e8449; }
+        .badge { display: inline-block; font-size: .8em; font-weight: bold; padding: 2px 8px;
+                 border-radius: 10px; margin-right: 4px; vertical-align: middle; }
+        .badge-xml  { background: #d6eaf8; color: #1a5276; }
+        .badge-java { background: #d5f5e3; color: #1a5e36; }
+
+        /* Flujo de petición */
+        .flow { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 4px;
+                padding: 14px 16px; font-family: monospace; font-size: .87em;
+                line-height: 1.7; white-space: pre; overflow-x: auto; }
+
+        /* Nota */
+        .nota { background: #fef9e7; border-left: 4px solid #f39c12;
+                padding: 10px 14px; border-radius: 4px; margin: 14px 0; font-size: .93em; }
+    </style>
+</head>
+<body>
+
+<h1>43 — Struts 1.x: Dónde poner la validación</h1>
+
+<p>
+    En Struts 1.x hay <strong>tres sitios posibles</strong> para la validación de un formulario.
+    El módulo 40 mostró el primero. Este módulo muestra los otros dos.
+</p>
+
+<h2>Comparativa de enfoques</h2>
+
+<table>
+    <tr>
+        <th>Módulo</th>
+        <th>¿Dónde vive la validación?</th>
+        <th>Mecanismo</th>
+        <th>Configurable sin recompilar</th>
+    </tr>
+    <tr>
+        <td><strong>40</strong></td>
+        <td><code>Action.execute()</code></td>
+        <td>Código Java en la acción</td>
+        <td>No</td>
+    </tr>
+    <tr class="row-a">
+        <td><strong>43-A</strong></td>
+        <td><code>validation.xml</code></td>
+        <td>Struts Validator (declarativo)</td>
+        <td>Sí — editar el XML</td>
+    </tr>
+    <tr class="row-b">
+        <td><strong>43-B</strong></td>
+        <td><code>ActionForm.validate()</code></td>
+        <td>Código Java en el Form</td>
+        <td>No</td>
+    </tr>
+</table>
+
+<div class="nota">
+    <strong>Clave común a 43-A y 43-B:</strong> en <code>struts-config.xml</code> el action lleva
+    <code>validate="true"</code> y un atributo <code>input="..."</code>.
+    Struts llama a <code>form.validate()</code> antes de <code>action.execute()</code>;
+    si hay errores, reenvía a <code>input</code> sin llamar nunca a la Action.
+</div>
+
+<h2>Flujo de una petición POST (ambos ejemplos)</h2>
+
+<div class="flow">Navegador  POST /xxx.do
+    │
+    ▼
+ActionServlet
+    ├─ 1. Crea/reutiliza el form bean y lo puebla por reflexión
+    ├─ 2. validate="true"  →  llama a form.validate()
+    │         ┌─ hay errores → reenvía a input="..."  (Action NO se ejecuta)
+    │         └─ sin errores → continúa
+    └─ 3. Llama a Action.execute()  ←  solo si validate() devolvió vacío
+               └─ mapping.findForward("exito") → vista de éxito</div>
+
+
+<h2>Ejemplos de este módulo</h2>
+
+<!-- ──────────────────────────────────────────────────────── EJEMPLO A -->
+<div class="card card-a">
+    <h3><span class="badge badge-xml">XML</span> Ejemplo A — Struts Validator (declarativo)</h3>
+
+    <p>
+        <strong>Formulario de registro</strong> con tres campos: nombre, correo electrónico y edad.<br>
+        Las reglas de validación se declaran en <code>WEB-INF/validation.xml</code>.
+        <code>RegistroForm</code> extiende <code>ValidatorForm</code> y no contiene
+        ningún método <code>validate()</code> propio: el framework lo hereda y ejecuta el XML.
+        <code>RegistroAction.execute()</code> no tiene ni una línea de validación.
+    </p>
+
+    <p><strong>Reglas aplicadas:</strong></p>
+    <ul>
+        <li><code>nombre</code> — obligatorio, mínimo 2 caracteres, máximo 50</li>
+        <li><code>email</code> — obligatorio, formato de correo válido</li>
+        <li><code>edad</code> — obligatorio, número entero, rango 1–120</li>
+    </ul>
+
+    <p><strong>Piezas clave:</strong></p>
+    <ul>
+        <li><code>RegistroForm extends ValidatorForm</code></li>
+        <li><code>WEB-INF/validation.xml</code> con <code>&lt;field depends="required,email,intRange"&gt;</code></li>
+        <li><code>ValidatorPlugIn</code> en <code>struts-config.xml</code> que carga los XMLs al arrancar</li>
+        <li><code>validate="true"</code> + <code>input="..."</code> en el <code>&lt;action&gt;</code></li>
+    </ul>
+
+    <a href="formulario.do">Abrir Ejemplo A →</a>
+</div>
+
+<!-- ──────────────────────────────────────────────────────── EJEMPLO B -->
+<div class="card card-b">
+    <h3><span class="badge badge-java">Java</span> Ejemplo B — Validación programática en el Form</h3>
+
+    <p>
+        <strong>Formulario de contacto</strong> con tres campos: nombre, correo electrónico y mensaje.<br>
+        <code>ContactoForm</code> extiende <code>ActionForm</code> y sobreescribe el método
+        <code>validate(ActionMapping, HttpServletRequest)</code>.
+        Cuando Struts detecta <code>validate="true"</code>, llama a ese método <em>antes</em> de
+        la Action. La lógica de validación está en Java pero <em>en el Form</em>, no en la Action.
+    </p>
+
+    <p><strong>Reglas aplicadas:</strong></p>
+    <ul>
+        <li><code>nombre</code> — obligatorio</li>
+        <li><code>email</code> — obligatorio, debe contener <code>@</code> y algo después</li>
+        <li><code>mensaje</code> — obligatorio, mínimo 10 caracteres</li>
+    </ul>
+
+    <p><strong>Piezas clave:</strong></p>
+    <ul>
+        <li><code>ContactoForm extends ActionForm</code> con <code>validate()</code> sobreescrito</li>
+        <li><code>validate()</code> construye y devuelve un <code>ActionErrors</code> con claves de mensajes</li>
+        <li>No necesita <code>ValidatorPlugIn</code> ni <code>validation.xml</code></li>
+        <li><code>validate="true"</code> + <code>input="..."</code> en el <code>&lt;action&gt;</code> (igual que A)</li>
+    </ul>
+
+    <a href="mostrarContacto.do">Abrir Ejemplo B →</a>
+</div>
+
+
+<h2>UTF-8 en los mensajes de error</h2>
+
+<p>
+    Por defecto Struts 1.x carga <code>ApplicationResources.properties</code> como
+    <strong>ISO-8859-1</strong>, lo que corrompe los acentos.
+    Este módulo incluye <code>Utf8MessageResourcesFactory</code> y <code>Utf8MessageResources</code>:
+    dos clases que sobreescriben el método de carga para usar <code>UTF-8</code>.
+    El <code>.properties</code> se escribe con caracteres normales; no se necesitan escapes
+    <code>\uXXXX</code>.
+</p>
+
+<pre>&lt;!-- struts-config.xml --&gt;
+&lt;message-resources parameter="ApplicationResources"
+                   factory="com.cursosdedesarrollo.Utf8MessageResourcesFactory"/&gt;</pre>
+
+
+<h2>Estructura de archivos relevantes</h2>
+
+<pre>43-struts1-validacion/
+├── src/main/java/com/cursosdedesarrollo/
+│   ├── RegistroForm.java             ← extends ValidatorForm (Ejemplo A)
+│   ├── RegistroAction.java           ← sin código de validación (Ejemplo A)
+│   ├── ContactoForm.java             ← extends ActionForm + validate() (Ejemplo B)
+│   ├── ContactoAction.java           ← sin código de validación (Ejemplo B)
+│   ├── MostrarFormularioAction.java  ← muestra formulario vacío (ambos)
+│   ├── Utf8MessageResources.java     ← carga .properties en UTF-8
+│   └── Utf8MessageResourcesFactory.java
+├── src/main/resources/
+│   └── ApplicationResources.properties   ← mensajes de error en UTF-8
+└── src/main/webapp/WEB-INF/
+    ├── struts-config.xml             ← validate="true", input=, ValidatorPlugIn
+    ├── validation.xml                ← reglas declarativas (solo Ejemplo A)
+    ├── web.xml
+    └── vistas/
+        ├── formulario.jsp            ← Ejemplo A
+        ├── exito.jsp                 ← Ejemplo A
+        ├── formularioContacto.jsp    ← Ejemplo B
+        └── exitoContacto.jsp         ← Ejemplo B</pre>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC
+        "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.3.0//EN"
+        "http://commons.apache.org/dtds/validator_1_3_0.dtd">
+
+<!--
+  Reglas declarativas del Struts Validator.
+  No hay lógica de validación en Java: todo queda aquí.
+
+  Cada <field> indica:
+    - property:  el campo del form (nombre de la propiedad en RegistroForm)
+    - depends:   lista de validadores a aplicar, en orden
+    - <arg>:     argumentos para el mensaje de error
+                   position="0" → {0} en el mensaje (normalmente el nombre del campo)
+                   position="1" → {1} (ej. longitud mínima)
+    - <var>:     parámetros del validador (ej. longitud mínima/máxima, rango)
+-->
+<form-validation>
+    <formset>
+        <form name="registroForm">
+
+            <!-- nombre: obligatorio, mínimo 2 caracteres, máximo 50 -->
+            <field property="nombre" depends="required,minlength,maxlength">
+                <arg position="0" key="label.nombre"/>
+                <arg position="1" name="minlength" key="${var:minlength}" resource="false"/>
+                <arg position="1" name="maxlength" key="${var:maxlength}" resource="false"/>
+                <var><var-name>minlength</var-name><var-value>2</var-value></var>
+                <var><var-name>maxlength</var-name><var-value>50</var-value></var>
+            </field>
+
+            <!-- email: obligatorio, formato correo válido -->
+            <field property="email" depends="required,email">
+                <arg position="0" key="label.email"/>
+            </field>
+
+            <!-- edad: obligatorio, debe ser un entero, rango 1–120 -->
+            <field property="edad" depends="required,integer,intRange">
+                <arg position="0" key="label.edad"/>
+                <arg position="1" name="intRange" key="${var:min}" resource="false"/>
+                <arg position="2" name="intRange" key="${var:max}" resource="false"/>
+                <var><var-name>min</var-name><var-value>1</var-value></var>
+                <var><var-name>max</var-name><var-value>120</var-value></var>
+            </field>
+
+        </form>
+    </formset>
+</form-validation>
