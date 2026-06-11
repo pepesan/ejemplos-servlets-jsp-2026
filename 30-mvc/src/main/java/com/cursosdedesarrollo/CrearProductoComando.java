@@ -14,6 +14,8 @@ public class CrearProductoComando implements Comando {
             return post(req, resp);
         }
         req.setAttribute("errores", new LinkedHashMap<String, String>());
+        Producto p = new Producto();
+        req.setAttribute("producto", p);
         return "formulario.jsp";
     }
 
