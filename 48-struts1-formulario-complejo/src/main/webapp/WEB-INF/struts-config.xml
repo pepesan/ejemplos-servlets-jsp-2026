@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+
+    <form-beans>
+        <form-bean name="registroForm" type="com.cursosdedesarrollo.RegistroForm"/>
+    </form-beans>
+
+    <action-mappings>
+
+        <!-- GET /formulario.do → muestra el formulario vacío -->
+        <action path="/formulario"
+                name="registroForm"
+                scope="request"
+                validate="false"
+                forward="/WEB-INF/vistas/formulario.jsp"/>
+
+        <!--
+          POST /registrar.do → procesa el formulario.
+          validate="true": Struts llama a RegistroForm.validate() antes de la Action.
+          Si hay errores, hace forward a input sin invocar RegistrarAction.
+        -->
+        <action path="/registrar"
+                type="com.cursosdedesarrollo.RegistrarAction"
+                name="registroForm"
+                scope="request"
+                validate="true"
+                input="/WEB-INF/vistas/formulario.jsp">
+            <forward name="exito" path="/WEB-INF/vistas/resultado.jsp"/>
+        </action>
+
+    </action-mappings>
+
+    <message-resources parameter="ApplicationResources"
+                       factory="com.cursosdedesarrollo.Utf8MessageResourcesFactory"/>
+
+</struts-config>

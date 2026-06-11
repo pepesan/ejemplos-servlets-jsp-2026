@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+
+    <form-beans>
+        <form-bean name="subirForm" type="com.cursosdedesarrollo.SubirFicheroForm"/>
+    </form-beans>
+
+    <action-mappings>
+
+        <!-- GET /formulario.do → muestra el formulario de subida vacío -->
+        <action path="/formulario"
+                name="subirForm"
+                scope="request"
+                validate="false"
+                forward="/WEB-INF/vistas/formulario.jsp"/>
+
+        <!--
+          POST /subir.do → procesa el fichero.
+          validate="false": la validación la hace SubirFicheroAction manualmente
+          para poder incluir el tipo MIME (no disponible en el ActionForm.validate()).
+          input="/WEB-INF/vistas/formulario.jsp": destino cuando saveErrors() se usa.
+        -->
+        <action path="/subir"
+                type="com.cursosdedesarrollo.SubirFicheroAction"
+                name="subirForm"
+                scope="request"
+                validate="false"
+                input="/WEB-INF/vistas/formulario.jsp">
+            <forward name="exito" path="/WEB-INF/vistas/resultado.jsp"/>
+        </action>
+
+        <!--
+          GET /descargar.do?nombre=fichero.txt   → descarga (Content-Disposition: attachment)
+          GET /descargar.do?nombre=fichero.txt&ver=true → visualización inline
+          La Action escribe directamente en el response y devuelve null.
+        -->
+        <action path="/descargar"
+                type="com.cursosdedesarrollo.DescargarFicheroAction"
+                validate="false"/>
+
+    </action-mappings>
+
+    <!--
+      <controller> configura el límite de tamaño para peticiones multipart.
+      CommonsMultipartRequestHandler (por defecto en Struts) lee este valor.
+      maxFileSize acepta bytes ("2097152") o sufijo M/K ("2M").
+    -->
+    <controller maxFileSize="2M"/>
+
+    <message-resources parameter="ApplicationResources"
+                       factory="com.cursosdedesarrollo.Utf8MessageResourcesFactory"/>
+
+</struts-config>

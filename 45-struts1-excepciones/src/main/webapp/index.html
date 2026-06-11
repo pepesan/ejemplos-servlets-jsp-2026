@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>45 — Gestión declarativa de excepciones en Struts 1.x</title>
+    <style>
+        * { box-sizing: border-box; }
+        body  { font-family: sans-serif; max-width: 740px; margin: 40px auto; color: #333; padding: 0 16px; }
+        h1    { border-bottom: 3px solid #c0392b; padding-bottom: 10px; }
+        h2    { margin-top: 28px; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        p     { line-height: 1.65; margin: 8px 0; }
+        code  { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: .92em; }
+        pre   { background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 4px;
+                padding: 14px 16px; overflow-x: auto; font-size: .88em; line-height: 1.5; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+        .card { background: #fafafa; border: 1px solid #ddd; border-radius: 6px;
+                padding: 14px 16px; }
+        .card h3 { margin: 0 0 6px; font-size: .95em; }
+        .card p  { margin: 0 0 8px; font-size: .88em; color: #555; }
+        .card a  { display: inline-block; padding: 6px 16px; border-radius: 4px;
+                   text-decoration: none; font-size: .9em; font-weight: bold; color: #fff; }
+        .rojo    { background: #c0392b; border-color: #c0392b; }
+        .rojo a  { background: #c0392b; }
+        .rojo a:hover { background: #a93226; }
+        .naranja { background: #e67e22; border-color: #e67e22; }
+        .naranja a { background: #e67e22; }
+        .naranja a:hover { background: #ca6f1e; }
+        .morado  { background: #8e44ad; border-color: #8e44ad; }
+        .morado a { background: #8e44ad; }
+        .morado a:hover { background: #7d3c98; }
+        .verde   { background: #27ae60; border-color: #27ae60; }
+        .verde a { background: #27ae60; }
+        .verde a:hover { background: #229954; }
+        .card.rojo,.card.naranja,.card.morado,.card.verde { color: #fff; }
+        .card.rojo h3,.card.naranja h3,.card.morado h3,.card.verde h3 { color: #fff; }
+        .card.rojo p,.card.naranja p,.card.morado p,.card.verde p { color: rgba(255,255,255,.85); }
+        .card.rojo code,.card.naranja code,.card.morado code,.card.verde code {
+            background: rgba(0,0,0,.25); color: #fff; }
+        .card a.blanco { background: rgba(255,255,255,.2); color: #fff; }
+        .card a.blanco:hover { background: rgba(255,255,255,.35); }
+        .nota { background: #fef9e7; border-left: 4px solid #f39c12;
+                padding: 10px 14px; border-radius: 4px; margin: 14px 0; font-size: .9em; }
+        table { border-collapse: collapse; width: 100%; margin-top: 14px; font-size: .9em; }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
+        th    { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+
+<h1>45 — Gestión declarativa de excepciones</h1>
+
+<p>
+    Struts 1.x permite declarar en <code>struts-config.xml</code> qué vista
+    mostrar cuando una Action lanza una excepción, sin <code>try/catch</code>
+    en el código Java. Es posible asignar handlers globales (para todas las
+    Actions) o locales (para una Action concreta) y usar handlers personalizados
+    que loggeen o enriquezcan el error antes de mostrar la vista.
+</p>
+
+<h2>Prueba los cuatro escenarios</h2>
+
+<div class="grid">
+    <div class="card morado">
+        <h3>Recurso no encontrado</h3>
+        <p>Lanza <code>RecursoNoEncontradoException</code> (excepción de negocio
+           propia). Interceptada por el handler global con
+           <code>LoggingExceptionHandler</code>.</p>
+        <a href="producto.do?tipo=notfound" class="blanco">Probar →</a>
+    </div>
+    <div class="card naranja">
+        <h3>Error de cálculo (local)</h3>
+        <p>Lanza <code>ArithmeticException</code> (división por cero).
+           Interceptada por el handler <strong>local</strong> de la action
+           <code>/producto</code>, que sobrescribe el global.</p>
+        <a href="producto.do?tipo=division" class="blanco">Probar →</a>
+    </div>
+    <div class="card rojo">
+        <h3>Error general</h3>
+        <p>Lanza <code>RuntimeException</code> genérica.
+           Interceptada por el handler global de <code>RuntimeException</code>
+           con el <code>ExceptionHandler</code> por defecto de Struts.</p>
+        <a href="producto.do?tipo=general" class="blanco">Probar →</a>
+    </div>
+    <div class="card verde">
+        <h3>Sin excepción (camino feliz)</h3>
+        <p>No se lanza ninguna excepción. La Action hace
+           <code>mapping.findForward("ok")</code> normalmente.</p>
+        <a href="producto.do?tipo=ok" class="blanco">Probar →</a>
+    </div>
+</div>
+
+<h2>Configuración en <code>struts-config.xml</code></h2>
+
+<pre>&lt;!-- GLOBALES: afectan a todas las Actions --&gt;
+&lt;global-exceptions&gt;
+    &lt;exception
+        type="com.cursosdedesarrollo.RecursoNoEncontradoException"
+        key="error.noEncontrado"
+        path="/WEB-INF/vistas/noEncontrado.jsp"
+        handler="com.cursosdedesarrollo.LoggingExceptionHandler"/&gt;
+
+    &lt;exception
+        type="java.lang.RuntimeException"
+        key="error.general"
+        path="/WEB-INF/vistas/error.jsp"/&gt;
+&lt;/global-exceptions&gt;
+
+&lt;!-- LOCAL: solo para /producto, sobrescribe el global para ArithmeticException --&gt;
+&lt;action path="/producto" type="com.cursosdedesarrollo.ProductoAction"&gt;
+    &lt;exception
+        type="java.lang.ArithmeticException"
+        key="error.calculo"
+        path="/WEB-INF/vistas/errorCalculo.jsp"/&gt;
+    &lt;forward name="ok" path="/WEB-INF/vistas/resultado.jsp"/&gt;
+&lt;/action&gt;</pre>
+
+<h2>Orden de resolución</h2>
+
+<table>
+    <tr><th>Excepción lanzada</th><th>Nivel</th><th>Handler</th><th>Vista</th></tr>
+    <tr>
+        <td><code>ArithmeticException</code></td>
+        <td>Local (/producto)</td>
+        <td>ExceptionHandler por defecto</td>
+        <td>errorCalculo.jsp</td>
+    </tr>
+    <tr>
+        <td><code>RecursoNoEncontradoException</code></td>
+        <td>Global</td>
+        <td>LoggingExceptionHandler</td>
+        <td>noEncontrado.jsp</td>
+    </tr>
+    <tr>
+        <td><code>RuntimeException</code></td>
+        <td>Global</td>
+        <td>ExceptionHandler por defecto</td>
+        <td>error.jsp</td>
+    </tr>
+</table>
+
+<div class="nota">
+    <strong>¿Por qué ArithmeticException va al handler local y no al global RuntimeException?</strong><br>
+    Struts busca primero en la action, luego en global-exceptions.
+    Dentro de cada nivel, busca la clase más específica (primero exacta, luego superclases).
+    Al estar <code>ArithmeticException</code> declarada en la action, se encuentra
+    antes de llegar al global.
+</div>
+
+</body>
+</html>

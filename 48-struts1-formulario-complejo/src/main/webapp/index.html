@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>48 — Struts 1.x: Formulario complejo</title>
+    <style>
+        body  { font-family: sans-serif; max-width: 680px; margin: 40px auto;
+                color: #222; padding: 0 16px; background: #fafafa; }
+        h1    { border-bottom: 3px solid #2980b9; padding-bottom: 10px; color: #1a5276; }
+        p     { line-height: 1.65; }
+        .card { background: #fff; border: 1px solid #d5d8dc; border-radius: 8px;
+                padding: 20px 24px; margin: 20px 0; }
+        .card a { display: inline-block; margin-top: 12px; padding: 10px 24px;
+                  background: #2980b9; color: #fff; text-decoration: none;
+                  border-radius: 4px; font-weight: bold; }
+        .card a:hover { background: #2471a3; }
+        table { border-collapse: collapse; width: 100%; margin-top: 14px; font-size: .9em; }
+        th, td { padding: 8px 12px; border: 1px solid #d5d8dc; text-align: left; }
+        th    { background: #eaf4fc; }
+        code  { background: #f2f3f4; padding: 2px 6px; border-radius: 3px; font-size: .9em; }
+    </style>
+</head>
+<body>
+
+<h1>48 — Formulario complejo con Struts 1.x</h1>
+
+<p>
+    Formulario de registro de candidato que combina todos los tipos de campo
+    soportados por las Struts HTML taglibs y HTML5 nativo.
+</p>
+
+<div class="card">
+    <h2 style="margin:0 0 8px">Formulario de registro</h2>
+    <p style="margin:0">
+        Completa el formulario con datos de candidato: datos personales,
+        selects, radio buttons, checkboxes de tecnologías, textarea y campos fecha.
+    </p>
+    <a href="formulario.do">Abrir formulario →</a>
+</div>
+
+<table>
+    <tr><th>Tag Struts</th><th>HTML generado</th><th>Tipo de campo</th></tr>
+    <tr>
+        <td><code>&lt;html:text&gt;</code></td>
+        <td><code>&lt;input type="text"&gt;</code></td>
+        <td>Texto libre</td>
+    </tr>
+    <tr>
+        <td><code>&lt;html:radio&gt;</code></td>
+        <td><code>&lt;input type="radio"&gt;</code></td>
+        <td>Opción única (género, modalidad)</td>
+    </tr>
+    <tr>
+        <td><code>&lt;html:select&gt; + &lt;html:option&gt;</code></td>
+        <td><code>&lt;select&gt;&lt;option&gt;</code></td>
+        <td>Lista desplegable (país, nivel)</td>
+    </tr>
+    <tr>
+        <td><code>&lt;html:multibox&gt;</code></td>
+        <td><code>&lt;input type="checkbox"&gt;</code></td>
+        <td>Selección múltiple → <code>String[]</code></td>
+    </tr>
+    <tr>
+        <td><code>&lt;html:textarea&gt;</code></td>
+        <td><code>&lt;textarea&gt;</code></td>
+        <td>Texto multilínea</td>
+    </tr>
+    <tr>
+        <td><em>HTML5 nativo</em></td>
+        <td><code>&lt;input type="date"&gt;</code></td>
+        <td>Fecha (Struts no tiene tag propio)</td>
+    </tr>
+</table>
+
+</body>
+</html>

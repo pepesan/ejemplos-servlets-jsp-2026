@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+
+    <form-beans>
+        <form-bean name="saludoForm" type="org.apache.struts.action.DynaActionForm">
+            <form-property name="nombre" type="java.lang.String" initial=""/>
+        </form-bean>
+    </form-beans>
+
+    <action-mappings>
+
+        <!--
+          GET /inicio.do → muestra la página principal con textos localizados.
+          Struts lee el Locale de la sesión (Globals.LOCALE_KEY) y <html:message>
+          selecciona el fichero de mensajes correcto automáticamente.
+        -->
+        <action path="/inicio"
+                name="saludoForm"
+                scope="request"
+                validate="false"
+                forward="/WEB-INF/vistas/inicio.jsp"/>
+
+        <!--
+          POST /idioma.do?lang=es|en → guarda el Locale en sesión y redirige.
+          PRG: redirect="true" para evitar reenvío del POST al refrescar.
+        -->
+        <action path="/idioma"
+                type="com.cursosdedesarrollo.CambiarIdiomaAction">
+            <forward name="inicio" path="/inicio.do" redirect="true"/>
+        </action>
+
+        <!--
+          POST /saludo.do → lee "nombre" del form y pone el saludo localizado en request.
+        -->
+        <action path="/saludo"
+                type="com.cursosdedesarrollo.SaludoAction"
+                name="saludoForm"
+                scope="request"
+                validate="false"
+                input="/WEB-INF/vistas/inicio.jsp">
+            <forward name="ok" path="/WEB-INF/vistas/inicio.jsp"/>
+        </action>
+
+    </action-mappings>
+
+    <!--
+      message-resources con Utf8MessageResourcesFactory para cargar correctamente
+      los ficheros .properties guardados en UTF-8 (acentos, ñ, etc.).
+
+      Struts buscará:
+        ApplicationResources.properties          → locale por defecto
+        ApplicationResources_es.properties       → locale "es"
+        ApplicationResources_en.properties       → locale "en"
+    -->
+    <message-resources parameter="ApplicationResources"
+                       factory="com.cursosdedesarrollo.Utf8MessageResourcesFactory"/>
+
+</struts-config>

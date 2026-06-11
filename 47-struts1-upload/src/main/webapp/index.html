@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>47 — Struts 1.x: Subida de ficheros (FormFile)</title>
+    <style>
+        * { box-sizing: border-box; }
+        body  { font-family: sans-serif; max-width: 720px; margin: 40px auto; color: #333; padding: 0 16px; }
+        h1    { border-bottom: 3px solid #8e44ad; padding-bottom: 10px; }
+        h2    { margin-top: 28px; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        p     { line-height: 1.65; margin: 8px 0; }
+        code  { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: .92em; }
+        pre   { background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 4px;
+                padding: 14px 16px; overflow-x: auto; font-size: .88em; line-height: 1.5; }
+        .cta  { display: inline-block; margin-top: 16px; padding: 10px 24px; background: #8e44ad;
+                color: #fff; border-radius: 4px; text-decoration: none; font-size: 1.05em; font-weight: bold; }
+        .cta:hover { background: #7d3c98; }
+        table { border-collapse: collapse; width: 100%; margin-top: 14px; font-size: .92em; }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
+        th    { background: #f0f0f0; }
+        .nota { background: #f5eef8; border-left: 4px solid #8e44ad;
+                padding: 10px 14px; border-radius: 4px; margin: 14px 0; font-size: .9em; }
+    </style>
+</head>
+<body>
+
+<h1>47 — Struts 1.x: Subida de ficheros con <code>FormFile</code></h1>
+
+<p>
+    Struts integra <code>CommonsMultipartRequestHandler</code> (Apache Commons FileUpload)
+    para procesar formularios <code>multipart/form-data</code>.
+    El campo del fichero se declara como <code>FormFile</code> en el
+    <code>ActionForm</code>; Struts lo rellena automáticamente igual que cualquier
+    campo de texto.
+</p>
+
+<a class="cta" href="formulario.do">Abrir formulario de subida →</a>
+
+<h2>Diferencia con el módulo 19</h2>
+
+<table>
+    <tr><th></th><th>Módulo 19 (Servlet puro)</th><th>Módulo 47 (Struts)</th></tr>
+    <tr>
+        <td><strong>Config. del limite</strong></td>
+        <td><code>@MultipartConfig(maxFileSize=...)</code></td>
+        <td><code>&lt;controller maxFileSize="2M"/&gt;</code> en struts-config.xml</td>
+    </tr>
+    <tr>
+        <td><strong>Acceso al fichero</strong></td>
+        <td><code>request.getPart("archivo")</code></td>
+        <td><code>form.getArchivo()</code> (campo <code>FormFile</code>)</td>
+    </tr>
+    <tr>
+        <td><strong>Nombre original</strong></td>
+        <td>Parsear header <code>Content-Disposition</code></td>
+        <td><code>formFile.getFileName()</code></td>
+    </tr>
+    <tr>
+        <td><strong>MIME type</strong></td>
+        <td><code>part.getContentType()</code></td>
+        <td><code>formFile.getContentType()</code></td>
+    </tr>
+    <tr>
+        <td><strong>Tamaño</strong></td>
+        <td><code>part.getSize()</code></td>
+        <td><code>formFile.getFileSize()</code></td>
+    </tr>
+    <tr>
+        <td><strong>Leer contenido</strong></td>
+        <td><code>part.getInputStream()</code></td>
+        <td><code>formFile.getInputStream()</code></td>
+    </tr>
+</table>
+
+<h2>Piezas clave</h2>
+
+<pre>// 1. ActionForm con campo FormFile
+public class SubirFicheroForm extends ActionForm {
+    private FormFile archivo;
+    private String descripcion = "";
+    // getters, setters, reset() — reset() debe asignar null al FormFile
+}
+
+// 2. struts-config.xml — límite de tamaño
+&lt;controller maxFileSize="2M"/&gt;
+
+// 3. JSP — enctype obligatorio, &lt;html:file&gt; en lugar de &lt;input type="file"&gt;
+&lt;html:form action="/subir.do" method="post" enctype="multipart/form-data"&gt;
+    &lt;html:file property="archivo" accept="image/*,.pdf,.txt"/&gt;
+    &lt;html:text property="descripcion"/&gt;
+    &lt;html:submit value="Subir"/&gt;
+&lt;/html:form&gt;
+
+// 4. Action — leer FormFile
+SubirFicheroForm f  = (SubirFicheroForm) form;
+FormFile         ff = f.getArchivo();
+String nombre = ff.getFileName();         // nombre original
+String mime   = ff.getContentType();      // "image/jpeg", etc.
+int    tam    = ff.getFileSize();         // bytes
+
+// Guardar en disco
+try (InputStream in = ff.getInputStream();
+     OutputStream out = new FileOutputStream(destino)) { ... }
+ff.destroy(); // liberar recursos internos</pre>
+
+<div class="nota">
+    <strong>Dependencias adicionales necesarias:</strong><br>
+    <code>commons-fileupload</code> (opcional en struts-core) y <code>commons-io</code>.
+    Sin ellas, Struts lanza <code>ClassNotFoundException</code> al procesar multipart.
+</div>
+
+</body>
+</html>

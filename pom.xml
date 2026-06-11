@@ -48,6 +48,10 @@
         <module>42-struts1-dispatch</module>
         <module>43-struts1-validacion</module>
         <module>44-struts1-dynaform</module>
+        <module>45-struts1-excepciones</module>
+        <module>46-struts1-i18n</module>
+        <module>47-struts1-upload</module>
+        <module>48-struts1-formulario-complejo</module>
         <!-- Hibernate -->
         <module>50-hibernate</module>
         <module>51-hibernate-anotaciones</module>

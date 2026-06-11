@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>46 — Struts 1.x: Internacionalización (i18n)</title>
+    <style>
+        * { box-sizing: border-box; }
+        body  { font-family: sans-serif; max-width: 720px; margin: 40px auto; color: #333; padding: 0 16px; }
+        h1    { border-bottom: 3px solid #2980b9; padding-bottom: 10px; }
+        h2    { margin-top: 28px; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        p     { line-height: 1.65; margin: 8px 0; }
+        code  { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: .92em; }
+        .cta  { display: inline-block; margin-top: 16px; padding: 10px 24px; background: #2980b9;
+                color: #fff; border-radius: 4px; text-decoration: none; font-size: 1.05em; font-weight: bold; }
+        .cta:hover { background: #2471a3; }
+        table { border-collapse: collapse; width: 100%; margin-top: 14px; font-size: .92em; }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
+        th    { background: #f0f0f0; }
+    </style>
+</head>
+<body>
+
+<h1>46 — Struts 1.x: Internacionalización (i18n)</h1>
+
+<p>
+    Struts tiene soporte nativo de <code>Locale</code>: guarda el idioma elegido
+    en sesión bajo la clave <code>Globals.LOCALE_KEY</code> y las taglibs
+    (<code>&lt;bean:message&gt;</code>, <code>&lt;html:message&gt;</code>)
+    seleccionan automáticamente el fichero de mensajes correspondiente
+    (<code>ApplicationResources_es.properties</code>,
+    <code>ApplicationResources_en.properties</code>, etc.).
+</p>
+
+<a class="cta" href="inicio.do">Abrir demo (Español / English) →</a>
+
+<h2>Ficheros de mensajes</h2>
+<table>
+    <tr><th>Fichero</th><th>Locale</th><th>Descripción</th></tr>
+    <tr>
+        <td><code>ApplicationResources.properties</code></td>
+        <td>por defecto</td>
+        <td>Fallback cuando el locale no tiene fichero específico</td>
+    </tr>
+    <tr>
+        <td><code>ApplicationResources_es.properties</code></td>
+        <td><code>es</code></td>
+        <td>Español</td>
+    </tr>
+    <tr>
+        <td><code>ApplicationResources_en.properties</code></td>
+        <td><code>en</code></td>
+        <td>English</td>
+    </tr>
+</table>
+
+<h2>Cómo se cambia el idioma</h2>
+<p>
+    <code>CambiarIdiomaAction</code> recibe <code>?lang=es</code> o
+    <code>?lang=en</code> y guarda el <code>Locale</code> en sesión:
+</p>
+<pre style="background:#f8f8f8;border:1px solid #e0e0e0;padding:12px;border-radius:4px;font-size:.88em">
+// CambiarIdiomaAction.java
+String lang = request.getParameter("lang");
+request.getSession().setAttribute(Globals.LOCALE_KEY, new Locale(lang));
+return mapping.findForward("inicio");  // redirect=true → PRG
+</pre>
+
+<h2>Uso en JSP</h2>
+<pre style="background:#f8f8f8;border:1px solid #e0e0e0;padding:12px;border-radius:4px;font-size:.88em">
+&lt;%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %&gt;
+
+&lt;!-- Muestra el texto del locale activo --&gt;
+&lt;bean:message key="app.titulo"/&gt;
+
+&lt;!-- Con parámetros: saludo.resultado=¡Hola, {0}! --&gt;
+&lt;bean:message key="saludo.resultado" arg0="Ana"/&gt;
+
+&lt;!-- JSTL fmt también respeta el locale de Struts --&gt;
+&lt;fmt:formatDate value="..." type="full" dateStyle="full"/&gt;
+</pre>
+
+</body>
+</html>

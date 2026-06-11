@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN"
+        "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+
+<struts-config>
+
+    <!--
+      EXCEPCIONES GLOBALES
+      ────────────────────
+      Se aplican a TODAS las Actions. Struts las consulta cuando la excepción
+      no tiene un handler más específico en la propia action.
+
+      Orden de resolución (de más a menos específico):
+        1. <exception> dentro del <action> que se ejecuta (local)
+        2. <global-exceptions> (global)
+        En ambos niveles: primero clase exacta, luego superclases.
+    -->
+    <global-exceptions>
+
+        <!--
+          RecursoNoEncontradoException — excepción de negocio propia.
+          Usa LoggingExceptionHandler: loggea y luego delega a Struts.
+          {0} en el mensaje se reemplaza con ex.getMessage().
+        -->
+        <exception
+            type="com.cursosdedesarrollo.RecursoNoEncontradoException"
+            key="error.noEncontrado"
+            path="/WEB-INF/vistas/noEncontrado.jsp"
+            handler="com.cursosdedesarrollo.LoggingExceptionHandler"/>
+
+        <!--
+          RuntimeException — excepción genérica de último recurso.
+          Handler por defecto (ExceptionHandler): guarda el mensaje en request
+          y hace forward a la vista.
+        -->
+        <exception
+            type="java.lang.RuntimeException"
+            key="error.general"
+            path="/WEB-INF/vistas/error.jsp"/>
+
+    </global-exceptions>
+
+    <action-mappings>
+
+        <!--
+          /producto.do — Action que lanza excepciones según el parámetro "tipo".
+
+          Excepción LOCAL:
+            ArithmeticException — más específica que RuntimeException.
+            Como está declarada aquí (nivel action), sobrescribe el handler
+            global de RuntimeException aunque ArithmeticException sea subclase.
+        -->
+        <action path="/producto"
+                type="com.cursosdedesarrollo.ProductoAction">
+            <exception
+                type="java.lang.ArithmeticException"
+                key="error.calculo"
+                path="/WEB-INF/vistas/errorCalculo.jsp"/>
+            <forward name="ok" path="/WEB-INF/vistas/resultado.jsp"/>
+        </action>
+
+    </action-mappings>
+
+    <!--
+      ComposableRequestProcessor (por defecto en Struts 1.3) no llama a
+      processException() cuando una Action lanza una excepción; la excepción
+      escapa del chain directamente como ServletException 500.
+      RequestProcessor (el procesador clásico de Struts 1.x) sí envuelve
+      action.execute() en processActionPerform() que captura la excepción
+      y la pasa a processException(), que es la que consulta <global-exceptions>.
+    -->
+    <controller processorClass="org.apache.struts.action.RequestProcessor"/>
+
+    <message-resources parameter="ApplicationResources"
+                       factory="com.cursosdedesarrollo.Utf8MessageResourcesFactory"/>
+
+</struts-config>
