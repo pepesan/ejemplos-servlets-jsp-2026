@@ -1,0 +1,18 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    ManyToMany UNIDIRECCIONAL — lado pasivo (Etiqueta).
+
+    Etiqueta no tiene ninguna referencia a Producto.
+    La tabla productos_etiquetas la gestiona Producto.hbm.xml.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.muchosamuchos">
+    <class name="Etiqueta" table="etiquetas">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="nombre" column="nombre" not-null="true" length="60"/>
+    </class>
+</hibernate-mapping>

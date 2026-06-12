@@ -1,0 +1,22 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    OneToOne BIDIRECCIONAL — lado inverso (Perfil).
+
+    property-ref="perfil" indica que la FK no está aquí sino en el campo "perfil"
+    de la clase Usuario. Es el equivalente XML de @OneToOne(mappedBy="perfil").
+
+    Perfil no genera ninguna columna extra; la FK perfil_id está en la tabla usuarios.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.unoauno">
+    <class name="Perfil" table="perfiles">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="bio"      column="bio"      length="400"/>
+        <property name="linkedin" column="linkedin" length="200"/>
+        <one-to-one name="usuario" class="Usuario" property-ref="perfil" fetch="select"/>
+    </class>
+</hibernate-mapping>

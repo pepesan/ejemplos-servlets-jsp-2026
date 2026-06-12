@@ -1,0 +1,25 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    OneToOne BIDIRECCIONAL — lado dueño (Usuario).
+
+    La FK perfil_id vive en la tabla usuarios.
+    Usamos <many-to-one unique="true"> para representar @OneToOne con @JoinColumn:
+      - unique="true"  → impone unicidad sobre perfil_id (equivale a la FK 1:1)
+      - cascade="all"  → guardar/borrar Usuario guarda/borra Perfil
+      - fetch="select" → carga lazy
+
+    El lado inverso (Perfil) usa <one-to-one property-ref="perfil">.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.unoauno">
+    <class name="Usuario" table="usuarios">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="login" column="login" not-null="true" length="60"/>
+        <many-to-one name="perfil" class="Perfil" column="perfil_id"
+                     cascade="all" fetch="select" unique="true"/>
+    </class>
+</hibernate-mapping>

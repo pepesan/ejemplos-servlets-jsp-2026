@@ -1,0 +1,25 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    OneToMany BIDIRECCIONAL — lado inverso (Departamento).
+
+    inverse="true": la FK departamento_id la gestiona Empleado, no Departamento.
+    cascade="all": guardar Departamento guarda sus Empleados.
+    lazy="true": la colección se carga bajo demanda (FetchType.LAZY).
+
+    Sin inverse="true" Hibernate generaría UPDATE innecesarios al guardar empleados.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.unoamuchos">
+    <class name="Departamento" table="departamentos">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="nombre" column="nombre" not-null="true" length="80"/>
+        <bag name="empleados" cascade="all" inverse="true" lazy="true">
+            <key column="departamento_id"/>
+            <one-to-many class="Empleado"/>
+        </bag>
+    </class>
+</hibernate-mapping>

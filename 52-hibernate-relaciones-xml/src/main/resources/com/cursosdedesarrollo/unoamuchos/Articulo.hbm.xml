@@ -1,0 +1,19 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    OneToMany UNIDIRECCIONAL — lado pasivo (Articulo).
+
+    Articulo no tiene ningún campo que apunte a Categoria.
+    La FK categoria_id existe en esta tabla pero Hibernate la gestiona
+    desde el <bag> de Categoria.hbm.xml, no desde aquí.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.unoamuchos">
+    <class name="Articulo" table="articulos">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="titulo" column="titulo" not-null="true" length="200"/>
+    </class>
+</hibernate-mapping>

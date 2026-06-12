@@ -1,0 +1,23 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    OneToOne UNIDIRECCIONAL: Persona → Pasaporte
+
+    La FK pasaporte_id vive en la tabla personas.
+    Usamos <many-to-one unique="true"> para representar @OneToOne con @JoinColumn:
+      - unique="true"  → impone unicidad sobre pasaporte_id (equivale a la FK 1:1)
+      - cascade="all"  → guardar Persona guarda Pasaporte; borrar Persona borra Pasaporte
+      - fetch="select" → carga lazy (proxy), equivalente a FetchType.LAZY
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.unoauno">
+    <class name="Persona" table="personas">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="nombre" column="nombre" not-null="true" length="100"/>
+        <many-to-one name="pasaporte" class="Pasaporte" column="pasaporte_id"
+                     cascade="all" fetch="select" unique="true"/>
+    </class>
+</hibernate-mapping>

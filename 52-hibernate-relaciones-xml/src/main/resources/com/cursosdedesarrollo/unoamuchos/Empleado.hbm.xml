@@ -1,0 +1,22 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    OneToMany BIDIRECCIONAL — lado dueño (Empleado).
+
+    La FK departamento_id vive en la tabla empleados.
+    fetch="select" → carga lazy del Departamento (FetchType.LAZY equivalente).
+    Departamento tiene <bag inverse="true"> como lado inverso.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.unoamuchos">
+    <class name="Empleado" table="empleados">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="nombre"  column="nombre"  not-null="true" length="100"/>
+        <property name="salario" column="salario" type="double"/>
+        <many-to-one name="departamento" class="Departamento"
+                     column="departamento_id" fetch="select"/>
+    </class>
+</hibernate-mapping>

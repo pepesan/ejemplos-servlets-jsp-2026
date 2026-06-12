@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    ManyToMany UNIDIRECCIONAL — lado dueño (Producto).
+
+    La tabla intermedia productos_etiquetas contiene:
+      producto_id → productos.id
+      etiqueta_id → etiquetas.id
+
+    Etiqueta no tiene ninguna colección apuntando a Producto (unidireccional).
+    Las etiquetas se guardan primero (ver tests), no necesitamos cascade aquí.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.muchosamuchos">
+    <class name="Producto" table="productos">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="nombre" column="nombre" not-null="true" length="100"/>
+        <bag name="etiquetas" table="productos_etiquetas" lazy="true">
+            <key column="producto_id"/>
+            <many-to-many class="Etiqueta" column="etiqueta_id"/>
+        </bag>
+    </class>
+</hibernate-mapping>

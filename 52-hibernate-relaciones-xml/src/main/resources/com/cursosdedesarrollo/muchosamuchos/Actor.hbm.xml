@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    ManyToMany BIDIRECCIONAL — lado inverso (Actor).
+
+    inverse="true": la tabla actores_peliculas la gestiona Pelicula.hbm.xml.
+    Actor solo puede leer las películas; no inserta en la tabla de unión.
+
+    table="actores_peliculas" debe coincidir con el table de Pelicula.hbm.xml.
+    key column="actor_id" es la FK de este lado en la tabla de unión.
+    many-to-many column="pelicula_id" es la FK del otro lado.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.muchosamuchos">
+    <class name="Actor" table="actores">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="nombre" column="nombre" not-null="true" length="100"/>
+        <bag name="peliculas" table="actores_peliculas" inverse="true" lazy="true">
+            <key column="actor_id"/>
+            <many-to-many class="Pelicula" column="pelicula_id"/>
+        </bag>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    OneToMany UNIDIRECCIONAL — lado dueño (Categoria).
+
+    La FK categoria_id vive en la tabla articulos.
+    inverse="false" (por defecto): Hibernate gestiona la FK desde aquí.
+    cascade="all,delete-orphan": equivalente a cascade=ALL + orphanRemoval=true.
+
+    Sin <many-to-one> en Articulo: relación puramente unidireccional.
+    Comparación con bidireccional: Empleado sí tiene <many-to-one departamento>.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.unoamuchos">
+    <class name="Categoria" table="categorias">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="nombre" column="nombre" not-null="true" length="80"/>
+        <bag name="articulos" cascade="all,delete-orphan" inverse="false">
+            <key column="categoria_id"/>
+            <one-to-many class="Articulo"/>
+        </bag>
+    </class>
+</hibernate-mapping>

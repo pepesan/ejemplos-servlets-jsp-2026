@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    ManyToMany BIDIRECCIONAL — lado dueño (Pelicula).
+
+    La tabla de unión actores_peliculas contiene:
+      pelicula_id → peliculas.id  (key de este lado)
+      actor_id    → actores.id    (many-to-many column)
+
+    Actor tiene el mismo table="actores_peliculas" con inverse="true".
+    Los actores se guardan primero en los tests (no necesitamos cascade).
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.muchosamuchos">
+    <class name="Pelicula" table="peliculas">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="titulo" column="titulo" not-null="true" length="200"/>
+        <bag name="actores" table="actores_peliculas" lazy="true">
+            <key column="pelicula_id"/>
+            <many-to-many class="Actor" column="actor_id"/>
+        </bag>
+    </class>
+</hibernate-mapping>
