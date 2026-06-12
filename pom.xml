@@ -58,7 +58,8 @@
         <module>52-hibernate-relaciones-anotaciones</module>
         <module>52-hibernate-relaciones-xml</module>
         <module>53-hibernate-hql</module>
-        <module>54-hibernate-herencia</module>
+        <module>54-hibernate-herencia-anotaciones</module>
+        <module>54-hibernate-herencia-xml</module>
         <module>55-hibernate-mysql</module>
         <module>56-hibernate-postgresql</module>
         <!-- Integración -->

@@ -1,0 +1,53 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    TABLE_PER_CLASS — jerarquía completa en un único fichero.
+
+    No existe tabla "cuentas". Cada subclase tiene su tabla propia con
+    TODOS los campos (incluyendo los heredados de Cuenta).
+
+    Equivalencias con anotaciones:
+      @Inheritance(TABLE_PER_CLASS) → <union-subclass> dentro de <class abstract="true">
+      @Table(name="cuentas_ahorro") → table="cuentas_ahorro" en <union-subclass>
+      GenerationType.TABLE          → generator class="sequence" (secuencia compartida)
+
+    Por qué NO se puede usar identity aquí:
+      IDENTITY genera IDs dentro de cada tabla de forma independiente.
+      CuentaCorriente y CuentaAhorro podrían generar el mismo ID (ej: ambas id=1).
+      Al hacer s2.get(Cuenta.class, id) con UNION ALL, Hibernate no sabría
+      en qué tabla buscar si hay IDs duplicados entre tablas.
+      Una secuencia compartida garantiza IDs únicos globalmente.
+
+    DDL generado:
+      CREATE SEQUENCE cuenta_seq
+      CREATE TABLE cuentas_corriente (id BIGINT PK, saldo DOUBLE, descubierto_max DOUBLE NOT NULL)
+      CREATE TABLE cuentas_ahorro    (id BIGINT PK, saldo DOUBLE, tasa_interes DOUBLE NOT NULL)
+
+    Consulta polimórfica ("from Cuenta"):
+      SELECT ... FROM cuentas_corriente UNION ALL SELECT ... FROM cuentas_ahorro
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.tableperclass">
+    <class name="Cuenta" abstract="true">
+
+        <id name="id" column="id" type="long">
+            <generator class="sequence">
+                <param name="sequence">cuenta_seq</param>
+            </generator>
+        </id>
+
+        <property name="saldo" column="saldo" not-null="true"/>
+
+        <!-- CuentaCorriente: tabla propia con saldo repetido + descubierto_max -->
+        <union-subclass name="CuentaCorriente" table="cuentas_corriente">
+            <property name="descubiertoMax" column="descubierto_max" not-null="true"/>
+        </union-subclass>
+
+        <!-- CuentaAhorro: tabla propia con saldo repetido + tasa_interes -->
+        <union-subclass name="CuentaAhorro" table="cuentas_ahorro">
+            <property name="tasaInteres" column="tasa_interes" not-null="true"/>
+        </union-subclass>
+
+    </class>
+</hibernate-mapping>

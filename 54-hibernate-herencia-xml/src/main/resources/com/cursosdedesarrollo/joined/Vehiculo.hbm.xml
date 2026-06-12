@@ -1,0 +1,45 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    JOINED — jerarquía completa en un único fichero.
+
+    Tabla base "vehiculos" + tabla propia por subclase con FK al id de la raíz.
+
+    Equivalencias con anotaciones:
+      @Inheritance(JOINED)       → <joined-subclass> dentro de <class>
+      @Table(name="coches")      → table="coches" en <joined-subclass>
+      <key column="id"/>         → la FK en la tabla de subclase apunta al id de vehiculos
+
+    DDL generado:
+      CREATE TABLE vehiculos (id BIGINT PK, marca VARCHAR(80) NOT NULL)
+      CREATE TABLE coches    (id BIGINT PK → vehiculos.id, puertas INT NOT NULL)
+      CREATE TABLE motos     (id BIGINT PK → vehiculos.id, cilindrada INT NOT NULL)
+
+    Ventaja frente a SINGLE_TABLE: columnas de subclase pueden ser NOT NULL.
+    Desventaja: cada consulta polimórfica hace LEFT JOIN sobre todas las subclases.
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.joined">
+    <class name="Vehiculo" table="vehiculos" abstract="true">
+
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+
+        <property name="marca" column="marca" not-null="true" length="80"/>
+
+        <!-- Coche: tabla "coches", FK coches.id → vehiculos.id -->
+        <joined-subclass name="Coche" table="coches">
+            <key column="id"/>
+            <property name="puertas" column="puertas" not-null="true"/>
+        </joined-subclass>
+
+        <!-- Moto: tabla "motos", FK motos.id → vehiculos.id -->
+        <joined-subclass name="Moto" table="motos">
+            <key column="id"/>
+            <property name="cilindrada" column="cilindrada" not-null="true"/>
+        </joined-subclass>
+
+    </class>
+</hibernate-mapping>

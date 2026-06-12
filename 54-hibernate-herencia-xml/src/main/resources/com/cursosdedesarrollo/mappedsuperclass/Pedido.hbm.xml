@@ -1,0 +1,34 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    @MappedSuperclass equivalente — fichero separado por entidad concreta.
+
+    Los campos de EntidadAuditable (creadoEn, modificadoEn) se repiten aquí
+    manualmente porque HBM.xml no tiene un equivalente a @MappedSuperclass.
+
+    DDL generado (tabla "pedidos"):
+      CREATE TABLE pedidos (
+        id           BIGINT PRIMARY KEY,
+        total        DOUBLE NOT NULL,
+        creado_en    TIMESTAMP,
+        modificado_en TIMESTAMP
+      )
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.mappedsuperclass">
+    <class name="Pedido" table="pedidos">
+
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+
+        <!-- Campos propios de Pedido -->
+        <property name="total" column="total" not-null="true"/>
+
+        <!-- Campos heredados de EntidadAuditable (repetidos porque HBM no tiene mapped-superclass) -->
+        <property name="creadoEn"     column="creado_en"     type="timestamp" update="false"/>
+        <property name="modificadoEn" column="modificado_en" type="timestamp"/>
+
+    </class>
+</hibernate-mapping>

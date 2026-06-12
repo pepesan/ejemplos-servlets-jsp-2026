@@ -1,0 +1,48 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    SINGLE_TABLE — jerarquía completa en un único fichero.
+
+    Una tabla "personas" contiene todas las subclases.
+    La columna "tipo" (discriminator) distingue filas de Empleado ("EMP") y Cliente ("CLI").
+
+    Equivalencias con anotaciones:
+      @Inheritance(SINGLE_TABLE)          → no hay atributo explícito; es el default de <class>
+                                            con <discriminator> y <subclass>
+      @DiscriminatorColumn(name="tipo")   → <discriminator column="tipo" type="string"/>
+      @DiscriminatorValue("EMP")          → discriminator-value="EMP" en <subclass>
+
+    DDL generado:
+      CREATE TABLE personas (
+        id      BIGINT PRIMARY KEY,
+        tipo    VARCHAR(3) NOT NULL,
+        nombre  VARCHAR(100) NOT NULL,
+        salario DOUBLE,      ← solo Empleado; nullable porque otros tipos no la usan
+        empresa VARCHAR(120) ← solo Cliente; nullable
+      )
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.singletable">
+    <class name="Persona" table="personas" abstract="true">
+
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+
+        <discriminator column="tipo" type="string" length="3"/>
+
+        <property name="nombre" column="nombre" not-null="true" length="100"/>
+
+        <!-- Subclase Empleado: discriminator value "EMP" -->
+        <subclass name="Empleado" discriminator-value="EMP">
+            <property name="salario" column="salario"/>
+        </subclass>
+
+        <!-- Subclase Cliente: discriminator value "CLI" -->
+        <subclass name="Cliente" discriminator-value="CLI">
+            <property name="empresa" column="empresa" length="120"/>
+        </subclass>
+
+    </class>
+</hibernate-mapping>

@@ -89,7 +89,8 @@ Proyecto Maven multi-módulo (`com.cursosdedesarrollo`). El POM raíz solo defin
 | [52-hibernate-relaciones-anotaciones](52-hibernate-relaciones-anotaciones/README.md) | jar | `@ManyToOne`, `@OneToMany`, `@OneToOne`, `@ManyToMany` — unidireccional y bidireccional con anotaciones JPA |
 | [52-hibernate-relaciones-xml](52-hibernate-relaciones-xml/README.md) | jar | Las mismas relaciones pero mapeadas con ficheros `hbm.xml` — POJOs sin anotaciones |
 | [53-hibernate-hql](53-hibernate-hql/README.md) | jar | Herencia (`SINGLE_TABLE`, `JOINED`, `TABLE_PER_CLASS`) + HQL + Criteria API |
-| [54-hibernate-herencia](54-hibernate-herencia/README.md) | jar | Estrategias de herencia en detalle: `SINGLE_TABLE`, `JOINED`, `TABLE_PER_CLASS`, `@MappedSuperclass` |
+| [54-hibernate-herencia-anotaciones](54-hibernate-herencia-anotaciones/README.md) | jar | Estrategias de herencia con anotaciones JPA: `SINGLE_TABLE`, `JOINED`, `TABLE_PER_CLASS`, `@MappedSuperclass` |
+| [54-hibernate-herencia-xml](54-hibernate-herencia-xml/README.md) | jar | Las mismas estrategias mapeadas con `hbm.xml`: `<subclass>`, `<joined-subclass>`, `<union-subclass>` — sin equivalente a `@MappedSuperclass` |
 | [55-hibernate-mysql](55-hibernate-mysql/README.md) | jar | Hibernate + MySQL 8 vía Docker; mismo CRUD con `MySQL8Dialect` |
 | [56-hibernate-postgresql](56-hibernate-postgresql/README.md) | jar | Hibernate + PostgreSQL 16 vía Docker; mismo CRUD con `PostgreSQLDialect` |
 

@@ -1,0 +1,40 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <property name="connection.driver_class">org.h2.Driver</property>
+        <property name="connection.url">jdbc:h2:mem:cursodb54xml;DB_CLOSE_DELAY=-1</property>
+        <property name="connection.username">sa</property>
+        <property name="connection.password"></property>
+
+        <property name="dialect">org.hibernate.dialect.H2Dialect</property>
+        <property name="hbm2ddl.auto">create-drop</property>
+        <property name="show_sql">true</property>
+
+        <!-- ── SINGLE_TABLE ────────────────────────────────────────────────
+             Un solo fichero cubre toda la jerarquía: Persona + Empleado + Cliente.
+             Tabla "personas" con columna discriminadora "tipo".              -->
+        <mapping resource="com/cursosdedesarrollo/singletable/Persona.hbm.xml"/>
+
+        <!-- ── JOINED ──────────────────────────────────────────────────────
+             Un solo fichero cubre toda la jerarquía: Vehiculo + Coche + Moto.
+             Tablas: vehiculos, coches (FK → vehiculos), motos (FK → vehiculos). -->
+        <mapping resource="com/cursosdedesarrollo/joined/Vehiculo.hbm.xml"/>
+
+        <!-- ── TABLE_PER_CLASS ─────────────────────────────────────────────
+             Un solo fichero cubre toda la jerarquía: Cuenta + subclases.
+             No existe tabla "cuentas"; cada subclase tiene su tabla completa. -->
+        <mapping resource="com/cursosdedesarrollo/tableperclass/Cuenta.hbm.xml"/>
+
+        <!-- ── @MappedSuperclass equivalente ──────────────────────────────
+             EntidadAuditable NO se registra (no es una entidad).
+             Cada subclase concreta tiene su propio fichero con los campos
+             de auditoría repetidos (HBM no tiene mapped-superclass).         -->
+        <mapping resource="com/cursosdedesarrollo/mappedsuperclass/Pedido.hbm.xml"/>
+        <mapping resource="com/cursosdedesarrollo/mappedsuperclass/Factura.hbm.xml"/>
+
+    </session-factory>
+</hibernate-configuration>

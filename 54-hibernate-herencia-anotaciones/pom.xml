@@ -11,10 +11,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>54-hibernate-herencia</artifactId>
+    <artifactId>54-hibernate-herencia-anotaciones</artifactId>
     <packaging>jar</packaging>
 
-    <name>54 - Hibernate: Estrategias de herencia</name>
+    <name>54A - Hibernate: Herencia con anotaciones JPA</name>
 
     <dependencies>
         <dependency>

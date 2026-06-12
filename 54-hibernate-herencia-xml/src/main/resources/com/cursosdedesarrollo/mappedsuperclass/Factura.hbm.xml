@@ -1,0 +1,41 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<!--
+    @MappedSuperclass equivalente — fichero separado por entidad concreta.
+
+    HBM.xml no tiene <mapped-superclass>. Los campos de EntidadAuditable
+    (creadoEn, modificadoEn) se repiten aquí manualmente.
+    Esto es el precio a pagar sin @MappedSuperclass: duplicación en el XML.
+
+    Equivalencias con anotaciones:
+      @Column(name="creado_en", updatable=false)  → update="false" en <property>
+      @Temporal(TemporalType.TIMESTAMP)            → type="timestamp"
+
+    DDL generado (tabla "facturas"):
+      CREATE TABLE facturas (
+        id           BIGINT PRIMARY KEY,
+        numero       VARCHAR(20) NOT NULL,
+        cliente      VARCHAR(100) NOT NULL,
+        creado_en    TIMESTAMP,       ← campo de EntidadAuditable
+        modificado_en TIMESTAMP       ← campo de EntidadAuditable
+      )
+-->
+<hibernate-mapping package="com.cursosdedesarrollo.mappedsuperclass">
+    <class name="Factura" table="facturas">
+
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+
+        <!-- Campos propios de Factura -->
+        <property name="numero"  column="numero"  not-null="true" length="20"/>
+        <property name="cliente" column="cliente" not-null="true" length="100"/>
+
+        <!-- Campos heredados de EntidadAuditable (repetidos porque HBM no tiene mapped-superclass) -->
+        <property name="creadoEn"     column="creado_en"     type="timestamp" update="false"/>
+        <property name="modificadoEn" column="modificado_en" type="timestamp"/>
+
+    </class>
+</hibernate-mapping>
