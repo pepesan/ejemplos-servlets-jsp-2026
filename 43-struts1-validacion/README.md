@@ -317,14 +317,61 @@ public class EmpleadoForm extends BeanValidationForm {
     <artifactId>hibernate-validator</artifactId>
     <version>6.2.5.Final</version>
 </dependency>
-<!-- EL para interpolación en tests (Tomcat ya lo provee en tiempo de ejecución) -->
-<dependency>
-    <groupId>org.glassfish</groupId>
-    <artifactId>javax.el</artifactId>
-    <version>3.0.0</version>
-    <scope>test</scope>
-</dependency>
 ```
+
+### Problemas de compatibilidad con Tomcat 7 (Ejemplo C)
+
+Al integrar Hibernate Validator 6.x con el plugin `tomcat7-maven-plugin`, aparecen
+dos errores distintos que hay que resolver:
+
+#### 1. `GRAVE: Unable to process Jar entry [module-info.class]`
+
+```
+GRAVE: Unable to process Jar entry [module-info.class]
+       from Jar [.../classmate-1.5.1.jar!/] for annotations
+org.apache.tomcat.util.bcel.classfile.ClassFormatException:
+       Invalid byte tag in constant pool: 19
+```
+
+**Causa:** HV 6.x trae como transitiva `com.fasterxml:classmate:1.5.1`, que incluye
+`module-info.class` compilado para Java 9+ (constant pool tag 19 = CONSTANT_Module).
+La librería BCEL empaquetada en Tomcat 7 no conoce ese formato y lanza
+`ClassFormatException`. El error se produce porque `mvn tomcat7:run` añade las
+dependencias Maven directamente al classpath de Tomcat (no las copia a WEB-INF/lib),
+y Tomcat escanea ese classpath externo en busca de anotaciones de servlet.
+
+**Solución:** `META-INF/context.xml` con `<JarScanner scanClassPath="false"/>`.
+Desactiva el escaneo del classpath externo. No afecta al funcionamiento porque
+todos los servlets y filtros de este módulo están declarados en `web.xml`,
+no mediante anotaciones.
+
+> `metadata-complete="true"` en `web.xml` **no resuelve** este problema: solo
+> evita el escaneo de las clases propias del WAR, no el del classpath externo.
+
+#### 2. `ClassNotFoundException: javax.el.ELManager`
+
+```
+java.lang.ClassNotFoundException: javax.el.ELManager
+    at [...] ResourceBundleMessageInterpolator.buildExpressionFactory
+```
+
+**Causa:** HV 6.x usa por defecto `ResourceBundleMessageInterpolator`, que requiere
+EL 3.0 (`javax.el.ELManager` existe desde EL 3.0 / Java EE 7). Tomcat 7 solo
+implementa EL 2.2, que no tiene esa clase.
+
+**Solución:** `BeanValidationForm` construye el `ValidatorFactory` con
+`ParameterMessageInterpolator` en lugar del interpolador por defecto:
+
+```java
+private static final ValidatorFactory FACTORY = Validation.byDefaultProvider()
+        .configure()
+        .messageInterpolator(new ParameterMessageInterpolator())
+        .buildValidatorFactory();
+```
+
+`ParameterMessageInterpolator` interpola los parámetros `{min}`, `{max}`, etc.
+de las anotaciones **sin usar EL**. Es suficiente para todos los mensajes de
+`EmpleadoForm`, que son cadenas simples sin expresiones `${...}`.
 
 ### Notas sobre múltiples violaciones por campo
 
@@ -498,5 +545,38 @@ curl -s -X POST http://localhost:8043/contacto.do \
 # POST correcto
 curl -s -X POST http://localhost:8043/contacto.do \
      -d "nombre=Ana&email=ana%40test.com&mensaje=Mensaje+largo+aqui" | grep -o "correctamente"
+# Esperado: correctamente
+```
+
+### Ejemplo C — Bean Validation (Hibernate Validator)
+
+```bash
+# GET formulario vacío
+curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8043/mostrarEmpleado.do
+# Esperado: 200
+
+# POST vacío → errores en los 4 campos
+curl -s -X POST http://localhost:8043/empleado.do \
+     -d "nombre=&email=&telefono=&nif=" | grep -o "obligatorio" | wc -l
+# Esperado: 4
+
+# email inválido
+curl -s -X POST http://localhost:8043/empleado.do \
+     -d "nombre=Ana&email=noesuncorreo&telefono=666777888&nif=12345678Z" | grep -o "válido"
+# Esperado: válido
+
+# teléfono con letras
+curl -s -X POST http://localhost:8043/empleado.do \
+     -d "nombre=Ana&email=ana%40test.com&telefono=abc&nif=12345678Z" | grep -o "dígitos"
+# Esperado: dígitos
+
+# NIF con letra minúscula
+curl -s -X POST http://localhost:8043/empleado.do \
+     -d "nombre=Ana&email=ana%40test.com&telefono=666777888&nif=12345678z" | grep -o "mayúscula"
+# Esperado: mayúscula
+
+# POST correcto
+curl -s -X POST http://localhost:8043/empleado.do \
+     -d "nombre=Ana+García&email=ana%40test.com&telefono=666777888&nif=12345678Z" | grep -o "correctamente"
 # Esperado: correctamente
 ```

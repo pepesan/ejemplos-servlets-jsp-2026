@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+    <!--
+    ══════════════════════════════════════════════════════════════════════════
+    PROBLEMA: GRAVE "Unable to process Jar entry [module-info.class]"
+    ══════════════════════════════════════════════════════════════════════════
+
+    Al arrancar con `mvn tomcat7:run`, Tomcat 7 imprime en consola:
+
+      GRAVE: Unable to process Jar entry [module-info.class]
+             from Jar [.../classmate-1.5.1.jar!/] for annotations
+      org.apache.tomcat.util.bcel.classfile.ClassFormatException:
+             Invalid byte tag in constant pool: 19
+
+    CAUSA RAÍZ
+    ──────────
+    Hibernate Validator 6.x arrastra como dependencia transitiva
+    `com.fasterxml:classmate:1.5.1` (y `org.jboss.logging:jboss-logging:3.4.x`).
+    Estos JARs están compilados con soporte de módulos Java 9+ e incluyen
+    un fichero `module-info.class` en el formato de clase Java 9
+    (constant pool tag 19 = CONSTANT_Module, inexistente en Java 8 y anteriores).
+
+    Tomcat 7 incorpora una versión antigua de la librería BCEL para escanear
+    JARs en busca de anotaciones de servlet (@WebServlet, @WebFilter…).
+    Ese BCEL no conoce el formato Java 9+ y lanza ClassFormatException.
+
+    POR QUÉ OCURRE CON `tomcat7:run` Y NO CON UN WAR DESPLEGADO NORMAL
+    ────────────────────────────────────────────────────────────────────
+    Con `mvn tomcat7:run`, el plugin NO copia las dependencias Maven a
+    WEB-INF/lib: las añade directamente al classpath de la JVM para que
+    Tomcat las encuentre. Tomcat 7, por defecto, escanea todos los JARs
+    del classpath externo (scanClassPath="true"), por lo que alcanza
+    classmate-1.5.1.jar desde ~/.m2/repository y falla al leerlo.
+
+    En un WAR desplegado en Tomcat 7 real, el JAR estaría en WEB-INF/lib
+    y ocurriría lo mismo, salvo que se configure el JarScanner.
+
+    EL ERROR NO ES FATAL — pero ensucia la consola y puede confundir.
+    La aplicación termina arrancando correctamente a pesar del GRAVE.
+
+    SOLUCIÓN APLICADA
+    ─────────────────
+    `<JarScanner scanClassPath="false"/>` desactiva el escaneo de JARs
+    en el classpath externo (Maven repository). Tomcat deja de intentar
+    leer module-info.class y el error desaparece.
+
+    No afecta al funcionamiento: ningún servlet, filtro ni listener de
+    este módulo usa anotaciones (@WebServlet…); todos están declarados
+    en web.xml. El escaneo era innecesario.
+
+    ALTERNATIVAS DESCARTADAS
+    ────────────────────────
+    • metadata-complete="true" en web.xml: solo evita el escaneo de clases
+      propias del WAR (WEB-INF/classes), no del classpath externo.
+    • Excluir classmate y usar versión 1.3.x: resuelve el síntoma pero
+      rompe la compatibilidad con Hibernate Validator 6.x.
+    ══════════════════════════════════════════════════════════════════════════
+    -->
+    <JarScanner scanClassPath="false"/>
+
+</Context>
