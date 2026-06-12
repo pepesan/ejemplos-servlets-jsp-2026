@@ -19,7 +19,7 @@
 
         <!-- Muestra el SQL generado en consola -->
         <property name="show_sql">true</property>
-        <property name="format_sql">false</property>
+        <property name="format_sql">true</property>
 
         <!-- Mapeo XML de la entidad Empleado -->
         <mapping resource="com/cursosdedesarrollo/Empleado.hbm.xml"/>

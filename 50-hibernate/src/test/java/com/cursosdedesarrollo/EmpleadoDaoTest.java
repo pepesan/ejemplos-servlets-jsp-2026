@@ -26,19 +26,19 @@ public class EmpleadoDaoTest {
 
     @Test
     public void guardarAsignaId() {
-        Empleado e = dao.guardar(new Empleado("Ana", "IT", 3000));
+        Empleado e = dao.guardar(new Empleado("Ana", "IT", 30000));
         assertNotNull(e.getId());
         assertTrue(e.getId() > 0);
     }
 
     @Test
     public void buscarPorIdDevuelveElMismoEmpleado() {
-        Empleado guardado = dao.guardar(new Empleado("Carlos", "RRHH", 2500));
+        Empleado guardado = dao.guardar(new Empleado("Carlos", "RRHH", 25000));
         Empleado leido    = dao.buscarPorId(guardado.getId());
         assertNotNull(leido);
         assertEquals("Carlos", leido.getNombre());
         assertEquals("RRHH",   leido.getDepartamento());
-        assertEquals(2500,     leido.getSalario(), 0.01);
+        assertEquals(25000,     leido.getSalario(), 0.01);
     }
 
     @Test
@@ -48,26 +48,26 @@ public class EmpleadoDaoTest {
 
     @Test
     public void listarTodosDevuelveTodos() {
-        dao.guardar(new Empleado("Ana",    "IT",   3000));
-        dao.guardar(new Empleado("Carlos", "RRHH", 2500));
+        dao.guardar(new Empleado("Ana",    "IT",   30000));
+        dao.guardar(new Empleado("Carlos", "RRHH", 25000));
         assertEquals(2, dao.listarTodos().size());
     }
 
     @Test
     public void actualizarModificaDatos() {
-        Empleado e = dao.guardar(new Empleado("Pedro", "IT", 2000));
-        e.setSalario(2800);
+        Empleado e = dao.guardar(new Empleado("Pedro", "IT", 20000));
+        e.setSalario(28000);
         e.setDepartamento("Ventas");
         dao.actualizar(e);
 
         Empleado leido = dao.buscarPorId(e.getId());
-        assertEquals(2800,    leido.getSalario(),     0.01);
+        assertEquals(28000,    leido.getSalario(),     0.01);
         assertEquals("Ventas", leido.getDepartamento());
     }
 
     @Test
     public void eliminarBorraElEmpleado() {
-        Empleado e = dao.guardar(new Empleado("María", "IT", 3200));
+        Empleado e = dao.guardar(new Empleado("María", "IT", 32000));
         Long id = e.getId();
         dao.eliminar(id);
         assertNull(dao.buscarPorId(id));
@@ -75,9 +75,9 @@ public class EmpleadoDaoTest {
 
     @Test
     public void buscarPorDepartamentoFiltrasCorrectamente() {
-        dao.guardar(new Empleado("Ana",   "IT",    3000));
-        dao.guardar(new Empleado("Luis",  "IT",    2800));
-        dao.guardar(new Empleado("María", "Ventas",2500));
+        dao.guardar(new Empleado("Ana",   "IT",    30000));
+        dao.guardar(new Empleado("Luis",  "IT",    28000));
+        dao.guardar(new Empleado("María", "Ventas",25000));
 
         List<Empleado> it = dao.buscarPorDepartamento("IT");
         assertEquals(2, it.size());

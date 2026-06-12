@@ -51,6 +51,8 @@ Proyecto Maven multi-módulo (`com.cursosdedesarrollo`). El POM raíz solo defin
 | [23-jsp-formularios](23-jsp-formularios/README.md) | war | 8023 | Ciclo GET/POST, validación server-side, re-relleno de campos, patrón PRG |
 | [24-jsp-jstl-funciones](24-jsp-jstl-funciones/README.md) | war | 8024 | Biblioteca `fn:`: length, substring, replace, split/join, escapeXml |
 | [25-jsp-errores](25-jsp-errores/README.md) | war | 8025 | Manejo de errores: directiva `errorPage` por JSP y `<error-page>` global en `web.xml` |
+| [26-jsp-estaticos](26-jsp-estaticos/README.md) | war | 8026 | Recursos estáticos: rutas correctas e incorrectas, `PathHelper`, `<jsp:forward>` |
+| [27-jsp-webjars](27-jsp-webjars/README.md) | war | 8027 | WebJars: jQuery y Bootstrap vía Maven, rutas con y sin versión (`webjars-locator`) |
 
 ### Unidad 4 — MVC
 
@@ -86,6 +88,11 @@ Proyecto Maven multi-módulo (`com.cursosdedesarrollo`). El POM raíz solo defin
 | [51-hibernate-anotaciones](51-hibernate-anotaciones/README.md) | jar | Mismo CRUD con `@Entity`, `@Id`, `@Column`, `@Transient` — `AnnotationConfiguration` |
 | [52-hibernate-relaciones](52-hibernate-relaciones/README.md) | jar | `@ManyToOne`, `@OneToMany`, `@OneToOne`, `@ManyToMany` — unidireccional y bidireccional |
 | [53-hibernate-hql](53-hibernate-hql/README.md) | jar | Herencia (`SINGLE_TABLE`, `JOINED`, `TABLE_PER_CLASS`) + HQL + Criteria API |
+| [54-hibernate-herencia](54-hibernate-herencia/README.md) | jar | Estrategias de herencia en detalle: `SINGLE_TABLE`, `JOINED`, `TABLE_PER_CLASS`, `@MappedSuperclass` |
+| [55-hibernate-mysql](55-hibernate-mysql/README.md) | jar | Hibernate + MySQL 8 vía Docker; mismo CRUD con `MySQL8Dialect` |
+| [56-hibernate-postgresql](56-hibernate-postgresql/README.md) | jar | Hibernate + PostgreSQL 16 vía Docker; mismo CRUD con `PostgreSQLDialect` |
+
+> Los módulos 55 y 56 requieren los contenedores Docker del directorio `docker/`. Arrancar con `./docker/01_launch.sh`.
 
 ### Unidad 7 — Integración
 
