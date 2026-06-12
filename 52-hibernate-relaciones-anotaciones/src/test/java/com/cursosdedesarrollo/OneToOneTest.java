@@ -47,7 +47,8 @@ public class OneToOneTest {
 
     @Test
     public void uni_pasaporteNoConoceAPersona() {
-        // Pasaporte no tiene campo Persona — la relación es solo desde Persona
+        // Hacemos consulta con HQL para cargar la persona que tiene un id de pasaporte específico
+        // Pero Pasaporte no tiene campo Persona — la relación es solo desde Persona
         Session s = HibernateUtil.getSessionFactory().openSession();
         Transaction t = s.beginTransaction();
 
@@ -63,6 +64,8 @@ public class OneToOneTest {
         Pasaporte pas = (Pasaporte) s2.get(Pasaporte.class, pasId);
         assertNotNull(pas);
         // pas.getPersona() no existe — Pasaporte es puramente pasivo
+        // Pero hacemos HQL para preguntar por el atributo pasaporte y su campo id
+        // algo parecido a un join
         Persona dueño = (Persona) s2.createQuery(
                 "from Persona p where p.pasaporte.id = :pid")
                 .setLong("pid", pasId)
