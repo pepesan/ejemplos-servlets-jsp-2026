@@ -135,8 +135,8 @@ public class OneToManyTest {
         Transaction t = s.beginTransaction();
 
         Departamento rrhh = new Departamento("RRHH");
-        rrhh.addEmpleado(new Empleado("Luis",  2500)); // helper: asigna ambos lados
-        rrhh.addEmpleado(new Empleado("María", 2800));
+        rrhh.addEmpleado(new Empleado("Luis",  25000)); // helper: asigna ambos lados
+        rrhh.addEmpleado(new Empleado("María", 28000));
         s.save(rrhh);
 
         t.commit();
