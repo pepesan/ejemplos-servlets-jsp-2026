@@ -1,21 +1,21 @@
 # 43 — Struts 1.x: Dónde poner la validación
 
-En Struts 1.x la validación puede vivir en tres sitios distintos.
-El módulo 40 mostró el primero; este módulo muestra los otros dos.
+En Struts 1.x la validación puede vivir en cuatro sitios distintos.
+El módulo 40 mostró el primero; este módulo muestra los otros tres.
 
 > ⚠️ **Java 8 obligatorio.** Struts 1.3.x usa reflexión que Java 9+ bloquea.
 > Instalar con SDKMAN: `sdk install java 8.0.412-tem && sdk use java 8.0.412-tem`
 
-## Comparativa de los tres enfoques
+## Comparativa de los cuatro enfoques
 
 | Módulo | ¿Dónde valida? | Mecanismo | Sin recompilar |
 |--------|----------------|-----------|----------------|
 | **40** | `Action.execute()` | Código Java en la acción | No |
 | **43-A** | `validation.xml` | Struts Validator (declarativo) | Sí — editar el XML |
 | **43-B** | `ActionForm.validate()` | Código Java en el Form | No |
+| **43-C** | Anotaciones en el Form bean | Bean Validation JSR-380 (Hibernate Validator) | No |
 
-La diferencia entre 43-A y 43-B no está en `struts-config.xml` (ambos usan
-`validate="true"` e `input`), sino en **dónde implementa el desarrollador las reglas**.
+Cada ejemplo tiene sus propias clases Java independientes; ninguna clase se comparte entre ejemplos.
 
 ---
 
@@ -249,15 +249,106 @@ Con esto el `.properties` se escribe en UTF-8 normal sin escapes `\uXXXX`.
 
 ---
 
+## Ejemplo C — Bean Validation JSR-380 (Hibernate Validator)
+
+**Formulario de alta de empleado**: nombre, correo, teléfono, NIF.
+
+### Cómo funciona
+
+`EmpleadoForm` extiende `BeanValidationForm` y **solo tiene anotaciones** en sus campos.
+No escribe ningún método `validate()`. `BeanValidationForm` lo implementa como puente:
+invoca la API estándar de `javax.validation` y convierte cada `ConstraintViolation` en un
+`ActionMessage` con el texto de la anotación (`resource=false`).
+
+```java
+// BeanValidationForm — fragmento clave
+private static final ValidatorFactory FACTORY = Validation.buildDefaultValidatorFactory();
+
+@Override
+public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+    Set<ConstraintViolation<BeanValidationForm>> violations = FACTORY.getValidator().validate(this);
+    ActionErrors errors = new ActionErrors();
+    for (ConstraintViolation<?> v : violations) {
+        String field = v.getPropertyPath().toString();
+        errors.add(field, new ActionMessage(v.getMessage(), false));
+    }
+    return errors;
+}
+```
+
+- `FACTORY` es estático y thread-safe: se crea una sola vez.
+- `getPropertyPath().toString()` devuelve el nombre del campo (`"nombre"`, `"email"`…).
+- `new ActionMessage(texto, false)` indica que el texto es literal (no clave del `.properties`).
+
+### `EmpleadoForm` — solo anotaciones
+
+```java
+public class EmpleadoForm extends BeanValidationForm {
+
+    @NotBlank(message = "El nombre es obligatorio.")
+    @Size(min = 2, max = 80, message = "El nombre debe tener entre 2 y 80 caracteres.")
+    private String nombre = "";
+
+    @NotBlank(message = "El correo electrónico es obligatorio.")
+    @Email(message = "El correo electrónico no tiene un formato válido.")
+    private String email = "";
+
+    @NotBlank(message = "El teléfono es obligatorio.")
+    @Pattern(regexp = "[0-9]{9,15}", message = "El teléfono debe tener entre 9 y 15 dígitos numéricos.")
+    private String telefono = "";
+
+    @NotBlank(message = "El NIF es obligatorio.")
+    @Pattern(regexp = "\\d{8}[A-Z]", message = "El NIF debe tener 8 dígitos seguidos de una letra mayúscula.")
+    private String nif = "";
+    // getters, setters, reset()
+}
+```
+
+### Dependencias Maven (Ejemplo C)
+
+```xml
+<dependency>
+    <groupId>javax.validation</groupId>
+    <artifactId>validation-api</artifactId>
+    <version>2.0.1.Final</version>
+</dependency>
+<dependency>
+    <groupId>org.hibernate.validator</groupId>
+    <artifactId>hibernate-validator</artifactId>
+    <version>6.2.5.Final</version>
+</dependency>
+<!-- EL para interpolación en tests (Tomcat ya lo provee en tiempo de ejecución) -->
+<dependency>
+    <groupId>org.glassfish</groupId>
+    <artifactId>javax.el</artifactId>
+    <version>3.0.0</version>
+    <scope>test</scope>
+</dependency>
+```
+
+### Notas sobre múltiples violaciones por campo
+
+Cuando un campo vacío tiene `@NotBlank` + `@Pattern`, ambas anotaciones
+disparan simultáneamente (una violación cada una). Struts acumula todos los
+`ActionMessage` para ese campo y los muestra todos.
+`<html:errors property="nombre"/>` en el JSP muestra solo los errores de ese campo.
+
+---
+
 ## Estructura de clases y archivos
 
 ```
 src/main/java/com/cursosdedesarrollo/
-├── RegistroForm.java              extends ValidatorForm     (Ejemplo A)
-├── RegistroAction.java            execute() sin validación  (Ejemplo A)
-├── ContactoForm.java              extends ActionForm + validate() sobreescrito  (Ejemplo B)
-├── ContactoAction.java            execute() sin validación  (Ejemplo B)
-├── MostrarFormularioAction.java   muestra formulario vacío  (ambos)
+├── RegistroForm.java              extends ValidatorForm          (Ejemplo A)
+├── RegistroAction.java            execute() sin validación       (Ejemplo A)
+├── MostrarRegistroAction.java     muestra formulario vacío       (Ejemplo A)
+├── ContactoForm.java              extends ActionForm + validate() (Ejemplo B)
+├── ContactoAction.java            execute() sin validación       (Ejemplo B)
+├── MostrarContactoAction.java     muestra formulario vacío       (Ejemplo B)
+├── BeanValidationForm.java        puente HV → ActionErrors       (Ejemplo C)
+├── EmpleadoForm.java              extends BeanValidationForm     (Ejemplo C)
+├── EmpleadoAction.java            execute() sin validación       (Ejemplo C)
+├── MostrarEmpleadoAction.java     muestra formulario vacío       (Ejemplo C)
 ├── Utf8MessageResources.java      carga .properties en UTF-8
 └── Utf8MessageResourcesFactory.java
 
@@ -269,13 +360,16 @@ src/main/webapp/WEB-INF/
 ├── validation.xml       reglas declarativas (solo Ejemplo A)
 ├── web.xml
 └── vistas/
-    ├── formulario.jsp        formulario de registro (Ejemplo A)
-    ├── exito.jsp             éxito registro         (Ejemplo A)
-    ├── formularioContacto.jsp formulario de contacto (Ejemplo B)
-    └── exitoContacto.jsp     éxito contacto          (Ejemplo B)
+    ├── formulario.jsp             formulario de registro (Ejemplo A)
+    ├── exito.jsp                  éxito registro         (Ejemplo A)
+    ├── formularioContacto.jsp     formulario de contacto (Ejemplo B)
+    ├── exitoContacto.jsp          éxito contacto         (Ejemplo B)
+    ├── formularioEmpleado.jsp     formulario de empleado (Ejemplo C)
+    └── exitoEmpleado.jsp          éxito alta empleado    (Ejemplo C)
 
 src/test/java/com/cursosdedesarrollo/
-└── ContactoFormTest.java   9 tests de ContactoForm.validate() sin contenedor
+├── ContactoFormTest.java    9 tests de ContactoForm.validate() sin contenedor
+└── EmpleadoFormTest.java   11 tests de EmpleadoForm (vía BeanValidationForm) sin contenedor
 ```
 
 ---
@@ -283,24 +377,40 @@ src/test/java/com/cursosdedesarrollo/
 ## Tests
 
 ```bash
-./test.sh   # mvn test → 9 tests, 0 fallos
+./test.sh   # mvn test → 20 tests, 0 fallos
 ```
 
-`ContactoFormTest` prueba la lógica de `ContactoForm.validate()` **sin contenedor**.
-El método solo accede a los campos del form, por lo que se puede invocar con `null`
-en los parámetros `ActionMapping` y `HttpServletRequest`:
+Ambas suites prueban la validación **sin contenedor** invocando `validate(null, null)`.
+
+### `ContactoFormTest` — 9 tests (Ejemplo B)
 
 | Test | Caso |
 |------|------|
 | `formularioValidoNoGeneraErrores` | todos los campos correctos → `errors.isEmpty()` |
-| `nombreVacioGeneraError` | nombre `""` → error en campo `"nombre"` |
-| `emailVacioGeneraError` | email `""` → error en campo `"email"` |
-| `emailSinArrobaGeneraError` | `"noesuncorreo"` → error en campo `"email"` |
-| `emailConArrobaAlFinalGeneraError` | `"nombre@"` → error en campo `"email"` |
-| `mensajeVacioGeneraError` | mensaje `""` → error en campo `"mensaje"` |
-| `mensajeCortoGeneraError` | mensaje de 5 chars → error en campo `"mensaje"` |
+| `nombreVacioGeneraError` | nombre `""` → error en `"nombre"` |
+| `emailVacioGeneraError` | email `""` → error en `"email"` |
+| `emailSinArrobaGeneraError` | `"noesuncorreo"` → error en `"email"` |
+| `emailConArrobaAlFinalGeneraError` | `"nombre@"` → error en `"email"` |
+| `mensajeVacioGeneraError` | mensaje `""` → error en `"mensaje"` |
+| `mensajeCortoGeneraError` | mensaje de 5 chars → error en `"mensaje"` |
 | `mensajeDe10CaracteresEsValido` | mensaje de 10 chars exactos → sin error |
 | `varioscamposInvalidosAcumulanErrores` | tres campos vacíos → `errors.size() == 3` |
+
+### `EmpleadoFormTest` — 11 tests (Ejemplo C)
+
+| Test | Caso |
+|------|------|
+| `formularioValidoNoGeneraErrores` | todos los campos correctos → `errors.isEmpty()` |
+| `nombreVacioGeneraError` | nombre `""` → error en `"nombre"` |
+| `nombreDeUnCaracterGeneraError` | nombre de 1 char → error en `"nombre"` (`@Size min=2`) |
+| `emailVacioGeneraError` | email `""` → error en `"email"` |
+| `emailSinArrobaGeneraError` | `"noesuncorreo"` → error en `"email"` |
+| `telefonoConLetrasGeneraError` | `"abc123"` → error en `"telefono"` |
+| `telefonoDeMenosDe9DigitosGeneraError` | 8 dígitos → error en `"telefono"` |
+| `nifSinLetraFinalGeneraError` | `"12345678"` → error en `"nif"` |
+| `nifConLetraMinusculaGeneraError` | `"12345678z"` → error en `"nif"` |
+| `nifCorrectoNoGeneraError` | `"12345678Z"` → sin error en `"nif"` |
+| `todosCamposVaciosGeneraErrorEnCadaCampo` | 4 campos vacíos → error en cada campo |
 
 El Ejemplo A (Struts Validator) no tiene tests unitarios: la validación XML
 la ejecuta el framework y requeriría un contexto de Struts para probarse.

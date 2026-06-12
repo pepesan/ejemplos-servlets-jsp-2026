@@ -28,16 +28,21 @@
         .card h3 { margin-top: 0; }
         .card-a h3 { color: #2980b9; }
         .card-b h3 { color: #27ae60; }
+        .card-c { border-left: 5px solid #8e44ad; }
+        .card-c h3 { color: #8e44ad; }
         .card a  { font-weight: bold; font-size: 1.05em; display: inline-block; margin-top: 8px;
                    padding: 8px 18px; border-radius: 4px; color: #fff; text-decoration: none; }
         .card-a a { background: #2980b9; }
         .card-a a:hover { background: #1f6fa0; }
         .card-b a { background: #27ae60; }
         .card-b a:hover { background: #1e8449; }
+        .card-c a { background: #8e44ad; }
+        .card-c a:hover { background: #7d3c98; }
         .badge { display: inline-block; font-size: .8em; font-weight: bold; padding: 2px 8px;
                  border-radius: 10px; margin-right: 4px; vertical-align: middle; }
         .badge-xml  { background: #d6eaf8; color: #1a5276; }
         .badge-java { background: #d5f5e3; color: #1a5e36; }
+        .badge-hv   { background: #f5eef8; color: #6c3483; }
 
         /* Flujo de petición */
         .flow { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 4px;
@@ -54,8 +59,8 @@
 <h1>43 — Struts 1.x: Dónde poner la validación</h1>
 
 <p>
-    En Struts 1.x hay <strong>tres sitios posibles</strong> para la validación de un formulario.
-    El módulo 40 mostró el primero. Este módulo muestra los otros dos.
+    En Struts 1.x hay <strong>cuatro sitios posibles</strong> para la validación de un formulario.
+    El módulo 40 mostró el primero. Este módulo muestra los otros tres.
 </p>
 
 <h2>Comparativa de enfoques</h2>
@@ -83,6 +88,12 @@
         <td><strong>43-B</strong></td>
         <td><code>ActionForm.validate()</code></td>
         <td>Código Java en el Form</td>
+        <td>No</td>
+    </tr>
+    <tr style="background:#f5eef8">
+        <td><strong>43-C</strong></td>
+        <td>Anotaciones en el Form bean</td>
+        <td>Bean Validation JSR-380 (Hibernate Validator)</td>
         <td>No</td>
     </tr>
 </table>
@@ -170,6 +181,39 @@ ActionServlet
     <a href="mostrarContacto.do">Abrir Ejemplo B →</a>
 </div>
 
+<!-- ──────────────────────────────────────────────────────── EJEMPLO C -->
+<div class="card card-c">
+    <h3><span class="badge badge-hv">HV</span> Ejemplo C — Bean Validation JSR-380 (Hibernate Validator)</h3>
+
+    <p>
+        <strong>Formulario de alta de empleado</strong> con cuatro campos: nombre, correo, teléfono y NIF.<br>
+        <code>EmpleadoForm</code> extiende <code>BeanValidationForm</code> y <em>solo</em> tiene
+        anotaciones en sus campos (<code>@NotBlank</code>, <code>@Email</code>, <code>@Size</code>,
+        <code>@Pattern</code>). No contiene ningún método <code>validate()</code>:
+        <code>BeanValidationForm</code> lo implementa como puente entre la API estándar de
+        <code>javax.validation</code> y los <code>ActionErrors</code> de Struts.
+    </p>
+
+    <p><strong>Reglas aplicadas:</strong></p>
+    <ul>
+        <li><code>nombre</code> — obligatorio, entre 2 y 80 caracteres</li>
+        <li><code>email</code> — obligatorio, formato de correo válido</li>
+        <li><code>telefono</code> — obligatorio, solo dígitos, entre 9 y 15</li>
+        <li><code>nif</code> — obligatorio, 8 dígitos seguidos de letra mayúscula (p. ej. <code>12345678Z</code>)</li>
+    </ul>
+
+    <p><strong>Piezas clave:</strong></p>
+    <ul>
+        <li><code>BeanValidationForm extends ActionForm</code> — implementa el puente HV → ActionErrors</li>
+        <li><code>EmpleadoForm extends BeanValidationForm</code> — solo anotaciones, cero lógica</li>
+        <li><code>Validation.buildDefaultValidatorFactory()</code> — instancia estática, thread-safe</li>
+        <li><code>ConstraintViolation.getPropertyPath()</code> — nombre del campo para <code>errors.add(field, …)</code></li>
+        <li>Mensajes inline en las anotaciones: <code>new ActionMessage(mensaje, false)</code></li>
+    </ul>
+
+    <a href="mostrarEmpleado.do">Abrir Ejemplo C →</a>
+</div>
+
 
 <h2>UTF-8 en los mensajes de error</h2>
 
@@ -191,24 +235,31 @@ ActionServlet
 
 <pre>43-struts1-validacion/
 ├── src/main/java/com/cursosdedesarrollo/
-│   ├── RegistroForm.java             ← extends ValidatorForm (Ejemplo A)
-│   ├── RegistroAction.java           ← sin código de validación (Ejemplo A)
-│   ├── ContactoForm.java             ← extends ActionForm + validate() (Ejemplo B)
-│   ├── ContactoAction.java           ← sin código de validación (Ejemplo B)
-│   ├── MostrarFormularioAction.java  ← muestra formulario vacío (ambos)
-│   ├── Utf8MessageResources.java     ← carga .properties en UTF-8
+│   ├── RegistroForm.java              ← extends ValidatorForm (Ejemplo A)
+│   ├── RegistroAction.java            ← sin código de validación (Ejemplo A)
+│   ├── MostrarRegistroAction.java     ← muestra formulario vacío (Ejemplo A)
+│   ├── ContactoForm.java              ← extends ActionForm + validate() (Ejemplo B)
+│   ├── ContactoAction.java            ← sin código de validación (Ejemplo B)
+│   ├── MostrarContactoAction.java     ← muestra formulario vacío (Ejemplo B)
+│   ├── BeanValidationForm.java        ← puente HV → ActionErrors (Ejemplo C)
+│   ├── EmpleadoForm.java              ← extends BeanValidationForm + anotaciones (Ejemplo C)
+│   ├── EmpleadoAction.java            ← sin código de validación (Ejemplo C)
+│   ├── MostrarEmpleadoAction.java     ← muestra formulario vacío (Ejemplo C)
+│   ├── Utf8MessageResources.java      ← carga .properties en UTF-8
 │   └── Utf8MessageResourcesFactory.java
 ├── src/main/resources/
 │   └── ApplicationResources.properties   ← mensajes de error en UTF-8
 └── src/main/webapp/WEB-INF/
-    ├── struts-config.xml             ← validate="true", input=, ValidatorPlugIn
-    ├── validation.xml                ← reglas declarativas (solo Ejemplo A)
+    ├── struts-config.xml              ← validate="true", input=, ValidatorPlugIn
+    ├── validation.xml                 ← reglas declarativas (solo Ejemplo A)
     ├── web.xml
     └── vistas/
-        ├── formulario.jsp            ← Ejemplo A
-        ├── exito.jsp                 ← Ejemplo A
-        ├── formularioContacto.jsp    ← Ejemplo B
-        └── exitoContacto.jsp         ← Ejemplo B</pre>
+        ├── formulario.jsp             ← Ejemplo A
+        ├── exito.jsp                  ← Ejemplo A
+        ├── formularioContacto.jsp     ← Ejemplo B
+        ├── exitoContacto.jsp          ← Ejemplo B
+        ├── formularioEmpleado.jsp     ← Ejemplo C
+        └── exitoEmpleado.jsp          ← Ejemplo C</pre>
 
 </body>
 </html>

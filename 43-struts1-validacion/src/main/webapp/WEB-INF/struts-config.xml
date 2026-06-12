@@ -10,6 +10,8 @@
         <form-bean name="registroForm" type="com.cursosdedesarrollo.RegistroForm"/>
         <!-- Ejemplo B: validación programática sobreescribiendo ActionForm.validate() -->
         <form-bean name="contactoForm" type="com.cursosdedesarrollo.ContactoForm"/>
+        <!-- Ejemplo C: Bean Validation JSR-380 con Hibernate Validator -->
+        <form-bean name="empleadoForm" type="com.cursosdedesarrollo.EmpleadoForm"/>
     </form-beans>
 
     <action-mappings>
@@ -17,7 +19,7 @@
         <!-- ─── EJEMPLO A: Struts Validator (validation.xml) ─────────────────── -->
 
         <action path="/formulario"
-                type="com.cursosdedesarrollo.MostrarFormularioAction"
+                type="com.cursosdedesarrollo.MostrarRegistroAction"
                 name="registroForm"
                 scope="request"
                 validate="false">
@@ -41,7 +43,7 @@
         <!-- ─── EJEMPLO B: ActionForm.validate() programático ────────────────── -->
 
         <action path="/mostrarContacto"
-                type="com.cursosdedesarrollo.MostrarFormularioAction"
+                type="com.cursosdedesarrollo.MostrarContactoAction"
                 name="contactoForm"
                 scope="request"
                 validate="false">
@@ -60,6 +62,30 @@
                 validate="true"
                 input="/WEB-INF/vistas/formularioContacto.jsp">
             <forward name="exito" path="/WEB-INF/vistas/exitoContacto.jsp"/>
+        </action>
+
+        <!-- ─── EJEMPLO C: Bean Validation JSR-380 (Hibernate Validator) ──────── -->
+
+        <action path="/mostrarEmpleado"
+                type="com.cursosdedesarrollo.MostrarEmpleadoAction"
+                name="empleadoForm"
+                scope="request"
+                validate="false">
+            <forward name="formulario" path="/WEB-INF/vistas/formularioEmpleado.jsp"/>
+        </action>
+
+        <!--
+          validate="true" → Struts llama a EmpleadoForm.validate(), que hereda de
+                            BeanValidationForm y ejecuta las anotaciones JSR-380.
+          input="..."     → destino si hay violaciones.
+        -->
+        <action path="/empleado"
+                type="com.cursosdedesarrollo.EmpleadoAction"
+                name="empleadoForm"
+                scope="request"
+                validate="true"
+                input="/WEB-INF/vistas/formularioEmpleado.jsp">
+            <forward name="exito" path="/WEB-INF/vistas/exitoEmpleado.jsp"/>
         </action>
 
     </action-mappings>

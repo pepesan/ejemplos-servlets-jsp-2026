@@ -8,11 +8,13 @@ import org.apache.struts.action.ActionMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class MostrarFormularioAction extends Action {
+public class EmpleadoAction extends Action {
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form,
                                  HttpServletRequest request, HttpServletResponse response) {
-        return mapping.findForward("formulario");
+        // Si llegamos aquí, BeanValidationForm.validate() ya ejecutó las anotaciones
+        // de EmpleadoForm y no encontró ninguna violación.
+        return mapping.findForward("exito");
     }
 }
